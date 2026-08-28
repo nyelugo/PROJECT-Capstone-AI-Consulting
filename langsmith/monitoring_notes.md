@@ -21,11 +21,19 @@ honest about what it does not know.
 | Experiment | `triage-round1-ebb7facb` |
 | Model / prompt | `gpt-4o-mini`, prompt version `0ded1e114c89` |
 | Environment | `eval` — never `live` |
+| Dataset | https://eu.smith.langchain.com/o/bdd29afc-aefb-432d-a118-2ee71dc41429/datasets/074b52a4-d07a-46e6-9b10-7aac69b24c79 |
+| Experiment | https://eu.smith.langchain.com/o/bdd29afc-aefb-432d-a118-2ee71dc41429/datasets/074b52a4-d07a-46e6-9b10-7aac69b24c79/compare?selectedSessions=148f16a5-714e-42c0-ac94-c37c61f1ca65 |
 | Export | `traces_export.json` (60 decision records), `experiment_summary.json` |
 | Screenshots | `screenshots/` |
 
 Reproduce: `python langsmith/run_monitoring_sample.py 60` then
 `python langsmith/summarise_experiment.py`.
+
+> **On the links.** They point into a private LangSmith workspace, so an instructor without
+> access will get a login wall. That is why the run records are exported to
+> `traces_export.json` and the aggregates to `experiment_summary.json`, and why the
+> screenshots are committed — the deliverable accepts either, and the export is the one
+> that works without credentials.
 
 > **Region note.** A key from an EU workspace authenticates against the default US endpoint
 > and then returns 403 on every call, which reads as a bad key rather than a wrong region.

@@ -4,7 +4,11 @@ Author: Ugo Ahukannah
 Capstone Round 1 · Deliverable 6 of 7
 
 Every figure below is computed by `cost_model.py`. Re-run it to reproduce them:
-`python cost_estimation/cost_model.py` → `cost_model.json`.
+`python cost_estimation/cost_model.py` → `cost_model.json` and `assumptions.md`.
+
+**The full assumptions table is `assumptions.md`**, generated from the same model, with
+every input classified as sourced, measured, an assumption about the client, or a
+judgement of mine. The judgements are the ones to challenge first.
 
 ---
 

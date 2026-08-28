@@ -20,7 +20,7 @@ business whose reasoning you can watch happen on a screen.
 | LangSmith monitoring sample | **Done** — `langsmith/`, 60 traced decisions, EU workspace |
 | Cost + timeline estimate | **Done** — `cost_estimation/`, model + assumptions table |
 | Round 1 presentation deck | **Done** — `presentation/`, 14 slides + speaker notes |
-| `round1_decision.md` | After the staff presentation — `feedback/` |
+| `round1_decision.md` | **Scaffolded** — `feedback/`, filled in after the staff presentation |
 
 ## The data
 
@@ -74,13 +74,23 @@ dashboard/          app.py · metrics.py (single source of truth) · docs · scr
 n8n/                POC workflow export + documentation
 langsmith/          traced experiment, export, monitoring notes, screenshots
 classifier/         prompt, taxonomy, team map, decision codes, FINDINGS.md
-cost_estimation/    cost_model.py (all figures derived) + analysis + timeline
-feedback/           round1_decision.md — KEEP or CHANGE, after the staff presentation
+cost_estimation/    cost_model.py (all figures derived) + analysis + timeline + assumptions table
+feedback/           round1_decision.md — KEEP or CHANGE, completed after the presentation
 presentation/       round1_pitch.pptx + .pdf + speaker_notes.md
 data_prep.py        curation, with both data-quality corrections
 fetch_data.sh       re-download the raw pull
 PLAN.md             locked decisions, rubric weights, open questions
 ```
+
+## LangSmith monitoring
+
+Experiment `triage-round1-ebb7facb` on the **EU** workspace, 60 traced decisions.
+[Dataset](https://eu.smith.langchain.com/o/bdd29afc-aefb-432d-a118-2ee71dc41429/datasets/074b52a4-d07a-46e6-9b10-7aac69b24c79)
+· [Experiment](https://eu.smith.langchain.com/o/bdd29afc-aefb-432d-a118-2ee71dc41429/datasets/074b52a4-d07a-46e6-9b10-7aac69b24c79/compare?selectedSessions=148f16a5-714e-42c0-ac94-c37c61f1ca65)
+
+Both links need workspace access. `langsmith/traces_export.json` and
+`langsmith/experiment_summary.json` carry the same records with no login required, and
+`langsmith/screenshots/` shows the trace view.
 
 ## The dashboard
 
