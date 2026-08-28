@@ -27,56 +27,44 @@ bought whole.]
 # Slide 3 — Three use cases, and two I will not build
 [Four seconds to scan. Don't read the six items.]
 
-Ranked by one thing: how visible the reasoning is. Not by which saves most. Complaint
-triage is first because you can watch it work.
+Ranked by one thing: how visible the reasoning is. Not by which saves most. Triage is
+first because you can watch it work.
 
-The right column is what I'm refusing. A chatbot fails in public, in your customer's
-voice. Credit scoring is high-risk under the AI Act — months of conformity work before a
-single decision goes live.
+The right column is what I'm refusing. A chatbot fails in public, in your customer's voice.
+Credit scoring is high-risk under the AI Act — months of conformity work before a single
+decision goes live.
 
 [Land this:] The fastest way to earn your trust is to tell you what not to buy.
 
-So: complaint triage. Here's what your complaints actually look like.
+So: triage. To show you what that looks like I needed complaint data, and you haven't given
+me any — so I went and got the next best thing.
 
 # Slide 4 — This is the dashboard you would open
 [Switch to the live dashboard here if you can. This slide is the fallback — it's a real
 screenshot of the same thing.]
 
-Nearly seventeen thousand real complaints, on one screen.
+Whose numbers these are is on the right, and it matters: they are not yours. Seventeen
+thousand real complaints from the public regulator database, standing in until Phase 0
+measures the real thing. The shape transfers — the mix, the language, how cases end. The
+volume does not, and I'm not going to pretend otherwise.
 
-Four numbers across the top, and only the third is in money. Hold on to the fourth: 46% of
-what arrives could be sorted automatically — a share of something you already do, not a
-promise about transformation.
+Four numbers across the top, only the third in money. Hold on to the fourth: 46% of what
+arrives could be sorted automatically.
 
-Two things in here matter more than the rest.
+One thing in here matters more than the rest.
 
-# Slide 5 — Volume and cost are not the same picture
-The first one. Read the last column, not the first.
-
-Deposits and cards are two thirds of your volume — but money leaves the building 5.7 times
-more often on a card complaint than a vehicle loan.
-
-So which queue a complaint lands in isn't administration. It's money. That's your argument
-for accurate routing, not mine.
-
-The second thing is what makes this buildable at all.
-
-[Q: Is this your data? — No. It's the US regulator's public database, used as a proxy for
-the shape of a complaint inbox, not a forecast of your volumes. Your real numbers come
-from Phase 0.]
-
-# Slide 6 — Five categories are half of everything that arrives
-Sixty-four categories exist. Five of them are nearly half your inbox.
+# Slide 5 — Five categories are half of everything that arrives
+Sixty-four categories exist. Five are nearly half of every complaint in the data — and
+that concentration is a property of complaint books, not of one firm.
 
 So I'm not asking a machine to be good at sixty-four things. I'm asking it to be good at
 five, and to admit when it's outside them.
 
-That's the difference between "AI for complaints", which I couldn't finish, and something
-I can hand you working.
+That's the difference between "AI for complaints" and something I can hand you working.
 
 Here's how it works.
 
-# Slide 7 — You can watch it decide
+# Slide 6 — You can watch it decide
 Four steps, and notice where the chain ends — a person decides. The machine never routes
 anything itself.
 
@@ -87,7 +75,7 @@ That human boundary is also what keeps this limited-risk under the AI Act.
 
 Let me show you it running.
 
-# Slide 8 — Here it is, actually running
+# Slide 7 — Here it is, actually running
 [Switch to the live n8n window. This screenshot is the fallback if the demo is cold.]
 
 Green ticks all the way across, on a real complaint.
@@ -99,7 +87,7 @@ Nothing here is a mockup. Click any node and you read its real input and output.
 
 That's one that worked. Here's what happens when it doesn't.
 
-# Slide 9 — It caught itself fabricating a reason
+# Slide 8 — It caught itself fabricating a reason
 [Slow right down. This is the most important slide in the deck.]
 
 Four times out of sixty, the model made up its justification. It confidently quoted words
@@ -111,7 +99,7 @@ trusting it. Bottom row — nothing was silently wrong.
 A system that explains itself convincingly but falsely is more dangerous than one that
 says nothing. Let me show you one.
 
-# Slide 10 — One of those four, opened up
+# Slide 9 — One of those four, opened up
 One of those four, on the record.
 
 Eighty per cent confident, a plausible team — and the sentence it quoted simply wasn't in
@@ -122,48 +110,48 @@ That's what I mean by watching it.
 
 Which brings me to the number I could have left out of this deck.
 
-# Slide 11 — What it cannot do yet
+# Slide 10 — What it cannot do yet
 [Don't soften this. Say it plainly.]
 
-Sixty per cent of the time it picks the right team. Not good enough to deploy.
+Sixty per cent of the time it picks the right team — measured on that same public data.
+Not good enough to deploy.
 
-I'm showing you because the reason matters more than the number. Ask it the same complaint
-twice and it answers the same way nine times in ten — so it's consistent. It just
-disagrees with the official label.
-
-And who writes that label? Your customer does, from a dropdown, untrained.
+I'm showing you because the reason matters more. Ask it the same complaint twice and it
+answers the same way nine times in ten — so it's consistent. It just disagrees with the
+official label. And who writes that label? Your customer does, from a dropdown, untrained.
 
 So the fix isn't a cleverer model. It's better labels — which changes what I'd ask you to
 buy. But first, what it costs.
 
-# Slide 12 — The model is not the cost. Oversight is.
+# Slide 11 — The model is not the cost. Oversight is.
 Twenty-nine cents a year. Measured, not estimated.
 
-What actually costs money is the review — someone accountable for watching it. That's the
-five thousand six hundred line, and I wouldn't remove it.
+What costs money is the review — someone accountable for watching it. That's the five
+thousand six hundred line, and I wouldn't remove it.
 
-So at your volume, choosing a model isn't a budget decision. It's an accuracy decision —
-the one six times more expensive would still cost about five euro a year.
+Those euros assume a firm your size, so treat them as an order of magnitude. The ratio is
+what survives whatever your real volume turns out to be: choosing a model isn't a budget
+decision, it's an accuracy one.
 
 Which makes what I'm asking for small.
 
 [Q: So why not always use the best model? — At this volume you should. That's the point.]
 
-# Slide 13 — What I would do next, and what it costs
+# Slide 12 — What I would do next, and what it costs
 Fixed fee per phase, because your problem is uncertainty.
 
 Phase 0 buys something odd: two of your handlers labelling three hundred complaints before
-any AI at all. Those are the better labels — worth buying even if you never build this,
-because it tells you whether your categories can be applied consistently by anybody.
+any AI at all. Those are the better labels — and it's worth buying even if you never build
+this, because it tells you whether your categories can be applied consistently by anybody.
 
-For your operations team that's about six days, and nothing changes about who decides.
+For operations that's about six days, and nothing changes about who decides.
 
 Fourteen thousand to reach a decision, not twenty-four and a half to a deployment.
 
 [If pressed on ROI: break-even is four avoided ombudsman referrals a year. I'm not
 claiming we hit it. That's what the pilot measures.]
 
-# Slide 14 — Close: what I want your feedback on
+# Slide 13 — Close: what I want your feedback on
 [Stop pitching. Drop the client voice — this is to you as assessors, not as Chleo.]
 
 The questions are on the slide, so I won't read them.
@@ -172,6 +160,15 @@ Push me on the first. I built this pitch around admitting a weak number early, b
 that an honest sixty per cent buys more trust than a confident eighty-five.
 
 I think that's right. I'm not certain it survives contact with a real client.
+
+# Slide 14 — Backup: volume and cost are not the same picture
+[Only if the room asks where the money actually goes.]
+
+Deposits and cards are two thirds of the volume in this data — but money leaves the
+building 5.7 times more often on a card complaint than on a vehicle loan.
+
+That ratio should hold for you, because it comes from how the products work, not from who
+the firm is. Which is why accurate routing is worth paying for.
 
 # Slide 15 — Backup: three corrections made before any analysis
 [Only if data quality is questioned.]
