@@ -50,17 +50,18 @@ On the left, the workflow running on a real complaint. Green ticks mean every st
 executed. It proposed Disputes and fraud — quoting your customer's own words as its reason
 — and then it stopped and waited for a person.
 
-On the right, that same decision opened up in monitoring. Sixty decisions traced, every one
-on the record, including the ones where nothing happened.
+On the right, that same decision opened up in monitoring.
 
-And this is the part I'd want you to hear. Four times out of sixty, the model made up its
-justification — it quoted words that weren't in the complaint at all, confidently. The
-check caught every one and sent it to a person with the reason written down.
+[Point at the row of squares.] That is every decision it has made — one square each, none
+of them hidden. Blue, it proposed a team. Amber, it wasn't confident enough and said so.
 
-[Point at the dark strip.] Which is why I'm not asking you to switch anything on. It picks
-the right team sixty per cent of the time on this data. That is not good enough to route on
-its own — so it proposes, and a person decides. That's the honest configuration until a
-pilot on your data says otherwise.
+The red ones are the ones I'd want you to hear about. Four times it quoted a sentence that
+simply wasn't in the complaint. Confidently. The check caught every one and sent it to a
+person with the reason written down.
+
+[Point at the dark strip, let them read it.] Which is why I am not asking you to switch
+anything on today. Sixty per cent is on that strip, and I would rather you heard it from me
+now than found it in month three.
 
 # Slide 5 — Cost, timeline and the ask
 Fixed fee per phase, because your problem is uncertainty and I won't hand you an open-ended
@@ -71,13 +72,13 @@ any AI at all. That's the ground truth that doesn't exist today, and it's worth 
 if you never build this — it tells you whether your own categories can be applied
 consistently by anybody.
 
-Running cost is seven thousand four hundred a year, of which the AI itself is twenty-nine
-cents. The rest is someone accountable for watching it, and I wouldn't remove it.
+[Point at the bar along the top.] That is where the running cost goes. The dark block is
+someone accountable for watching it, and I wouldn't remove it. The sliver on the right is
+the AI itself — twenty-nine cents a year.
 
-Two assumptions, on the slide. The volume is the regulator's rate applied to a firm your
-size, so treat the euros as an order of magnitude. And the return rests on avoiding
-ombudsman referrals — four a year covers the running cost. I'm not claiming we hit it.
-That's what the pilot measures.
+Two assumptions, written on the slide rather than buried in an appendix. The second is the
+one that matters: I am not claiming we avoid four ombudsman referrals a year. That is
+precisely what the pilot is for.
 
 Fourteen thousand to reach a decision. Not twenty-four and a half to a deployment.
 
