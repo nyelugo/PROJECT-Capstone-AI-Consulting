@@ -1,206 +1,187 @@
 # Slide 1 — Cover
-[Hold for a beat before starting. Do not read the slide.]
+[Beat before you start. Do not read the slide.]
+[Convention for the whole deck: you are in Chleo's meeting. Speak to the room as "you",
+never about her as "she". The only exception is Slide 11, where you step out.]
 
-I met Chleo at a dinner. She runs a mid-size financial services firm, and she told me she
-does not trust AI because she cannot see what it does.
+We met at a dinner, and you told me you do not trust AI because you cannot see what it does.
 
-So this is not a pitch about what AI could do for her. It is a pitch about one decision she
-can watch happen.
+So this is not a pitch about what AI could do for you. It is about one decision you can
+watch happen.
 
-Everything I am about to show you runs. The numbers are reproducible from the repository.
+Everything here runs. Every number traces back to a repository you can open.
 
 # Slide 2 — Chleo's objection is trust, not capability
-Three things I took from that dinner.
+[Point at the middle card, not the left one. The fear is the slide.]
 
-Her firm: about 500 staff, a quarter of a million retail customers, EU-established.
+You never asked me whether AI works. You asked what it *is*, and how you would see it.
 
-Her fear, in her own words: AI is not transparent. She kept asking what "the AI" actually
-is, and how she would sign up. Those are not naive questions. They are the right ones.
+Those are the two questions your regulator will ask you as well, which is why I have built
+the answer to them rather than a demo.
 
-So the job is not to build her a platform. It is to find one place in her business where a
-machine makes a decision, and she can watch it, and disagree with it.
+So I am not proposing a platform. I am proposing one place in your business where you can
+watch a machine decide — and overrule it.
 
-[Q: Isn't she just uninformed? — No. She is asking for auditability, which is exactly what
-her regulator will ask for too.]
+[Q: Is this too small to matter? — Small is the point. You cannot audit something you
+bought whole.]
 
 # Slide 3 — Three use cases, and two I will not build
-Three I would build. Complaint triage — it reads a complaint and proposes which team should
-handle it. Anomaly flagging, where every flag carries its reason. And reporting assistance,
-which drafts what a person then signs.
+[Do not read the six items. Give them four seconds to scan, then talk about the ordering.]
 
-Two I refuse. A customer-facing chatbot fails in public, in her customer's voice, and its
-errors are unbounded. Credit scoring is Annex III high-risk under the EU AI Act — that is
-conformity assessment and a fundamental-rights impact assessment before a single decision
-goes live.
+The three on the left are ranked by one thing only: how visible the reasoning is. Not by
+which saves the most money.
 
-[Land this line:] I think the fastest way to earn a sceptical CEO's trust is to be the
-consultant who tells her what not to buy.
+The two on the right I am refusing, and I want to be explicit about why. A chatbot fails
+in public, in your customer's voice, with errors nobody can bound. Credit scoring is
+Annex III high-risk under the AI Act — conformity assessment and a fundamental-rights
+impact assessment before a single decision goes live.
+
+[Land this:] The fastest way to earn your trust is to tell you what not to buy.
 
 # Slide 4 — Volume and cost are not the same picture
-This is from her dashboard, built on 16,839 real complaints from the public CFPB database.
+[Switch to the live dashboard now if the room is warm. Otherwise stay on the table.]
 
-Deposits and cards are two thirds of the volume. But look at the last column — credit card
-complaints end with money paid out 17.2% of the time, against 3.0% for vehicle loans. Nearly
-six times.
+Read the last column, not the first.
 
-So where a complaint lands is not an administrative detail. It has money attached to it.
-That is the argument for getting routing right, and it is her argument, not mine.
+Deposits and cards are two thirds of your volume — but a card complaint ends with money
+leaving the building 5.7 times more often than a vehicle loan complaint does.
 
-[If asked about the data:] US regulatory data, used as a proxy for the shape of a complaint
-inbox — the mix of issues and the language — not a forecast of her volumes. I say that on
-the dashboard itself.
+So which queue a complaint lands in is not administration. It is money. That is your
+argument for accurate routing, and I am only pointing at it.
+
+[Q: Is this your data? — No. It is the US regulator's public complaint database, 16,839
+complaints, used as a proxy for the *shape* of a complaint inbox — the mix and the
+language. Not a forecast of your volumes. Your real numbers come from Phase 0.]
 
 # Slide 5 — Five categories are half of everything that arrives
-This is the finding the whole proposal rests on.
+[Let the 46.1% sit. This is the slide the whole proposal rests on.]
 
-There are 64 issue categories. Five of them are 46% of everything that arrives.
+Sixty-four categories exist. Five of them are nearly half your inbox.
 
-That means the model does not have to be good at 64 things. It has to be good at five, and
-it has to be willing to say "I don't know" about the rest.
+That is what makes this buildable. I am not asking a model to be good at sixty-four
+things — I am asking it to be good at five and to admit when it is outside them.
 
-That is a scope Chleo can approve and a risk she can bound. It is the difference between
-"AI for complaints" and something I can actually finish.
+It is the difference between "AI for complaints", which I could not finish, and something
+I can hand you working.
 
 # Slide 6 — You can watch it decide
-[Switch to the live n8n window if time allows; otherwise narrate the diagram.]
+[Switch to the live n8n window. If the demo is cold, narrate the chevrons and play the
+recording.]
 
-A complaint arrives. The model proposes a team. Four guards check that proposal. A handler
-sees the reason and decides.
+This is running now. Not a mockup.
 
-Every branch ends at a person. Nothing is routed by the machine.
+Here is the part that answers your actual question: you can open any step and read the
+real data going through it. Not my description of what it did — the thing itself.
 
-And this is the part that answers her actual question — in n8n she can open any step and
-read the exact data going in and out. Not a description of what it did. The thing itself.
+And notice where the chain ends. A person decides. The machine never routes anything on
+its own.
 
-The four guards: valid JSON, a queue that actually exists for that product, confidence above
-0.70, and the quote must appear verbatim in the complaint. Any failure goes to a human with
-the reason stated.
+[If you have time, expand one guard:] The fourth check is the interesting one. The model
+has to quote your customer's own words back, and we verify that quote is really in the
+complaint before anyone sees it.
 
-[Q: Why n8n and not code? — Because she can read it. That is the whole point.]
+[Q: Why n8n rather than code? — Because you can read it. That is the entire reason.]
 
 # Slide 7 — It caught itself fabricating a reason
-60 decisions traced in LangSmith. Every one accounted for.
+[Slow right down. This is the most important slide in the deck.]
 
-52 passed all checks. Four were stopped because the model's confidence was too low. And four
-were stopped because the justification quote it gave was not actually in the complaint.
+Four times out of sixty, the model invented its justification — it produced a quote that
+was not in the complaint at all. Confidently.
 
-[Slow down here.] It made up its reason. Four times out of sixty. And the system caught
-every one, because the guard checks the quote against the text rather than trusting it.
+Every one was caught, because the system checks the quote against the text instead of
+trusting it.
 
-A system that explains itself convincingly but falsely is more dangerous than one that says
-nothing at all. That is the failure mode Chleo should be afraid of, and it is the one we
-instrument for.
+That bottom row is the one to look at. Nothing was silently wrong. A system that explains
+itself convincingly but falsely is far more dangerous than one that says nothing, and it
+is the failure I have instrumented for.
 
 # Slide 8 — What it cannot do yet
-Here is the number I could have left off this deck.
+[Do not soften this. Say the number plainly.]
 
-60.5% correct team assignment. That is not deployable. I am telling you because the reason
-matters more than the number.
+Sixty per cent. That is not good enough to deploy, and I am showing you rather than
+burying it, because the reason matters more than the number.
 
-I tested whether the model was just weak. It agrees with itself 88 to 89% of the time — it
-is stable. It disagrees with the public label systematically, not randomly.
+I checked whether the model was simply weak. It agrees with *itself* nearly ninety per
+cent of the time — it is stable. It disagrees with the public label systematically.
 
-Then I looked at who assigns that label. It is chosen by the customer filing the complaint,
-from a dropdown, with no training. It records which box a member of the public ticked. It is
-not a record of which team should handle the case.
+So I looked at who writes that label. Your customer does, from a dropdown, untrained. It
+records which box a member of the public ticked. It is not a record of which team should
+have handled the case.
 
-So measuring a triage model against it measures agreement with untrained self-selection.
-Any vendor quoting an accuracy figure built this way is quoting a number that does not mean
-what it appears to mean.
+Measured against it, any vendor's accuracy figure means less than it appears to.
 
 # Slide 9 — The model is not the cost. Oversight is.
-The API costs 29 cents a year. That is not a typo, and it is measured, not estimated —
-684 input tokens and 49 output tokens per complaint, at list price.
+[Pause on the first row. Let someone react to 29 cents.]
 
-The platform is €1,800. The quarterly accuracy review is €5,600 — that is someone
-accountable for watching it.
+Twenty-nine cents a year. That is measured, not estimated.
 
-97% of the running cost is human oversight. Four thousandths of one percent is the model.
+What actually costs money is the review — someone accountable for watching it. That is
+the £5,600 line, and I would not remove it.
 
-Which means model choice is not a financial decision at her volume. It is an accuracy
-decision. Even the model six times more expensive would cost about €5 a year.
+Which means at your volume, choosing a model is not a budget decision at all. It is an
+accuracy decision. The model six times more expensive would still cost about five euro a
+year.
 
-[Q: So why not use the best model always? — At this volume, you should. That is the point.]
+[Q: So why not always use the best model? — At this volume you should. That is the point.]
 
 # Slide 10 — What I would do next, and what it costs
-Three phases, fixed fee, because a client whose objection is uncertainty should not be handed
-an open-ended commitment.
+[Slow on Phase 0. It is the unusual part and the part they will question.]
 
-Phase 0 is two weeks and €5,600 — two of her handlers label 300 complaints. That produces
-the ground truth she does not currently have. It is worth buying even if she never builds
-any AI, because it tells her whether her own categories can be applied consistently by
-anyone.
+Fixed fee per phase, because you told me your problem is uncertainty and I am not going
+to hand you an open-ended commitment.
 
-Phase 1 is the pilot: it proposes, nobody acts on it, and we measure against her labels.
+Phase 0 buys something odd: two of your own handlers labelling three hundred complaints,
+before any AI at all. It is worth buying even if you never build this, because it tells
+you whether your own categories can be applied consistently by anybody.
 
-Phase 2 only happens if the pilot passes.
+You are committing fourteen thousand to reach a decision — not twenty-four and a half to
+a deployment. Phase 2 only happens if the pilot earns it.
 
-She commits €14,000 to reach a decision, not €24,500 to a deployment.
-
-And the break-even is concrete: the running cost is covered if this prevents four ombudsman
-referrals a year, at €760 each. Whether it does is what the pilot is for. I am not claiming
-it does.
+[If pressed on ROI:] The break-even is four avoided ombudsman referrals a year. I am not
+claiming we hit it. That is what the pilot measures.
 
 # Slide 11 — Close: what I want your feedback on
-[Step out of the pitch here. Change tone — this is to the room as assessors, not as Chleo.]
+[Stop pitching. Drop the client voice — this is to you as assessors, not as Chleo.]
 
-Three things I would genuinely like challenged.
+The questions are on the slide, so I will not read them.
 
-First — I lead with "this is not deployable yet, and here is the number." I think that is
-stronger than a confident 85%. It might just lose the room.
+The one I actually want pushed on is the first. I have built this pitch around admitting
+a weak number early, on the bet that an honest sixty per cent buys more trust than a
+confident eighty-five would.
 
-Second — Phase 0 sells a labelling exercise before any AI at all. Does that read as rigour,
-or as stalling?
-
-Third — I refuse two use cases on stage. Does that build authority, or does it sound
-negative?
-
-If you only push me on one thing, push me on the first.
+I think that is right. I am not certain it survives contact with a real client, and that
+is the thing I would most like you to take apart.
 
 # Slide 12 — Backup: three corrections made before any analysis
-[Only if asked about data quality.]
+[Only if data quality is questioned.]
 
-Three things the data appeared to say that were false.
+Three things the data appeared to say, and did not.
 
-Complaints looked like they fell 73% in July. They did not — the CFPB only publishes a
-complaint once the firm has responded, so recent weeks are structurally incomplete. I cut
-the window at 27 June.
+The July cliff is the one that would have caught me. The CFPB only publishes a complaint
+once the firm has responded, so the newest weeks are always thin. Read naively it is a
+73% collapse in complaints and a wonderful slide. It is an artefact — I cut the window at
+27 June.
 
-Handling time looked like a service metric. It is zero for 96% of records because it
-measures the regulator's own routing, not any firm's speed. I dropped it.
-
-And two different timeliness fields were on screen together — 98.0% answered on time next to
-0.6% "untimely" — which reads as a contradiction. They measure different things, so I
-relabelled one.
-
-Each of those would have produced a confident wrong answer.
+The other two are on the slide. The pattern is the point: each would have produced a
+confident, wrong answer that no test would have caught.
 
 # Slide 13 — Backup: the compliance position
 [Only if the legal seat asks.]
 
-Preliminary view: limited risk. It classifies and routes; a human resolves. It is not Annex
-III creditworthiness assessment.
+Limited risk, and the reasoning is what matters: it classifies and routes, a human
+resolves, and it never touches creditworthiness.
 
-What keeps it there is the human decision boundary. If it ever routes autonomously, that is
-a new assessment, not an upgrade.
+What holds it there is the human decision boundary. If it ever routes autonomously that
+is a new assessment, not an upgrade to this one.
 
-GDPR applies regardless of tier — complaint text is personal data, so legal basis, retention
-and a DPIA are Round 2 deliverables.
-
-The open risk I would flag now is model hosting region. An EU customer's complaint text must
-not leave the EEA by accident.
-
-I am deliberately not giving you a final classification. Round 2 owes the step-by-step
-reasoning. A confident tier label without that work is exactly the unearned certainty Chleo
-is right to distrust.
+I am deliberately not giving you a final classification today. Round 2 owes the
+step-by-step reasoning. A confident tier label without that work is exactly the unearned
+certainty you were right to distrust in the first place.
 
 # Slide 14 — Backup: every number and where it came from
-[Only if challenged on sourcing.]
+[Only if sourcing is challenged.]
 
-The corpus is the CFPB public API. The complaint rate is FCA aggregate data for the second
-half of 2025. The ombudsman fee is the published FOS figure. The token counts I measured
-myself. The accuracy figure is 240 complaints, stratified, fixed seed.
+Everything on these slides is either measured by me or cited to a regulator.
 
-Everything on these slides is either measured or cited. Where a number is a judgement — the
-triage minutes, the on-costs — it is labelled as a judgement in the cost model, not dressed
-up as a measurement.
+Where a figure is a judgement rather than a measurement — the minutes per complaint, the
+employer on-costs — it is labelled as a judgement in the cost model. I have not dressed
+an estimate up as a finding anywhere in this deck.
