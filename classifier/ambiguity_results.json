@@ -1,0 +1,7 @@
+{
+  "model": "gpt-4o",
+  "n": 100,
+  "temperature": 1.0,
+  "self_agreement_exact_queue_pct": 88.0,
+  "self_agreement_team_pct": 89.0
+}

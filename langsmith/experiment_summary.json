@@ -1,0 +1,57 @@
+{
+  "experiment": "triage-round1-ebb7facb",
+  "dataset": "capstone-complaint-triage",
+  "environment": "eval",
+  "model": "gpt-4o-mini",
+  "prompt_version": "0ded1e114c89",
+  "runs": 60,
+  "feedback_rows_raw": 240,
+  "duplicate_feedback_rows": {
+    "team_correct": 3,
+    "guard": 3,
+    "evidence_verbatim": 2,
+    "auto_proposed": 1
+  },
+  "metrics": {
+    "auto_proposed": {
+      "rate_pct": 86.2,
+      "measured_on": 58,
+      "unmeasured": 2,
+      "coverage_pct": 96.7
+    },
+    "evidence_verbatim": {
+      "rate_pct": 93.1,
+      "measured_on": 58,
+      "unmeasured": 2,
+      "coverage_pct": 96.7
+    },
+    "guard": {
+      "rate_pct": 86.2,
+      "measured_on": 58,
+      "unmeasured": 2,
+      "coverage_pct": 96.7
+    },
+    "team_correct": {
+      "rate_pct": 63.3,
+      "measured_on": 49,
+      "unmeasured": 11,
+      "coverage_pct": 81.7
+    }
+  },
+  "customer_ref_join": {
+    "joined": 60,
+    "mismatched": 0,
+    "missing_one_side": 0,
+    "join_rate_pct": 100.0
+  },
+  "reason_code_distribution": {
+    "OK_PROPOSED": 52,
+    "REJECT_EVIDENCE_NOT_VERBATIM": 4,
+    "REJECT_LOW_CONFIDENCE": 4
+  },
+  "reason_codes_via_feedback_lossy": {
+    "OK_PROPOSED": 50,
+    "REJECT_LOW_CONFIDENCE": 4,
+    "REJECT_EVIDENCE_NOT_VERBATIM": 4
+  }
+}

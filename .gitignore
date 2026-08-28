@@ -1,0 +1,16 @@
+# Raw upstream pull - 62 MB, reproducible via ./fetch_data.sh
+data/raw/
+
+# Secrets
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Tableau working files
+*.twb.bak
+*.hyper
+dashboard/__pycache__/

@@ -1,0 +1,9 @@
+{
+  "dataset": "capstone-complaint-triage",
+  "experiment": "triage-round1-ebb7facb",
+  "n": 60,
+  "environment": "eval",
+  "model": "gpt-4o-mini",
+  "prompt_version": "0ded1e114c89",
+  "endpoint": "https://eu.api.smith.langchain.com"
+}

@@ -1,0 +1,67 @@
+{
+  "n_evaluated": 240,
+  "api_errors": 0,
+  "HEADLINE_team_accuracy_volume_weighted_pct": 60.5,
+  "auto_routed_pct": 79.2,
+  "exact_label_accuracy_pct": 48.3,
+  "TEAM_accuracy_pct": 61.7,
+  "TEAM_accuracy_when_auto_routed_pct": 64.2,
+  "exact_accuracy_when_auto_routed_pct": 51.1,
+  "sent_to_human_pct": 20.8,
+  "invented_queue_pct": 0.0,
+  "evidence_verbatim_pct": 99.6,
+  "mean_tokens_per_complaint": 723,
+  "per_product": {
+    "Checking or savings account": {
+      "n": 40,
+      "queues": 6,
+      "exact_accuracy_pct": 57.5,
+      "team_accuracy_pct": 72.5,
+      "auto_routed_pct": 50.0,
+      "team_accuracy_when_auto_routed_pct": 70.0
+    },
+    "Credit card": {
+      "n": 40,
+      "queues": 12,
+      "exact_accuracy_pct": 37.5,
+      "team_accuracy_pct": 42.5,
+      "auto_routed_pct": 90.0,
+      "team_accuracy_when_auto_routed_pct": 41.7
+    },
+    "Money transfer, virtual currency, or money service": {
+      "n": 40,
+      "queues": 12,
+      "exact_accuracy_pct": 50.0,
+      "team_accuracy_pct": 82.5,
+      "auto_routed_pct": 95.0,
+      "team_accuracy_when_auto_routed_pct": 81.6
+    },
+    "Payday loan, title loan, personal loan, or advance loan": {
+      "n": 40,
+      "queues": 16,
+      "exact_accuracy_pct": 25.0,
+      "team_accuracy_pct": 42.5,
+      "auto_routed_pct": 80.0,
+      "team_accuracy_when_auto_routed_pct": 46.9
+    },
+    "Prepaid card": {
+      "n": 40,
+      "queues": 6,
+      "exact_accuracy_pct": 70.0,
+      "team_accuracy_pct": 80.0,
+      "auto_routed_pct": 85.0,
+      "team_accuracy_when_auto_routed_pct": 88.2
+    },
+    "Vehicle loan or lease": {
+      "n": 40,
+      "queues": 8,
+      "exact_accuracy_pct": 50.0,
+      "team_accuracy_pct": 50.0,
+      "auto_routed_pct": 75.0,
+      "team_accuracy_when_auto_routed_pct": 56.7
+    }
+  },
+  "model": "gpt-4o",
+  "confidence_threshold": 0.7,
+  "sample_seed": 42
+}

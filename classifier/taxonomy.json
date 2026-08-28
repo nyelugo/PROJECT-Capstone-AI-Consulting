@@ -1,0 +1,109 @@
+{
+  "min_share": 0.01,
+  "products": {
+    "Checking or savings account": [
+      "Closing an account",
+      "Managing an account",
+      "Opening an account",
+      "Problem caused by your funds being low",
+      "Problem with a lender or other company charging your account",
+      "OTHER"
+    ],
+    "Credit card": [
+      "Advertising and marketing, including promotional offers",
+      "Closing your account",
+      "Fees or interest",
+      "Getting a credit card",
+      "Incorrect information on your report",
+      "Other features, terms, or problems",
+      "Problem when making payments",
+      "Problem with a company's investigation into an existing problem",
+      "Problem with a purchase shown on your statement",
+      "Struggling to pay your bill",
+      "Trouble using your card",
+      "OTHER"
+    ],
+    "Money transfer, virtual currency, or money service": [
+      "Confusing or missing disclosures",
+      "Fraud or scam",
+      "Managing, opening, or closing your mobile wallet account",
+      "Money was not available when promised",
+      "Other service problem",
+      "Other transaction problem",
+      "Problem with customer service",
+      "Trouble accessing funds in your mobile or digital wallet",
+      "Unauthorized transactions or other transaction problem",
+      "Unexpected or other fees",
+      "Wrong amount charged or received",
+      "OTHER"
+    ],
+    "Payday loan, title loan, personal loan, or advance loan": [
+      "Can't contact lender or servicer",
+      "Can't stop withdrawals from your bank account",
+      "Charged fees or interest you didn't expect",
+      "Getting a line of credit",
+      "Getting the loan",
+      "Incorrect information on your report",
+      "Loan payment wasn't credited to your account",
+      "Money was taken from your bank account on the wrong day or for the wrong amount",
+      "Problem when making payments",
+      "Problem with a company's investigation into an existing problem",
+      "Problem with additional add-on products or services",
+      "Problem with the payoff process at the end of the loan",
+      "Received a loan you didn't apply for",
+      "Struggling to pay your loan",
+      "Vehicle was repossessed or sold the vehicle",
+      "OTHER"
+    ],
+    "Prepaid card": [
+      "Advertising",
+      "Problem getting a card or closing an account",
+      "Problem with a purchase or transfer",
+      "Trouble using the card",
+      "Unexpected or other fees",
+      "OTHER"
+    ],
+    "Vehicle loan or lease": [
+      "Getting a loan or lease",
+      "Incorrect information on your report",
+      "Managing the loan or lease",
+      "Problem with a company's investigation into an existing problem",
+      "Problems at the end of the loan or lease",
+      "Repossession",
+      "Struggling to pay your loan",
+      "OTHER"
+    ]
+  },
+  "coverage": {
+    "Checking or savings account": {
+      "n": 5835,
+      "queues": 5,
+      "covered_pct": 99.3
+    },
+    "Credit card": {
+      "n": 5382,
+      "queues": 11,
+      "covered_pct": 99.1
+    },
+    "Money transfer, virtual currency, or money service": {
+      "n": 2551,
+      "queues": 11,
+      "covered_pct": 97.9
+    },
+    "Payday loan, title loan, personal loan, or advance loan": {
+      "n": 1163,
+      "queues": 15,
+      "covered_pct": 94.1
+    },
+    "Prepaid card": {
+      "n": 385,
+      "queues": 5,
+      "covered_pct": 100.0
+    },
+    "Vehicle loan or lease": {
+      "n": 1523,
+      "queues": 7,
+      "covered_pct": 98.7
+    }
+  }
+}

@@ -1,0 +1,350 @@
+{
+  "name": "Capstone \u2014 Complaint Triage POC (assist-only)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "run-demo",
+      "name": "Run demo",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "complaint-triage",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "complaint-received",
+      "name": "Complaint received",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "p",
+              "name": "product",
+              "value": "Checking or savings account",
+              "type": "string"
+            },
+            {
+              "id": "n",
+              "name": "narrative",
+              "value": "XX/XX/XXXXXXXX  {$48.00} XXXX XXXX Did not receive the order and was denied by CashApp for the refund. Asked for an appeal and was denied again. \n\nXX/XX/XXXXXXXX  {$43.00} XXXX XXXX  Did not receive the order and was denied by CashApp for the refund. Didnt get a chance to appeal because Im busy with school and later forgot about it. But this order was taken by someone else other than my self. \n\nXX/XX/XXXXXXXX XXXX Been Verified a company that pops up under spam pages signed me up for something that I did not want and made cancelling very difficult on their website. And i didnt want their subscription I only wanted the trial and my dispute was denied by CashApp XX/XX/XXXXXXXX  {$9.00} XXXX. Originally I wanted to use their services but after signing up they revealed that they also wanted to charge me another {$25.00} fee to use their notary which was absurd because I could get it done at my bank for free. I emailed the company explaining that i didnt want their services and I cancelled the subscription right way same moment and was not refunded my money and CashApp denied my dispute.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "sample-complaint",
+      "name": "Sample complaint",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -340,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "p",
+              "name": "product",
+              "value": "={{ $json.product || $json.body?.product }}",
+              "type": "string"
+            },
+            {
+              "id": "n",
+              "name": "narrative",
+              "value": "={{ ($json.narrative || $json.body?.narrative || '').slice(0, 6000) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "normalise-complaint",
+      "name": "Normalise complaint",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -120,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: \"gpt-4o-mini\",\n  temperature: 0,\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: \"You are a complaint triage assistant at a retail bank. You do not resolve complaints, decide outcomes, or contact customers. You read one complaint that has already arrived on a known product, and choose which of that product's queues should handle it.\\n\\nYou will be given the product and the exact list of queues available for it. Choose exactly one queue from that list, copied verbatim.\\n\\nRules:\\n- Choose only from the list you are given. Queues for other products do not apply.\\n- Prefer a named queue. Almost every real complaint belongs to one of them. Choose \\\"OTHER\\\" only when no queue on the list is even plausibly related to what the customer is describing \\u2014 not merely because the fit is imperfect.\\n- When two queues could both fit, choose the more specific one and lower your confidence to reflect the ambiguity. Do not retreat to \\\"OTHER\\\" because two options overlap.\\n- Give a confidence between 0 and 1 reflecting how certain you are. Be honest \\u2014 this is how uncertainty is signalled, not the \\\"OTHER\\\" queue. Below 0.7 a human reviews it, which is a good outcome.\\n- Quote one short verbatim phrase or sentence from the complaint that most drove your decision. Copy it exactly. Do not paraphrase, summarise or invent it.\\n\\nRespond with JSON only:\\n{\\\"queue\\\": \\\"<one queue, copied verbatim from the list>\\\", \\\"confidence\\\": <number 0-1>, \\\"evidence\\\": \\\"<verbatim quote from the complaint>\\\"}\" },\n    { role: 'user', content: 'Product: ' + $json.product + '\\n\\nQueues available for this product:\\n' + ({\"Checking or savings account\": [\"Closing an account\", \"Managing an account\", \"Opening an account\", \"Problem caused by your funds being low\", \"Problem with a lender or other company charging your account\", \"OTHER\"], \"Credit card\": [\"Advertising and marketing, including promotional offers\", \"Closing your account\", \"Fees or interest\", \"Getting a credit card\", \"Incorrect information on your report\", \"Other features, terms, or problems\", \"Problem when making payments\", \"Problem with a company's investigation into an existing problem\", \"Problem with a purchase shown on your statement\", \"Struggling to pay your bill\", \"Trouble using your card\", \"OTHER\"], \"Money transfer, virtual currency, or money service\": [\"Confusing or missing disclosures\", \"Fraud or scam\", \"Managing, opening, or closing your mobile wallet account\", \"Money was not available when promised\", \"Other service problem\", \"Other transaction problem\", \"Problem with customer service\", \"Trouble accessing funds in your mobile or digital wallet\", \"Unauthorized transactions or other transaction problem\", \"Unexpected or other fees\", \"Wrong amount charged or received\", \"OTHER\"], \"Payday loan, title loan, personal loan, or advance loan\": [\"Can't contact lender or servicer\", \"Can't stop withdrawals from your bank account\", \"Charged fees or interest you didn't expect\", \"Getting a line of credit\", \"Getting the loan\", \"Incorrect information on your report\", \"Loan payment wasn't credited to your account\", \"Money was taken from your bank account on the wrong day or for the wrong amount\", \"Problem when making payments\", \"Problem with a company's investigation into an existing problem\", \"Problem with additional add-on products or services\", \"Problem with the payoff process at the end of the loan\", \"Received a loan you didn't apply for\", \"Struggling to pay your loan\", \"Vehicle was repossessed or sold the vehicle\", \"OTHER\"], \"Prepaid card\": [\"Advertising\", \"Problem getting a card or closing an account\", \"Problem with a purchase or transfer\", \"Trouble using the card\", \"Unexpected or other fees\", \"OTHER\"], \"Vehicle loan or lease\": [\"Getting a loan or lease\", \"Incorrect information on your report\", \"Managing the loan or lease\", \"Problem with a company's investigation into an existing problem\", \"Problems at the end of the loan or lease\", \"Repossession\", \"Struggling to pay your loan\", \"OTHER\"]}[$json.product] || ['OTHER']).map(q => '- ' + q).join('\\n') + '\\n\\nComplaint:\\n' + $json.narrative }\n  ]\n}) }}",
+        "options": {}
+      },
+      "id": "classify-complaint",
+      "name": "Classify complaint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        160
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "zyWXiCTcgNwli088",
+          "name": "Ugo_OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the model's answer, then validate it before trusting it.\n// Reason CODES and their order are generated from classifier/decide.py so the n8n POC and\n// the LangSmith monitoring can never describe the same rejection differently.\nconst TAXONOMY = {\"Checking or savings account\": [\"Closing an account\", \"Managing an account\", \"Opening an account\", \"Problem caused by your funds being low\", \"Problem with a lender or other company charging your account\", \"OTHER\"], \"Credit card\": [\"Advertising and marketing, including promotional offers\", \"Closing your account\", \"Fees or interest\", \"Getting a credit card\", \"Incorrect information on your report\", \"Other features, terms, or problems\", \"Problem when making payments\", \"Problem with a company's investigation into an existing problem\", \"Problem with a purchase shown on your statement\", \"Struggling to pay your bill\", \"Trouble using your card\", \"OTHER\"], \"Money transfer, virtual currency, or money service\": [\"Confusing or missing disclosures\", \"Fraud or scam\", \"Managing, opening, or closing your mobile wallet account\", \"Money was not available when promised\", \"Other service problem\", \"Other transaction problem\", \"Problem with customer service\", \"Trouble accessing funds in your mobile or digital wallet\", \"Unauthorized transactions or other transaction problem\", \"Unexpected or other fees\", \"Wrong amount charged or received\", \"OTHER\"], \"Payday loan, title loan, personal loan, or advance loan\": [\"Can't contact lender or servicer\", \"Can't stop withdrawals from your bank account\", \"Charged fees or interest you didn't expect\", \"Getting a line of credit\", \"Getting the loan\", \"Incorrect information on your report\", \"Loan payment wasn't credited to your account\", \"Money was taken from your bank account on the wrong day or for the wrong amount\", \"Problem when making payments\", \"Problem with a company's investigation into an existing problem\", \"Problem with additional add-on products or services\", \"Problem with the payoff process at the end of the loan\", \"Received a loan you didn't apply for\", \"Struggling to pay your loan\", \"Vehicle was repossessed or sold the vehicle\", \"OTHER\"], \"Prepaid card\": [\"Advertising\", \"Problem getting a card or closing an account\", \"Problem with a purchase or transfer\", \"Trouble using the card\", \"Unexpected or other fees\", \"OTHER\"], \"Vehicle loan or lease\": [\"Getting a loan or lease\", \"Incorrect information on your report\", \"Managing the loan or lease\", \"Problem with a company's investigation into an existing problem\", \"Problems at the end of the loan or lease\", \"Repossession\", \"Struggling to pay your loan\", \"OTHER\"]};\nconst QUEUE_TO_TEAM = {\"Closing an account\": \"Account servicing\", \"Closing your account\": \"Account servicing\", \"Managing an account\": \"Account servicing\", \"Managing, opening, or closing your mobile wallet account\": \"Account servicing\", \"Opening an account\": \"Account servicing\", \"Problem getting a card or closing an account\": \"Account servicing\", \"Trouble accessing funds in your mobile or digital wallet\": \"Account servicing\", \"Trouble using the card\": \"Account servicing\", \"Trouble using your card\": \"Account servicing\", \"Problem caused by your funds being low\": \"Account servicing\", \"Managing the loan or lease\": \"Account servicing\", \"Fraud or scam\": \"Disputes and fraud\", \"Money was not available when promised\": \"Disputes and fraud\", \"Other transaction problem\": \"Disputes and fraud\", \"Problem with a purchase or transfer\": \"Disputes and fraud\", \"Problem with a purchase shown on your statement\": \"Disputes and fraud\", \"Unauthorized transactions or other transaction problem\": \"Disputes and fraud\", \"Wrong amount charged or received\": \"Disputes and fraud\", \"Problem with a lender or other company charging your account\": \"Disputes and fraud\", \"Can't stop withdrawals from your bank account\": \"Disputes and fraud\", \"Money was taken from your bank account on the wrong day or for the wrong amount\": \"Disputes and fraud\", \"Charged fees or interest you didn't expect\": \"Payments and collections\", \"Fees or interest\": \"Payments and collections\", \"Loan payment wasn't credited to your account\": \"Payments and collections\", \"Problem when making payments\": \"Payments and collections\", \"Problem with the payoff process at the end of the loan\": \"Payments and collections\", \"Problems at the end of the loan or lease\": \"Payments and collections\", \"Struggling to pay your bill\": \"Payments and collections\", \"Struggling to pay your loan\": \"Payments and collections\", \"Unexpected or other fees\": \"Payments and collections\", \"Getting a credit card\": \"Originations\", \"Getting a line of credit\": \"Originations\", \"Getting a loan or lease\": \"Originations\", \"Getting the loan\": \"Originations\", \"Received a loan you didn't apply for\": \"Originations\", \"Problem with additional add-on products or services\": \"Originations\", \"Incorrect information on your report\": \"Credit reporting\", \"Problem with a company's investigation into an existing problem\": \"Credit reporting\", \"Repossession\": \"Asset recovery\", \"Vehicle was repossessed or sold the vehicle\": \"Asset recovery\", \"Advertising\": \"General enquiries\", \"Advertising and marketing, including promotional offers\": \"General enquiries\", \"Can't contact lender or servicer\": \"General enquiries\", \"Confusing or missing disclosures\": \"General enquiries\", \"Other features, terms, or problems\": \"General enquiries\", \"Other service problem\": \"General enquiries\", \"Problem with customer service\": \"General enquiries\", \"OTHER\": \"HUMAN_REVIEW\"};\nconst THRESHOLD = 0.7;\nconst REASONS = {\"OK_PROPOSED\": \"passed all checks\", \"REJECT_MALFORMED_OUTPUT\": \"model did not return valid JSON\", \"REJECT_QUEUE_NOT_IN_PRODUCT\": \"model proposed a queue that does not exist for this product\", \"REJECT_OUT_OF_TAXONOMY\": \"no queue on this product matches the complaint\", \"REJECT_LOW_CONFIDENCE\": \"confidence below the routing threshold\", \"REJECT_EVIDENCE_NOT_VERBATIM\": \"evidence quote is not verbatim from the complaint\", \"ERROR_MODEL_CALL\": \"the model call itself failed\"};\n\nconst input = $('Normalise complaint').first().json;\nconst product = input.product;\nconst raw = $input.first().json.choices?.[0]?.message?.content ?? '{}';\n\nlet parsed = {}, malformed = false;\ntry { parsed = JSON.parse(raw); } catch (e) { malformed = true; }\n\nconst queue = String(parsed.queue ?? '');\nconst confidence = Number(parsed.confidence ?? 0);\nconst evidence = String(parsed.evidence ?? '');\n\nconst validQueues = TAXONOMY[product] ?? ['OTHER'];\nconst queueIsValid = validQueues.includes(queue);\n// The quote must actually appear in the complaint. A fabricated quote manufactures false\n// justification, which is worse than giving no justification at all.\nconst evidenceIsVerbatim = evidence.length > 0 &&\n  input.narrative.toLowerCase().includes(evidence.slice(0, 60).toLowerCase());\n\n// Guard order is declared, not emergent. A complaint failing two guards is always\n// reported under the first, so the reason-code distribution stays comparable over time.\nlet code;\nif (malformed)                   code = 'REJECT_MALFORMED_OUTPUT';\nelse if (!queueIsValid)          code = 'REJECT_QUEUE_NOT_IN_PRODUCT';\nelse if (queue === 'OTHER')      code = 'REJECT_OUT_OF_TAXONOMY';\nelse if (confidence < THRESHOLD) code = 'REJECT_LOW_CONFIDENCE';\nelse if (!evidenceIsVerbatim)    code = 'REJECT_EVIDENCE_NOT_VERBATIM';\nelse                             code = 'OK_PROPOSED';\n\nconst decision = code === 'OK_PROPOSED' ? 'PROPOSE_TO_HANDLER' : 'HUMAN_REVIEW';\n\nreturn [{ json: {\n  product,\n  proposed_queue: queueIsValid ? queue : null,\n  proposed_team: code === 'OK_PROPOSED' ? (QUEUE_TO_TEAM[queue] ?? 'HUMAN_REVIEW') : 'HUMAN_REVIEW',\n  confidence,\n  evidence,\n  evidence_is_verbatim: evidenceIsVerbatim,\n  decision,\n  reason_code: code,\n  reason: REASONS[code],\n  narrative: input.narrative,\n}}];\n"
+      },
+      "id": "validate-and-route",
+      "name": "Validate and route",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.decision }}",
+              "rightValue": "PROPOSE_TO_HANDLER",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "safe-to-propose?",
+      "name": "Safe to propose?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        540,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a",
+              "name": "outcome",
+              "value": "PROPOSED",
+              "type": "string"
+            },
+            {
+              "id": "b",
+              "name": "team",
+              "value": "={{ $json.proposed_team }}",
+              "type": "string"
+            },
+            {
+              "id": "c",
+              "name": "queue",
+              "value": "={{ $json.proposed_queue }}",
+              "type": "string"
+            },
+            {
+              "id": "d",
+              "name": "why_this_team",
+              "value": "={{ $json.evidence }}",
+              "type": "string"
+            },
+            {
+              "id": "e",
+              "name": "confidence",
+              "value": "={{ $json.confidence }}",
+              "type": "number"
+            },
+            {
+              "id": "f",
+              "name": "handler_action",
+              "value": "Confirm or override. The complaint is not routed until you do.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "propose-to-handler",
+      "name": "Propose to handler",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        780,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a",
+              "name": "outcome",
+              "value": "HUMAN_REVIEW",
+              "type": "string"
+            },
+            {
+              "id": "b",
+              "name": "team",
+              "value": "Unassigned \u2014 needs a person",
+              "type": "string"
+            },
+            {
+              "id": "c",
+              "name": "why_no_proposal",
+              "value": "={{ $json.reason }}",
+              "type": "string"
+            },
+            {
+              "id": "r",
+              "name": "reason_code",
+              "value": "={{ $json.reason_code }}",
+              "type": "string"
+            },
+            {
+              "id": "d",
+              "name": "confidence",
+              "value": "={{ $json.confidence }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-to-human-review",
+      "name": "Send to human review",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        780,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "Run demo": {
+      "main": [
+        [
+          {
+            "node": "Sample complaint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sample complaint": {
+      "main": [
+        [
+          {
+            "node": "Normalise complaint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complaint received": {
+      "main": [
+        [
+          {
+            "node": "Normalise complaint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalise complaint": {
+      "main": [
+        [
+          {
+            "node": "Classify complaint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify complaint": {
+      "main": [
+        [
+          {
+            "node": "Validate and route",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and route": {
+      "main": [
+        [
+          {
+            "node": "Safe to propose?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Safe to propose?": {
+      "main": [
+        [
+          {
+            "node": "Propose to handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to human review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

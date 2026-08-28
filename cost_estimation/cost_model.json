@@ -1,0 +1,68 @@
+{
+  "volume": {
+    "complaints_per_year": 2426,
+    "current_account_complaints": 1850,
+    "credit_card_complaints": 576
+  },
+  "labour": {
+    "loaded_hourly_eur": 37.74,
+    "hours_now": 243,
+    "hours_assisted": 121,
+    "current_triage_cost_eur": 9156,
+    "annual_labour_saving_eur": 4578
+  },
+  "running_cost": {
+    "api_per_complaint_eur": 0.000121,
+    "api_per_year_eur": 0.29,
+    "platform_per_year_eur": 1800,
+    "model_review_per_year_eur": 5600,
+    "total_per_year_eur": 7400,
+    "net_per_year_eur": 2822
+  },
+  "upfront_fixed_fee": {
+    "Phase 0 \u2014 Discovery and expert labelling": {
+      "days": 8,
+      "fee_eur": 5600
+    },
+    "Phase 1 \u2014 Pilot build and 60-day shadow run": {
+      "days": 12,
+      "fee_eur": 8400
+    },
+    "Phase 2 \u2014 Deployment, if the pilot passes": {
+      "days": 15,
+      "fee_eur": 10500
+    }
+  },
+  "upfront_to_end_of_pilot_eur": 14000,
+  "upfront_full_eur": 24500,
+  "break_even": {
+    "net_annual_cost_eur": 2822,
+    "ombudsman_case_fee_eur": 760,
+    "avoided_ombudsman_cases_to_cover_running_cost": 3.7,
+    "complaints_per_year_for_labour_alone_to_cover": 3921,
+    "current_accounts_needed_for_labour_alone_to_cover": 529915
+  },
+  "assumption_sources": {
+    "current_accounts": "assumption: mid-size firm, ~250k retail customers",
+    "credit_cards": "assumption: ~32% card cross-hold",
+    "ca_complaints_per_1000_half": "FCA aggregate complaints data 2025 H2, current accounts",
+    "cc_complaints_per_1000_half": "FCA aggregate complaints data 2025 H2, credit cards",
+    "uphold_rate_pct": "FCA aggregate complaints data 2025 H2",
+    "avg_redress_gbp": "FCA aggregate complaints data 2025 H2",
+    "ombudsman_case_fee_gbp": "Financial Ombudsman Service case fee, frozen for 2025/26",
+    "ombudsman_free_cases": "FOS: most businesses receive 3 free cases a year",
+    "handler_salary_eur": "midpoint of NL banking CS ~EUR39.5k and IE complaints investigator ~EUR52k",
+    "input_tokens": "measured, n=12, classifier/prompt.py",
+    "output_tokens": "measured, n=12",
+    "price_in_per_1m_usd": "OpenAI list price, gpt-4o-mini",
+    "price_out_per_1m_usd": "OpenAI list price, gpt-4o-mini",
+    "triage_minutes_now": "judgement: read, categorise and route one complaint",
+    "triage_minutes_assisted": "judgement: confirm or override a proposal, still reading it",
+    "employer_oncost_pct": "judgement: employer social costs on gross salary",
+    "productive_hours_year": "judgement: FTE hours net of leave, training, admin",
+    "platform_eur_month": "judgement: n8n hosting + LangSmith + logging",
+    "review_days_per_quarter": "judgement: quarterly accuracy review and prompt maintenance",
+    "day_rate_eur": "set by the consultant"
+  },
+  "gbp_eur": 1.17
+}
