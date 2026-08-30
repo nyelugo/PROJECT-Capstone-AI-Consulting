@@ -22,6 +22,11 @@ business whose reasoning you can watch happen on a screen.
 | Round 1 presentation deck | **Done** — `presentation/`, 14 slides + speaker notes |
 | `round1_decision.md` | **Scaffolded** — `feedback/`, filled in after the staff presentation |
 
+## What each part does
+
+`STACK.md` is the high-level map: what each of the seven elements is for, how a complaint
+moves through them, why there are two LangSmith artifacts, and where the honest limits are.
+
 ## The data
 
 **Source:** [CFPB Consumer Complaint Database](https://www.consumerfinance.gov/data-research/consumer-complaints/)
