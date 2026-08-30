@@ -32,6 +32,32 @@ So the workflow proposes and a person confirms. Every branch ends at a human. Th
 on offer in Round 1 is a handler who opens a complaint already read, already categorised,
 with the reason visible — not a headcount reduction.
 
+## Input is validated before anything is spent
+
+`Normalise complaint` is a Code node, not a field-mapper. It validates what the *caller*
+sent before any model call happens — which matters most for the webhook, because that
+entry point is untrusted.
+
+| Check | Rejected when |
+|---|---|
+| `product` is a non-empty string | missing, or not a string |
+| `product` exists in the taxonomy | e.g. `"Mortgage"` — a product this system does not handle |
+| `narrative` is a non-empty string | missing, or not a string |
+| `narrative` is at least 20 characters | too short to classify |
+| `narrative` is capped at 6,000 characters | truncated, not rejected |
+
+Failure throws `REJECT_INVALID_INPUT: <reason>` and the execution stops there.
+
+The point is where it stops. Previously an unknown product flowed through, the classifier
+was offered only `OTHER`, and the complaint was rejected — **after** paying for an API
+call to reach a conclusion that was knowable up front. Verified: with `product` set to
+`"Mortgage"`, execution 19402 ran `Run demo → Sample complaint → Normalise complaint` and
+halted. `Classify complaint` never executed.
+
+This makes the workflow symmetrical. Five guards check what the model says; five checks
+verify what the caller says. Trusting the input while interrogating the output is the
+wrong way round.
+
 ## Tracing sits beside the decision, never in it
 
 `Validate and route` fans out: the routing decision goes to `Safe to propose?`, and the

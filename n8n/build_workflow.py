@@ -30,6 +30,39 @@ SAMPLE_PRODUCT = str(row["Product"])
 SAMPLE_NARRATIVE = str(row["Consumer complaint narrative"])
 SAMPLE_TRUTH = str(row["Issue"])
 
+
+# Input validation at the boundary. The output guards check what the MODEL says; this
+# checks what the CALLER says, which matters more for the webhook - that entry point is
+# untrusted. Rejecting here costs nothing; rejecting after the classifier costs an API
+# call to reach a conclusion that was knowable up front.
+NORMALISE_CODE = """// Validate and normalise the incoming complaint BEFORE any model call.
+// Both entry points converge here: the manual demo item, and the webhook body.
+const TAXONOMY = %s;
+const MIN_CHARS = 20;
+const MAX_CHARS = 6000;
+
+const src = $input.first().json;
+const raw = src.body ?? src;                       // webhook nests under .body
+
+const clean = (v) => (typeof v === 'string' ? v.trim() : v);
+const product   = clean(raw.product);
+let   narrative = clean(raw.narrative);
+
+const reject = (why) => {
+  // Fail fast and loudly. No model call is made, so a malformed request costs nothing.
+  throw new Error('REJECT_INVALID_INPUT: ' + why);
+};
+
+if (typeof product !== 'string' || !product)  reject('product is missing or not a string');
+if (!(product in TAXONOMY))                   reject(`unknown product ${JSON.stringify(product)} - expected one of: ${Object.keys(TAXONOMY).join(', ')}`);
+if (typeof narrative !== 'string' || !narrative) reject('narrative is missing or not a string');
+if (narrative.length < MIN_CHARS)             reject(`narrative is ${narrative.length} characters; at least ${MIN_CHARS} are needed to classify`);
+
+if (narrative.length > MAX_CHARS) narrative = narrative.slice(0, MAX_CHARS);
+
+return [{ json: { product, narrative, narrative_chars: narrative.length } }];
+""" % json.dumps(P.PRODUCT_QUEUES)
+
 PARSE_CODE = """// Parse the model's answer, then validate it before trusting it.
 // Reason CODES and their order are generated from classifier/decide.py so the n8n POC and
 // the LangSmith monitoring can never describe the same rejection differently.
@@ -100,14 +133,8 @@ nodes = [
             {"id": "p", "name": "product", "value": SAMPLE_PRODUCT, "type": "string"},
             {"id": "n", "name": "narrative", "value": SAMPLE_NARRATIVE, "type": "string"}]},
         "options": {}}),
-    node("Normalise complaint", "n8n-nodes-base.set", 3.4, [-120, 160], {
-        "assignments": {"assignments": [
-            {"id": "p", "name": "product",
-             "value": "={{ $json.product || $json.body?.product }}", "type": "string"},
-            {"id": "n", "name": "narrative",
-             "value": "={{ ($json.narrative || $json.body?.narrative || '').slice(0, 6000) }}",
-             "type": "string"}]},
-        "options": {}}),
+    node("Normalise complaint", "n8n-nodes-base.code", 2, [-120, 160], {
+        "jsCode": NORMALISE_CODE}),
     node("Classify complaint", "n8n-nodes-base.httpRequest", 4.2, [100, 160], {
         "method": "POST", "url": "https://api.openai.com/v1/chat/completions",
         "authentication": "predefinedCredentialType", "nodeCredentialType": "openAiApi",
