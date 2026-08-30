@@ -32,7 +32,7 @@ Sample: 240 complaints, 40 per product, stratified, seed 42. Ground truth: the C
 | Evidence quote genuinely verbatim | 93.8% | 99.6% |
 | Mean tokens per complaint | 726 | 723 |
 
-A model roughly 6× more expensive buys about 4 percentage points. **The bottleneck is not
+A model roughly 17× more expensive buys about 4 percentage points. **The bottleneck is not
 the model.**
 
 ## Three things that were wrong, and how they were found
