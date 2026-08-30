@@ -39,13 +39,18 @@ def build_dataset(client, n: int):
         description=("Public CFPB complaints (no personal data; narratives scrubbed by the "
                      "CFPB). Ground truth is the complainant's own issue selection, which is "
                      "why it is a weak yardstick — see classifier/FINDINGS.md."))
+    # One dict per example. The older form - parallel inputs=[...] / outputs=[...] lists -
+    # falls through to **kwargs, which the SDK labels "Legacy keyword args" and routes to a
+    # deprecated endpoint. That is what raises the "Legacy API usage detected" banner in the
+    # LangSmith UI. Deadline for the old endpoint is 2027-01-31.
     client.create_examples(
         dataset_id=ds.id,
-        inputs=[{"customer_ref": TC.pseudonymise(r["Complaint ID"]),
-                 "product": r["Product"],
-                 "narrative": r["Consumer complaint narrative"]} for _, r in s.iterrows()],
-        outputs=[{"truth_queue": r["truth_queue"], "truth_team": r["truth_team"]}
-                 for _, r in s.iterrows()])
+        examples=[{
+            "inputs": {"customer_ref": TC.pseudonymise(r["Complaint ID"]),
+                       "product": r["Product"],
+                       "narrative": r["Consumer complaint narrative"]},
+            "outputs": {"truth_queue": r["truth_queue"], "truth_team": r["truth_team"]},
+        } for _, r in s.iterrows()])
     return ds, len(s)
 
 
