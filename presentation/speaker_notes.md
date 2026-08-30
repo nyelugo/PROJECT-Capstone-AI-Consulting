@@ -40,7 +40,7 @@ Now let me show you a decision you can inspect.
 
 Here is the demo workflow processing 1 public CFPB complaint. It proposes the Disputes and Fraud team, quotes the customer’s words as evidence, and stops for human review.
 
-LangSmith records every evaluation outcome. Of 60 cases, 52 produced a proposal; 4 stopped for low confidence and 4 because the quoted evidence was absent from the complaint.
+On the right is a different case — one of the four the quote check stopped. LangSmith records every evaluation outcome. Of 60 cases, 52 produced a proposal; 4 stopped for low confidence and 4 because the quoted evidence was absent from the complaint.
 
 Those fabricated quotations matter most. Validation caught them and sent each case to human review.
 
