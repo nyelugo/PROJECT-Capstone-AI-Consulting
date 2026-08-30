@@ -139,6 +139,11 @@ Experiment `triage-round1-ebb7facb` on the **EU** workspace, 60 traced decisions
 [Dataset](https://eu.smith.langchain.com/o/bdd29afc-aefb-432d-a118-2ee71dc41429/datasets/074b52a4-d07a-46e6-9b10-7aac69b24c79)
 · [Experiment](https://eu.smith.langchain.com/o/bdd29afc-aefb-432d-a118-2ee71dc41429/datasets/074b52a4-d07a-46e6-9b10-7aac69b24c79/compare?selectedSessions=148f16a5-714e-42c0-ac94-c37c61f1ca65)
 
+There are two LangSmith artifacts and they live in different places: the **evaluation**
+(`triage-round1-ebb7facb`) under Datasets & Experiments, and a **tracing project**
+(`capstone-triage-live`) under Tracing, which is what the Monitoring tab charts. See
+`langsmith/monitoring_notes.md`.
+
 Both links need workspace access. `langsmith/traces_export.json` and
 `langsmith/experiment_summary.json` carry the same records with no login required, and
 `langsmith/screenshots/` shows the trace view.

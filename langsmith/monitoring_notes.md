@@ -39,6 +39,24 @@ Reproduce: `python langsmith/run_monitoring_sample.py 60` then
 > and then returns 403 on every call, which reads as a bad key rather than a wrong region.
 > `configure_langsmith()` sets the endpoint explicitly for that reason.
 
+## Two artifacts, and where each appears in LangSmith
+
+This trips people up, so it is worth stating plainly. LangSmith files a session under
+**Datasets & Experiments** when a reference dataset is attached to it, and under
+**Tracing** when one is not. The **Monitoring** tab charts tracing projects only.
+
+| Artifact | Project | Where it appears | What it answers |
+|---|---|---|---|
+| Evaluation | `triage-round1-ebb7facb` | Datasets & Experiments | "How well does it agree with the labels we have?" |
+| Live tracing | `capstone-triage-live` | Tracing, and charted under Monitoring | "What is it doing right now, decision by decision?" |
+
+The evaluation came first and carries the measurement. The tracing project was added
+because a slide that says the system is *watched* should not lead to an empty Monitoring
+tab — and because in production, monitoring means the second question, not the first.
+
+Reproduce the tracing project: `python langsmith/emit_live_traces.py 20`. It runs with
+`environment=demo`, never `live`.
+
 ## Results
 
 | Metric | Rate | Measured on |
