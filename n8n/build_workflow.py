@@ -14,6 +14,8 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
+LANGSMITH_ENDPOINT = "https://eu.api.smith.langchain.com"   # EU workspace
+LANGSMITH_PROJECT = "capstone-triage-live"                  # tracing project, not the eval
 sys.path.insert(0, str(ROOT / "classifier"))
 import decide as D            # noqa: E402
 import prompt as P            # noqa: E402
@@ -128,7 +130,35 @@ nodes = [
              "name": os.environ.get("N8N_OPENAI_CREDENTIAL_NAME", "Ugo_OpenAI")}}),
     node("Validate and route", "n8n-nodes-base.code", 2, [320, 160], {
         "jsCode": PARSE_CODE}),
-    node("Safe to propose?", "n8n-nodes-base.if", 2, [540, 160], {
+    node("Trace to LangSmith", "n8n-nodes-base.httpRequest", 4.2, [560, 400], {
+        "method": "POST", "url": LANGSMITH_ENDPOINT + "/runs",
+        "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth",
+        "sendBody": True, "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n"
+                    # LangSmith requires a 32-hex or UUID run id; an execution id with a
+                    # timestamp appended is rejected with 422.
+                    "  id: Array.from({length:32},()=>Math.floor(Math.random()*16).toString(16)).join(''),\n"
+                    "  name: 'complaint_triage_n8n',\n"
+                    "  run_type: 'chain',\n"
+                    "  start_time: new Date().toISOString(),\n"
+                    "  end_time: new Date().toISOString(),\n"
+                    f"  session_name: {json.dumps(LANGSMITH_PROJECT)},\n"
+                    "  inputs: { product: $json.product, narrative_chars: ($json.narrative || '').length },\n"
+                    "  outputs: {\n"
+                    "    decision: $json.decision, reason_code: $json.reason_code,\n"
+                    "    proposed_team: $json.proposed_team, proposed_queue: $json.proposed_queue,\n"
+                    "    confidence: $json.confidence, evidence_is_verbatim: $json.evidence_is_verbatim,\n"
+                    "    environment: 'demo', source: 'n8n'\n"
+                    "  }\n"
+                    "}) }}",
+        "options": {}},
+         # Observing must never affect the observed: if LangSmith is unreachable the
+         # complaint still gets routed. Telemetry is fire-and-forget.
+         onError="continueRegularOutput",
+         credentials={"httpHeaderAuth": {
+             "id": os.environ.get("N8N_LANGSMITH_CREDENTIAL_ID", "SET_ON_IMPORT"),
+             "name": os.environ.get("N8N_LANGSMITH_CREDENTIAL_NAME", "Ugo_LangSmith")}}),
+    node("Safe to propose?", "n8n-nodes-base.if", 2, [760, 160], {
         "conditions": {"options": {"caseSensitive": True, "version": 2},
                        "combinator": "and",
                        "conditions": [{"id": "c1",
@@ -136,7 +166,7 @@ nodes = [
                                        "rightValue": "PROPOSE_TO_HANDLER",
                                        "operator": {"type": "string", "operation": "equals"}}]},
         "options": {}}),
-    node("Propose to handler", "n8n-nodes-base.set", 3.4, [780, 60], {
+    node("Propose to handler", "n8n-nodes-base.set", 3.4, [1000, 60], {
         "assignments": {"assignments": [
             {"id": "a", "name": "outcome", "value": "PROPOSED", "type": "string"},
             {"id": "b", "name": "team", "value": "={{ $json.proposed_team }}", "type": "string"},
@@ -147,7 +177,7 @@ nodes = [
              "value": "Confirm or override. The complaint is not routed until you do.",
              "type": "string"}]},
         "options": {}}),
-    node("Send to human review", "n8n-nodes-base.set", 3.4, [780, 280], {
+    node("Send to human review", "n8n-nodes-base.set", 3.4, [1000, 280], {
         "assignments": {"assignments": [
             {"id": "a", "name": "outcome", "value": "HUMAN_REVIEW", "type": "string"},
             {"id": "b", "name": "team", "value": "Unassigned — needs a person", "type": "string"},
@@ -163,7 +193,13 @@ connections = {
     "Complaint received": {"main": [[{"node": "Normalise complaint", "type": "main", "index": 0}]]},
     "Normalise complaint": {"main": [[{"node": "Classify complaint", "type": "main", "index": 0}]]},
     "Classify complaint": {"main": [[{"node": "Validate and route", "type": "main", "index": 0}]]},
-    "Validate and route": {"main": [[{"node": "Safe to propose?", "type": "main", "index": 0}]]},
+    # Fan-out: the routing decision and the telemetry leave the same output in parallel.
+    # Tracing is a leaf - nothing downstream reads its response - so if LangSmith is slow,
+    # unreachable or returns rubbish, the complaint is routed exactly as it would have been.
+    "Validate and route": {"main": [[
+        {"node": "Safe to propose?", "type": "main", "index": 0},
+        {"node": "Trace to LangSmith", "type": "main", "index": 0},
+    ]]},
     "Safe to propose?": {"main": [
         [{"node": "Propose to handler", "type": "main", "index": 0}],
         [{"node": "Send to human review", "type": "main", "index": 0}]]},

@@ -12,12 +12,12 @@ the sentence that drove that decision, and hands both to a human handler. It doe
 route anything on its own.
 
 ```
-Run demo ─┐
-          ├─→ Normalise → Classify (OpenAI) → Validate and route → Safe to propose? ─┬─→ Propose to handler
-Webhook ──┘                                                                          └─→ Send to human review
+Run demo ─┐                                                    ┌─→ Safe to propose? ─┬─→ Propose to handler
+          ├─→ Normalise → Classify (OpenAI) → Validate and route                     └─→ Send to human review
+Webhook ──┘                                                    └─→ Trace to LangSmith   (leaf)
 ```
 
-Nine nodes. Two entry points: a **manual trigger** carrying a real complaint from the
+Ten nodes. Two entry points: a **manual trigger** carrying a real complaint from the
 corpus for demonstration, and a **webhook** for how it would actually receive complaints
 in production.
 
@@ -31,6 +31,28 @@ roughly four in ten complaints to the wrong team, silently.
 So the workflow proposes and a person confirms. Every branch ends at a human. The value
 on offer in Round 1 is a handler who opens a complaint already read, already categorised,
 with the reason visible — not a headcount reduction.
+
+## Tracing sits beside the decision, never in it
+
+`Validate and route` fans out: the routing decision goes to `Safe to propose?`, and the
+same item goes to `Trace to LangSmith`, which POSTs it to the `capstone-triage-live`
+tracing project. Nothing reads the trace node's response — it is a leaf.
+
+That shape is deliberate, and it was learned the hard way. Placed inline, the HTTP node
+replaced the item payload with the LangSmith response, so the IF downstream lost
+`decision` and every complaint fell to human review. **Observing broke the observed.**
+On the parallel branch, with `onError: continueRegularOutput`, LangSmith can 403, 422 or
+time out and the complaint is still routed correctly — which was demonstrated
+accidentally while the credential was being fixed.
+
+Two consequences worth stating in the pitch:
+
+* Running the workflow now produces a LangSmith trace. The system demonstrated and the
+  system monitored are the same system.
+* Every decision is traced, not only the successes — the node sits before the branch, so
+  rejections carry their reason code into monitoring too.
+
+Run ids are 32 hex characters; LangSmith rejects anything else with a 422.
 
 ## The validation layer is the interesting part
 

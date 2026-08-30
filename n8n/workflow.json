@@ -127,6 +127,33 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "https://eu.api.smith.langchain.com/runs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  id: Array.from({length:32},()=>Math.floor(Math.random()*16).toString(16)).join(''),\n  name: 'complaint_triage_n8n',\n  run_type: 'chain',\n  start_time: new Date().toISOString(),\n  end_time: new Date().toISOString(),\n  session_name: \"capstone-triage-live\",\n  inputs: { product: $json.product, narrative_chars: ($json.narrative || '').length },\n  outputs: {\n    decision: $json.decision, reason_code: $json.reason_code,\n    proposed_team: $json.proposed_team, proposed_queue: $json.proposed_queue,\n    confidence: $json.confidence, evidence_is_verbatim: $json.evidence_is_verbatim,\n    environment: 'demo', source: 'n8n'\n  }\n}) }}",
+        "options": {}
+      },
+      "id": "trace-to-langsmith",
+      "name": "Trace to LangSmith",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        400
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tBmGYrH4cGT3ytfy",
+          "name": "Ugo_LangSmith"
+        }
+      }
+    },
+    {
+      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -152,7 +179,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        540,
+        760,
         160
       ]
     },
@@ -205,7 +232,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        780,
+        1000,
         60
       ]
     },
@@ -252,7 +279,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        780,
+        1000,
         280
       ]
     }
@@ -318,6 +345,11 @@
         [
           {
             "node": "Safe to propose?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Trace to LangSmith",
             "type": "main",
             "index": 0
           }
