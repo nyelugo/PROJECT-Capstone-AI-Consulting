@@ -91,6 +91,26 @@ single arbitrary key from the record, so the column shows `n8n`, `demo` or `gpt-
 as often as it shows the decision. That is a display artifact — open the row for the
 full record.
 
+### What the trace does and does not cover
+
+The trace fires from `Validate and route`, so nothing after it is recorded. That is almost
+always fine, because nothing after it decides anything:
+
+* `Safe to propose?` branches purely on `decision`, which is traced — so which branch ran
+  is implied by the record.
+* Both Set nodes only rename and repackage fields that are already traced.
+
+Two exceptions were found by checking rather than assuming. `reason` is not sent, but it
+is a lookup of `reason_code` and fully recoverable. **`evidence` was not sent and was not
+recoverable from anything** — so monitoring could say a decision passed the verbatim check
+without recording what the quote said, which is the answer to "why was this routed here?".
+It is now traced.
+
+The remaining limit is worth stating plainly: **the trace records the decision, not the
+delivery.** Today `Propose to handler` is a Set node, so there is nothing to fail. When it
+becomes a write to a case management system, a successful trace will no longer prove the
+proposal reached a human, and a second event after delivery will be needed.
+
 ## The validation layer is the interesting part
 
 The `Validate and route` node exists because a language model's answer is a claim, not a

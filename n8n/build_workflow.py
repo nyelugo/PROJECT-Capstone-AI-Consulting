@@ -175,6 +175,12 @@ nodes = [
                     "    decision: $json.decision, reason_code: $json.reason_code,\n"
                     "    proposed_team: $json.proposed_team, proposed_queue: $json.proposed_queue,\n"
                     "    confidence: $json.confidence, evidence_is_verbatim: $json.evidence_is_verbatim,\n"
+                    # The quote the model relied on. Without it, monitoring can say a
+                    # decision passed the verbatim check but not what the check passed —
+                    # and the quote is the answer to "why was this routed here?".
+                    # NOTE: this is a fragment of customer text. Public CFPB data here;
+                    # sending it in production is a Round 2 GDPR decision, not a default.
+                    "    evidence: $json.evidence,\n"
                     "    environment: 'demo', source: 'n8n'\n"
                     "  }\n"
                     "}) }}",
