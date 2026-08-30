@@ -61,6 +61,24 @@ the *complainant* chose from a dropdown. That label is not expert routing ground
 no accuracy figure exists for this system yet. Creating one is what Phase 0 buys. See
 `classifier/FINDINGS.md`.
 
+## Reproducing the numbers
+
+`evidence_walkthrough.ipynb` recomputes every figure quoted in the pitch from the
+committed evidence files and reconciles them against what the deck states. It makes **no
+API calls and needs no keys**, so it costs nothing to run.
+
+```bash
+conda activate bootcamp-env
+jupyter lab evidence_walkthrough.ipynb      # Kernel -> Restart & Run All
+```
+
+The last table is the point: 18 figures, computed here versus stated in the deck, with a
+MISMATCH flag. It currently reports 0. If a figure ever drifts, that table says so before
+a grader does.
+
+It is **not** the live demo — the demo is the Streamlit dashboard plus the n8n and
+LangSmith tabs, listed in the notebook's final section.
+
 ## Setup
 
 ```bash
@@ -84,6 +102,7 @@ classifier/         prompt, taxonomy, team map, decision codes, FINDINGS.md
 cost_estimation/    cost_model.py (all figures derived) + analysis + timeline + assumptions table
 feedback/           round1_decision.md — KEEP or CHANGE, completed after the presentation
 presentation/       round1_pitch.pptx + .pdf + speaker_notes.md
+evidence_walkthrough.ipynb   recomputes and reconciles every figure in the pitch
 data_prep.py        curation, with both data-quality corrections
 fetch_data.sh       re-download the raw pull
 PLAN.md             locked decisions, rubric weights, open questions
