@@ -61,6 +61,21 @@ the *complainant* chose from a dropdown. That label is not expert routing ground
 no accuracy figure exists for this system yet. Creating one is what Phase 0 buys. See
 `classifier/FINDINGS.md`.
 
+## Running the dashboard
+
+Double-click **`run_dashboard.command`** (macOS) or **`run_dashboard.bat`** (Windows).
+It activates `bootcamp-env`, checks the data is present, stops any earlier instance so the
+app always lands on the same port, and opens `http://localhost:8501`.
+
+Or from a terminal:
+
+```bash
+conda activate bootcamp-env
+streamlit run dashboard/app.py
+```
+
+Leave the launcher window open while presenting; Ctrl-C there stops the app.
+
 ## Reproducing the numbers
 
 `evidence_walkthrough.ipynb` recomputes every figure quoted in the pitch from the
