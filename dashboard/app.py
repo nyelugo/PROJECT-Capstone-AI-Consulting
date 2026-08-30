@@ -92,7 +92,7 @@ fig = go.Figure(go.Scatter(
     line=dict(color=BLUE, width=2), marker=dict(size=8, color=BLUE),
     hovertemplate="Week %{x}<br><b>%{y:,} complaints</b><extra></extra>"))
 fig.update_yaxes(rangemode="tozero")
-st.plotly_chart(style(fig, 300, ytitle="Complaints"), use_container_width=True)
+st.plotly_chart(style(fig, 300, ytitle="Complaints"), width='stretch')
 st.markdown(
     f"<div class='takeaway'>Between {w['complaints'].min():,} and "
     f"{w['complaints'].max():,} complaints a week, averaging "
@@ -115,7 +115,7 @@ with left:
         hovertemplate="%{y}<br><b>%{x:,} complaints</b><extra></extra>"))
     f1.update_yaxes(autorange="reversed")
     f1.update_xaxes(showticklabels=False, range=[0, p["complaints"].max() * 1.18])
-    st.plotly_chart(style(f1, 320), use_container_width=True)
+    st.plotly_chart(style(f1, 320), width='stretch')
 
 with right:
     st.subheader("Where they cost money")
@@ -128,7 +128,7 @@ with right:
         hovertemplate="%{y}<br><b>%{x:.1f}% closed with money paid out</b><extra></extra>"))
     f2.update_yaxes(autorange="reversed")
     f2.update_xaxes(showticklabels=False, range=[0, q["monetary_pct"].max() * 1.2])
-    st.plotly_chart(style(f2, 320), use_container_width=True)
+    st.plotly_chart(style(f2, 320), width='stretch')
 
 cc, cv = p.iloc[p["monetary_pct"].argmax()], q.iloc[-1]
 st.markdown(
@@ -149,7 +149,7 @@ f3 = go.Figure(go.Bar(
     hovertemplate="%{y}<br><b>%{x:,} complaints</b><extra></extra>"))
 f3.update_yaxes(autorange="reversed")
 f3.update_xaxes(showticklabels=False, range=[0, t["complaints"].max() * 1.18])
-st.plotly_chart(style(f3, 380), use_container_width=True)
+st.plotly_chart(style(f3, 380), width='stretch')
 st.markdown(
     f"<div class='takeaway'>The {M.TOP_N_ISSUES} darker bars are "
     f"<b>{h['top5_share_pct']:.1f}% of everything that arrives</b>, out of "
@@ -171,7 +171,7 @@ with left2:
         hovertemplate="%{y}<br><b>%{x:,} complaints</b><extra></extra>"))
     f4.update_yaxes(autorange="reversed")
     f4.update_xaxes(showticklabels=False, range=[0, r["complaints"].max() * 1.2])
-    st.plotly_chart(style(f4, 300), use_container_width=True)
+    st.plotly_chart(style(f4, 300), width='stretch')
 
 with right2:
     st.subheader("How much reading that is")
@@ -184,7 +184,7 @@ with right2:
                  annotation_position="top right",
                  annotation_font=dict(color=INK_2, size=12))
     st.plotly_chart(style(f5, 300, xtitle="Characters in the complaint"),
-                    use_container_width=True)
+                    width='stretch')
 
 st.markdown(
     f"<div class='takeaway'>Four in five complaints are resolved with an explanation "
@@ -215,8 +215,8 @@ with st.expander("See the underlying numbers as a table"):
         p[["Product", "complaints", "monetary_pct"]].rename(columns={
             "complaints": "Complaints", "monetary_pct": "Closed with money paid (%)"}
         ).style.format({"Closed with money paid (%)": "{:.1f}"}),
-        use_container_width=True, hide_index=True)
+        width='stretch', hide_index=True)
     st.dataframe(t[["Issue", "complaints", "share_pct"]].rename(columns={
         "complaints": "Complaints", "share_pct": "Share of all complaints (%)"}
     ).style.format({"Share of all complaints (%)": "{:.1f}"}),
-        use_container_width=True, hide_index=True)
+        width='stretch', hide_index=True)

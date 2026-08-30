@@ -63,18 +63,28 @@ no accuracy figure exists for this system yet. Creating one is what Phase 0 buys
 
 ## Running the dashboard
 
-Double-click **`run_dashboard.command`** (macOS) or **`run_dashboard.bat`** (Windows).
-It activates `bootcamp-env`, checks the data is present, stops any earlier instance so the
-app always lands on the same port, and opens `http://localhost:8501`.
-
-Or from a terminal:
+**For presenting — silent launch, no terminal window:**
 
 ```bash
-conda activate bootcamp-env
-streamlit run dashboard/app.py
+./make_desktop_app.sh          # once; builds "Capstone Dashboard.app" on the Desktop
 ```
 
-Leave the launcher window open while presenting; Ctrl-C there stops the app.
+Double-click the app. It starts the dashboard in the background, opens
+`http://localhost:8501`, and shows nothing else. A second double-click while it is already
+running just reopens the tab. Failures appear as a macOS dialog rather than silence.
+
+A `.command` file cannot do this — macOS always opens Terminal to run one — which is why
+the presenting launcher is an `.app` bundle.
+
+**For development — visible logs:**
+
+```bash
+./run_dashboard.command        # macOS, or run_dashboard.bat on Windows
+# or
+conda activate bootcamp-env && streamlit run dashboard/app.py
+```
+
+To stop it: `pkill -f "streamlit run dashboard/app.py"`.
 
 ## Reproducing the numbers
 
