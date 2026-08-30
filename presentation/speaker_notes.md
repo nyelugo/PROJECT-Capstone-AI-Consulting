@@ -1,30 +1,28 @@
 # Round 1 Presentation — Clean Speaker Notes
 
-## Main presentation — Slides 1–5
+## Main presentation — Slides 1–6
 
 ### Slide 1 — See exactly what the AI does
 
-Over dinner, you told me you do not trust AI because you cannot see what it does.
-
-So I am not asking you to believe a promise. I am going to show you 1 complaint-routing decision from start to finish.
-
-The workflow runs, its reasoning is visible, and every number traces to project evidence, including public complaint data from the U.S. Consumer Financial Protection Bureau, or CFPB.
+Over dinner, you told me you do not trust AI because you cannot see what it does. Today I will show you exactly what I am proposing, what the public evidence does and does not prove, and how we would test it safely with your data.
 
 ### Slide 2 — A mid-size bank needs AI it can inspect
 
-You asked 2 questions: what exactly is the AI, and how would you see what it is doing?
+I assessed 3 use cases: complaint triage, anomaly flagging, and reporting assistance. Complaint triage comes first because its recommendation and supporting evidence can be inspected, while a person keeps the final decision. I also ruled out a customer-facing chatbot and creditworthiness scoring. Here is the proposal in 1 minute.
 
-I assessed 3 use cases: complaint triage, anomaly flagging, and reporting assistance. I ranked them by inspectability, not the largest promised saving.
+### Slide 3 — Complaint triage is a practical, low-risk test of AI value
 
-Triage comes first because the system proposes a team, shows the supporting words, and lets a person confirm or reject it.
+Chloe, your firm receives customer complaints that have to be reviewed and routed to the right team, and today that is largely a manual process. That gives us a practical, low-risk way to test whether AI can create real value.
 
-I ruled out a chatbot because it can fail publicly in the firm’s voice, and creditworthiness scoring because it is an Annex III high-risk use under the EU AI Act.
+The assistant would read each complaint, suggest which team should handle it, and show the customer’s own words behind its recommendation. Your staff would still make every final decision.
 
-The fastest way to earn your trust is to be clear about what you should not buy.
+I have already tested the approach on public complaint data. It showed enough promise to justify a proper test, and importantly, it stopped rather than forcing an answer when its checks failed. But public labels are not a substitute for decisions made by your own experienced handlers.
 
-Now let me show you the opportunity suggested by public complaint data.
+So the next step is to test it against a representative sample of 300 of your historical complaints, then, if the results justify it, run a 60-day shadow pilot where nobody acts on the AI’s recommendations.
 
-### Slide 3 — 4 numbers define the opportunity
+What I am asking you to approve today is that controlled test—not an AI deployment.
+
+### Slide 4 — 4 numbers define the opportunity
 
 This dashboard uses public CFPB data as a proxy. These are not your firm’s numbers; Phase 0 measures your real complaint mix and volume.
 
@@ -36,7 +34,7 @@ The public data tells us where to investigate; your data decides what enters the
 
 Now let me show you a decision you can inspect.
 
-### Slide 4 — Every decision is visible — and uncertain cases stop
+### Slide 5 — Every decision is visible — and uncertain cases stop
 
 Here is the demo workflow processing 1 public CFPB complaint. It proposes the Disputes and Fraud team, quotes the customer’s words as evidence, and leaves the routing decision to a person.
 
@@ -48,7 +46,7 @@ The broader evaluation produced 60.5% team-level agreement against consumer-sele
 
 The demo is observable, but it does not establish deployment accuracy. Phase 0 creates expert labels from your complaints; Phase 1 measures performance in shadow mode. That is why the proposal is staged.
 
-### Slide 5 — €14,000 to decide, not €24,500 to deploy
+### Slide 6 — €14,000 to decide, not €24,500 to deploy
 
 The pricing basis is €700 for each of my consulting days, contracted as a fixed fee per phase.
 
@@ -66,13 +64,13 @@ The ask is €14,000 to reach an evidence-based decision, not €24,500 for a de
 
 That is my proposal. Thank you. For Round 2, I would most value your view on whether the evidence, controls, and staged investment make Phase 0 a credible next step.
 
-## Appendix for questions — Slides 7–14
+## Appendix for questions — Slides 8–15
 
-### Slide 6 — Supporting evidence
+### Slide 7 — Supporting evidence
 
 *No spoken notes.*
 
-### Slide 7 — Why complaint triage comes first
+### Slide 8 — Why complaint triage comes first
 
 I ranked 3 candidate use cases by how visible and controllable their reasoning can be. Only complaint triage is proposed for Phase 0 and Phase 1; anomaly flagging and reporting assistance remain later options.
 
@@ -82,7 +80,7 @@ I ruled out 2 uses. A customer-facing chatbot could make public errors in the fi
 
 The point is not to find the most impressive use case. It is to choose a use case whose risks can be bounded and whose decisions can be examined.
 
-### Slide 8 — 5 categories account for 46.1% of complaints
+### Slide 9 — 5 categories account for 46.1% of complaints
 
 This chart explains how the public data supports a bounded initial test.
 
@@ -92,7 +90,7 @@ I would not assume that 46.1% applies to the client. Phase 0 must measure the cl
 
 The public result is a reason to investigate a focused scope, not a forecast of the client’s complaint book.
 
-### Slide 9 — Complaint volume does not predict monetary relief
+### Slide 10 — Complaint volume does not predict monetary relief
 
 This public-data slide separates how often complaints occur from how often they end with monetary relief.
 
@@ -102,7 +100,7 @@ The implication is that volume alone does not describe likely monetary relief. T
 
 This is a signal from public data, not a forecast for the client. The client’s own product mix, resolution costs, and escalation patterns must be measured during discovery and the pilot.
 
-### Slide 10 — All 60 evaluation decisions are accounted for
+### Slide 11 — All 60 evaluation decisions are accounted for
 
 In the 60-case evaluation sample recorded in LangSmith, 52 complaints produced a proposal after passing the configured validation checks. Passing those checks does not prove that the proposed team was correct.
 
@@ -112,7 +110,7 @@ Every case in the sample has a recorded outcome and a reason code. 0 cases lack 
 
 This does not prove that every proposal was correct. It proves that proposals and stops can be traced and discussed.
 
-### Slide 11 — 60.5% agreement makes expert labels essential
+### Slide 12 — 60.5% agreement makes expert labels essential
 
 The 60.5% result should not be interpreted as a clean measure of model accuracy.
 
@@ -122,7 +120,7 @@ The CFPB issue label is selected by the person filing the complaint, using a pro
 
 The 60.5% result therefore mixes model error with label mismatch; it cannot separate them. Phase 0 resolves that uncertainty by asking experienced handlers to create an expert-labelled reference set and by measuring their agreement with one another.
 
-### Slide 12 — 3 data corrections changed the story
+### Slide 13 — 3 data corrections changed the story
 
 3 data problems could have produced confident but misleading conclusions.
 
@@ -134,7 +132,7 @@ Third, 2 different timeliness fields created apparently conflicting percentages.
 
 The lesson is that a field can be complete and still mean the wrong thing for the business question.
 
-### Slide 13 — Human review supports a preliminary compliance view
+### Slide 14 — Human review supports a preliminary compliance view
 
 My Round 1 compliance position is deliberately preliminary. It is not a final legal classification.
 
@@ -146,7 +144,7 @@ Round 2 therefore needs a step-by-step classification and obligations assessment
 
 Round 2 must also establish the GDPR legal basis and retention period, decide whether a DPIA is required, and verify the hosting region and cross-border transfer controls. Those controls are open work, not completed safeguards.
 
-### Slide 14 — Every number is measured, sourced, or assumed
+### Slide 15 — Every number is measured, sourced, or assumed
 
 Every figure in the pitch fits 1 of 3 categories: measured in this project, taken from a named public source, or explicitly labelled as an assumption or professional judgement.
 
