@@ -12,7 +12,7 @@ I assessed 3 use cases: complaint triage, anomaly flagging, and reporting assist
 
 ### Slide 3 — Complaint triage is a practical, low-risk test of AI value
 
-Chloe, your firm receives customer complaints that have to be reviewed and routed to the right team, and today that is largely a manual process. That gives us a practical, low-risk way to test whether AI can create real value.
+Chleo, your firm receives customer complaints that have to be reviewed and routed to the right team, and today that is largely a manual process. That gives us a practical, low-risk way to test whether AI can create real value.
 
 The assistant would read each complaint, suggest which team should handle it, and show the customer’s own words behind its recommendation. Your staff would still make every final decision.
 

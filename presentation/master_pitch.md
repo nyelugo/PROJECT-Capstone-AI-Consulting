@@ -1,6 +1,6 @@
 # Round 1 Master Pitch
 
-Chloe, your firm receives customer complaints that have to be reviewed and routed to the right team for action. Today, that is a largely manual process, and it gives us a useful, low-risk way to test whether AI can create real operational value for a firm like yours.
+Chleo, your firm receives customer complaints that have to be reviewed and routed to the right team for action. Today, that is a largely manual process, and it gives us a useful, low-risk way to test whether AI can create real operational value for a firm like yours.
 
 The idea is not to let AI handle complaints or make decisions for your staff. It is simply to give your complaint handlers an assistant that reads each complaint, suggests which team should handle it, and shows the customer’s own words that support its recommendation. Your staff remain responsible for the final decision.
 
