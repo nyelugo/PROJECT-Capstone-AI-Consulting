@@ -80,6 +80,17 @@ Two consequences worth stating in the pitch:
 
 Run ids are 32 hex characters; LangSmith rejects anything else with a 422.
 
+Duration is measured from the input boundary: `Normalise complaint` stamps `t0`, and the
+trace uses it as `start_time`. An earlier version sent the same instant for start and end,
+so every n8n trace recorded 0.00s and the latency panel was meaningless for exactly the
+runs the demo produces. Traces before 2026-08-30 11:51 still show 0.00s; they are not
+rewritten.
+
+One reading trap in the LangSmith trace list: the Input and Output columns preview a
+single arbitrary key from the record, so the column shows `n8n`, `demo` or `gpt-4o-mini`
+as often as it shows the decision. That is a display artifact — open the row for the
+full record.
+
 ## The validation layer is the interesting part
 
 The `Validate and route` node exists because a language model's answer is a claim, not a

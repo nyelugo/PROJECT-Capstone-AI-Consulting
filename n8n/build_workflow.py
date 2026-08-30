@@ -60,7 +60,7 @@ if (narrative.length < MIN_CHARS)             reject(`narrative is ${narrative.l
 
 if (narrative.length > MAX_CHARS) narrative = narrative.slice(0, MAX_CHARS);
 
-return [{ json: { product, narrative, narrative_chars: narrative.length } }];
+return [{ json: { product, narrative, narrative_chars: narrative.length, t0: Date.now() } }];
 """ % json.dumps(P.PRODUCT_QUEUES)
 
 PARSE_CODE = """// Parse the model's answer, then validate it before trusting it.
@@ -167,7 +167,7 @@ nodes = [
                     "  id: Array.from({length:32},()=>Math.floor(Math.random()*16).toString(16)).join(''),\n"
                     "  name: 'complaint_triage_n8n',\n"
                     "  run_type: 'chain',\n"
-                    "  start_time: new Date().toISOString(),\n"
+                    "  start_time: new Date($('Normalise complaint').item.json.t0).toISOString(),\n"
                     "  end_time: new Date().toISOString(),\n"
                     f"  session_name: {json.dumps(LANGSMITH_PROJECT)},\n"
                     "  inputs: { product: $json.product, narrative_chars: ($json.narrative || '').length },\n"
