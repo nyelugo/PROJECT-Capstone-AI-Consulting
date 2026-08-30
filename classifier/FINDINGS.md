@@ -33,8 +33,11 @@ Sample: 240 complaints, 40 per product, stratified, seed 42. Ground truth: the C
 | Evidence quote genuinely verbatim | 93.8% | 99.6% |
 | Mean tokens per complaint | 726 | 723 |
 
-A model roughly 17× more expensive buys about 4 percentage points. **The bottleneck is not
-the model.**
+At current OpenAI list prices for [`gpt-4o-mini`](https://developers.openai.com/api/docs/models/gpt-4o-mini)
+and [`gpt-4o`](https://developers.openai.com/api/docs/models/gpt-4o), and using the project's
+measured token mix, `gpt-4o` costs 16.7× as much per complaint and improves volume-weighted
+team agreement by 3.7 percentage points. The exact cost comparison is reproduced in
+`cost_estimation/cost_model.json`. **The bottleneck is not the model.**
 
 ## Three things that were wrong, and how they were found
 

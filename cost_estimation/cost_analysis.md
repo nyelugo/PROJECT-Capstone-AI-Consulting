@@ -71,8 +71,11 @@ platform, and 0.004% is the model. That single ratio is worth a slide on its own
 the "AI is expensive" objection and replaces it with the true constraint, which is that a
 system making decisions needs someone accountable for watching it.
 
-Even on `gpt-4o`, six times the price, the API line would be about €5 a year. Model choice
-is simply not a financial decision at this volume — it is an accuracy decision.
+At the current OpenAI list prices used in this model — [`gpt-4o-mini`](https://developers.openai.com/api/docs/models/gpt-4o-mini)
+at $0.15/$0.60 and [`gpt-4o`](https://developers.openai.com/api/docs/models/gpt-4o) at
+$2.50/$10.00 per 1 million input/output tokens — the same measured token mix costs 16.7×
+as much on `gpt-4o`, taking the annual API line from €0.29 to €4.91. Model choice is simply
+not a financial decision at this volume — it is an accuracy decision.
 
 ## 4. The saving, stated honestly
 
@@ -166,7 +169,7 @@ Two honest readings of this, and Chleo should hear both:
 | Actual complaint volume | Drives everything. The FCA benchmark is UK reportable complaints; Chleo's real inbox may be materially larger, and Phase 0 measures it |
 | Time saved per complaint (3 min) | The softest number here. If assisted triage saves only 1 minute, the saving falls to €1,526 |
 | Whether escalations actually fall | The entire ROI case. Untested |
-| Model choice | Almost none. €0.29 vs €5 a year |
+| Model choice | Almost none. €0.29 vs €4.91 a year |
 
 ## 9. Honest limitations
 

@@ -29,8 +29,10 @@ ASSUMPTIONS = {
     # --- measured on this project ---
     "input_tokens":            (684, "measured, n=12, classifier/prompt.py"),
     "output_tokens":           (49,  "measured, n=12"),
-    "price_in_per_1m_usd":     (0.15, "OpenAI list price, gpt-4o-mini"),
-    "price_out_per_1m_usd":    (0.60, "OpenAI list price, gpt-4o-mini"),
+    "price_in_per_1m_usd":     (0.15, "OpenAI list price, gpt-4o-mini input: https://developers.openai.com/api/docs/models/gpt-4o-mini"),
+    "price_out_per_1m_usd":    (0.60, "OpenAI list price, gpt-4o-mini output: https://developers.openai.com/api/docs/models/gpt-4o-mini"),
+    "gpt4o_price_in_per_1m_usd":  (2.50, "OpenAI list price, gpt-4o input: https://developers.openai.com/api/docs/models/gpt-4o"),
+    "gpt4o_price_out_per_1m_usd": (10.00, "OpenAI list price, gpt-4o output: https://developers.openai.com/api/docs/models/gpt-4o"),
 
     # --- operating judgements (no source; these are the soft numbers) ---
     "triage_minutes_now":      (6,    "judgement: read, categorise and route one complaint"),
@@ -59,7 +61,13 @@ labour_saving = (hours_now - hours_assisted) * hourly
 # --- running cost ---------------------------------------------------------------
 per_complaint_usd = (A["input_tokens"] / 1e6 * A["price_in_per_1m_usd"]
                      + A["output_tokens"] / 1e6 * A["price_out_per_1m_usd"])
+per_complaint_gpt4o_usd = (
+    A["input_tokens"] / 1e6 * A["gpt4o_price_in_per_1m_usd"]
+    + A["output_tokens"] / 1e6 * A["gpt4o_price_out_per_1m_usd"]
+)
 api_year_eur = per_complaint_usd * complaints_year * 0.92        # USD->EUR, judgement
+gpt4o_api_year_eur = per_complaint_gpt4o_usd * complaints_year * 0.92
+gpt4o_to_mini_cost_ratio = per_complaint_gpt4o_usd / per_complaint_usd
 platform_year = A["platform_eur_month"] * 12
 review_year = A["review_days_per_quarter"] * 4 * A["day_rate_eur"]
 ongoing_year = api_year_eur + platform_year + review_year
@@ -101,6 +109,8 @@ out = {
                "annual_labour_saving_eur": round(labour_saving)},
     "running_cost": {"api_per_complaint_eur": round(per_complaint_usd * 0.92, 6),
                      "api_per_year_eur": round(api_year_eur, 2),
+                     "gpt4o_api_per_year_eur": round(gpt4o_api_year_eur, 2),
+                     "gpt4o_to_mini_cost_ratio": round(gpt4o_to_mini_cost_ratio, 1),
                      "platform_per_year_eur": platform_year,
                      "model_review_per_year_eur": review_year,
                      "total_per_year_eur": round(ongoing_year),
@@ -156,6 +166,7 @@ print(f"labour saving (assist)     EUR {labour_saving:>8,.0f}/yr")
 print()
 print(f"API cost per complaint     EUR {per_complaint_usd*0.92:>8.6f}")
 print(f"API cost per year          EUR {api_year_eur:>8.2f}")
+print(f"gpt-4o API cost per year   EUR {gpt4o_api_year_eur:>8.2f}  ({gpt4o_to_mini_cost_ratio:.1f}x mini)")
 print(f"platform per year          EUR {platform_year:>8,.0f}")
 print(f"model review per year      EUR {review_year:>8,.0f}")
 print(f"TOTAL running              EUR {ongoing_year:>8,.0f}/yr")

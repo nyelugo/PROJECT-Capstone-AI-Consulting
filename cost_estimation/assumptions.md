@@ -24,8 +24,10 @@ and the ones to challenge first.
 | `handler_salary_eur` | 45,000 | sourced | midpoint of NL banking CS ~EUR39.5k and IE complaints investigator ~EUR52k |
 | `input_tokens` | 684 | sourced | measured, n=12, classifier/prompt.py |
 | `output_tokens` | 49 | sourced | measured, n=12 |
-| `price_in_per_1m_usd` | 0.15 | sourced | OpenAI list price, gpt-4o-mini |
-| `price_out_per_1m_usd` | 0.6 | sourced | OpenAI list price, gpt-4o-mini |
+| `price_in_per_1m_usd` | 0.15 | sourced | OpenAI list price, gpt-4o-mini input: https://developers.openai.com/api/docs/models/gpt-4o-mini |
+| `price_out_per_1m_usd` | 0.6 | sourced | OpenAI list price, gpt-4o-mini output: https://developers.openai.com/api/docs/models/gpt-4o-mini |
+| `gpt4o_price_in_per_1m_usd` | 2.5 | sourced | OpenAI list price, gpt-4o input: https://developers.openai.com/api/docs/models/gpt-4o |
+| `gpt4o_price_out_per_1m_usd` | 10.0 | sourced | OpenAI list price, gpt-4o output: https://developers.openai.com/api/docs/models/gpt-4o |
 | `triage_minutes_now` | 6 | judgement | judgement: read, categorise and route one complaint |
 | `triage_minutes_assisted` | 3 | judgement | judgement: confirm or override a proposal, still reading it |
 | `employer_oncost_pct` | 30 | judgement | judgement: employer social costs on gross salary |
