@@ -48,8 +48,9 @@ a predicted issue class, a confidence score, the sentence in the complaint that 
 the decision, and an explicit `UNSURE` option that routes to a human.
 
 **Success criteria (measurable).**
-1. ≥80% top-1 accuracy on the five highest-volume issue classes, measured against the
-   corpus's own labels on a held-out split.
+1. ≥80% top-1 agreement on the five highest-volume issue classes against the corpus's own
+   labels on a held-out split. Note this is agreement with consumer-selected labels, not
+   accuracy; the accuracy criterion is set in Phase 0 against expert labels.
 2. ≥95% of low-confidence items correctly abstain rather than guess — abstention is
    scored as a success, not a failure.
 
@@ -123,13 +124,16 @@ not because it should lead the pitch.
 
 ---
 
-## What is deliberately not proposed
+## Two exclusions and one guardrail
 
-| Not proposed | Why |
+| Excluded | Why |
 |---|---|
 | Customer-facing chatbot | Fails in public, in the customer's voice, with unbounded errors. The worst opening move for a nervous client |
-| Credit scoring / automated lending decisions | Annex III high-risk under the EU AI Act — conformity assessment, registration and a fundamental-rights impact assessment before go-live |
-| Predicting which complaints will cost money | Creates an incentive to treat expensive customers differently. Deferred, and the reason is the point |
+| Creditworthiness scoring | Annex III high-risk under the EU AI Act — conformity assessment, registration and a fundamental-rights impact assessment before go-live |
+
+| Guardrail | Why |
+|---|---|
+| Predicted payout never determines routing priority | Predicting which complaints will cost money is not forbidden — letting that prediction order the queue is. It would create an incentive to treat expensive customers differently |
 
 Naming these in the pitch is intentional. The fastest way to earn a sceptical CEO's trust
 is to be the consultant who tells her what not to buy.
@@ -138,7 +142,8 @@ is to be the consultant who tells her what not to buy.
 
 ## Recommended sequence
 
-**Pilot UC-1 alone, for 60 days, on the firm's own complaint data.** Report accuracy,
-abstention rate and per-segment behaviour. If it holds, UC-3 follows almost for free —
+**Pilot UC-1 alone, for 60 days, on the firm's own complaint data.** Report accuracy
+against the Phase 0 expert labels — the first accuracy figure this project will have —
+plus abstention rate and per-segment behaviour. If it holds, UC-3 follows almost for free —
 it reads the same data. UC-2 is a separate conversation with a separate risk assessment,
 and should not be bundled into a first engagement.

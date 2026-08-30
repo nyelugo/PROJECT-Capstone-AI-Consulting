@@ -89,8 +89,9 @@ categorise-and-route step, not the reading.
 | **Net annual position** | **−€2,822** |
 
 Claiming the full €9,156 would require the model to route unsupervised at an accuracy it
-has not demonstrated — measured team accuracy is 60.5% (`classifier/FINDINGS.md`). The
-half-saving is the honest version.
+has not demonstrated. What has been measured is 60.5% *agreement* with consumer-selected
+labels (`classifier/FINDINGS.md`), and agreement with those labels is not deployment
+accuracy. The half-saving is the honest version.
 
 ## 5. Where the value actually is
 

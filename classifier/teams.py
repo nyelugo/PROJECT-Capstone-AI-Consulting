@@ -10,7 +10,7 @@ exact-label accuracy that no prompt removes.
 
 A mid-size firm does not have 47 queues. It has a handful of teams. Both labels in each
 pair above reach the SAME team, so a "wrong" exact label is often a correct routing
-decision. Team-level accuracy is what the business buys, so it is what gets measured.
+decision. Team-level routing is what the business buys, so that is what gets measured.
 
 This is a re-definition of the metric, not a relaxation of it: the routing decision is
 scored, and an exact-label score is reported alongside it so nothing is hidden.

@@ -54,6 +54,13 @@ before publication). Public data only, per the brief.
 - Median narrative **1,201 characters** (90th pct 3,013) — the actual human workload.
 - Timely response **98.0%**, any relief **19.7%**, monetary relief **12.7%**.
 
+**And the finding the whole pitch rests on:** the classifier reaches **60.5% agreement**
+with the CFPB team labels — **agreement, not accuracy**. Asked the same complaint twice it
+answers the same way ~9 times in 10, so it is consistent; it simply disagrees with a label
+the *complainant* chose from a dropdown. That label is not expert routing ground truth, so
+no accuracy figure exists for this system yet. Creating one is what Phase 0 buys. See
+`classifier/FINDINGS.md`.
+
 ## Setup
 
 ```bash

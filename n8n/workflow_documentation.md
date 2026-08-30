@@ -24,9 +24,9 @@ in production.
 ## Why it is assist-only, and not automatic
 
 This is the design consequence of the measurement in `classifier/FINDINGS.md`, not a
-hedge. Against the only labels available, team-level routing accuracy is **60.5%**
-(gpt-4o, n=240). Auto-routing at that accuracy would send roughly four in ten complaints
-to the wrong team, silently.
+hedge. Against the only labels available, team-level **agreement** is **60.5%**
+(gpt-4o, n=240) — agreement, not accuracy. Auto-routing on a number that weak would send
+roughly four in ten complaints to the wrong team, silently.
 
 So the workflow proposes and a person confirms. Every branch ends at a human. The value
 on offer in Round 1 is a handler who opens a complaint already read, already categorised,
@@ -120,7 +120,7 @@ checking/savings complaint from the corpus about disputed CashApp charges.
 | `decision` | PROPOSE_TO_HANDLER — passed all checks |
 
 The proposed queue matches that complaint's actual CFPB label exactly. One correct case is
-not an accuracy claim — the accuracy measurement is in `classifier/FINDINGS.md` — but it
+not an accuracy claim — the agreement measurement is in `classifier/FINDINGS.md` — but it
 does show the path works end to end on real text.
 
 **Run 2 — abstention path** (execution `16215`, success). The sample was temporarily

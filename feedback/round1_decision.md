@@ -71,5 +71,5 @@ quietly rewritten afterwards.
 | Industry / size | Financial services, mid-size EU retail bank and consumer lender |
 | Use case pitched | UC-1 complaint triage, assist-only |
 | Intended Round 2 MVP | The one capability that must run: classify a complaint, propose a team, quote its reason verbatim, abstain when unsure |
-| Known weakness going in | 60.5% team accuracy against consumer-selected labels — see `../classifier/FINDINGS.md` |
+| Known weakness going in | 60.5% *agreement* with consumer-selected labels — agreement, not accuracy. See `../classifier/FINDINGS.md` |
 | The ask | €14,000 to the pilot decision gate, not €24,500 to deployment |

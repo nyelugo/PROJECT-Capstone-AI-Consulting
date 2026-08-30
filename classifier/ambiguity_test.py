@@ -1,6 +1,6 @@
 """Measure the ceiling, not the model.
 
-Team accuracy sits near 60% for both gpt-4o-mini and gpt-4o. Either both models are
+Team-level agreement sits near 60% for both gpt-4o-mini and gpt-4o. Either both models are
 weak, or the task itself is ambiguous. This distinguishes the two: run the SAME model
 twice over the SAME complaints at temperature 1 and measure how often it agrees with
 itself.

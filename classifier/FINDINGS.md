@@ -11,9 +11,10 @@ All figures reproducible: `python classifier/evaluate.py 40 <model>` and
 
 ## Headline
 
-**The triage mechanism works and is stable. The accuracy number cannot honestly be
-established from public data, because the public labels are not expert judgements —
-they are the boxes members of the public ticked when filing.**
+**The triage mechanism works and is stable. What was measured is AGREEMENT with the
+public labels, not accuracy — and accuracy cannot honestly be established from this data,
+because the public labels are not expert judgements. They are the boxes members of the
+public ticked when filing.**
 
 That is the finding to take to Chleo, and it changes what she should buy first.
 
@@ -24,9 +25,9 @@ Sample: 240 complaints, 40 per product, stratified, seed 42. Ground truth: the C
 
 | Measure | gpt-4o-mini | gpt-4o |
 |---|---:|---:|
-| Exact-label accuracy | 45.0% | 48.3% |
-| **Team-level accuracy** (volume-weighted) | **56.8%** | **60.5%** |
-| Team accuracy on auto-routed items | 61.4% | 64.2% |
+| Exact-label agreement | 45.0% | 48.3% |
+| **Team-level agreement** (volume-weighted) | **56.8%** | **60.5%** |
+| Team agreement on auto-routed items | 61.4% | 64.2% |
 | Auto-routed (not seen by a human) | 91.7% | 79.2% |
 | Invented a queue that does not exist | 0.4% | 0.0% |
 | Evidence quote genuinely verbatim | 93.8% | 99.6% |
@@ -61,7 +62,7 @@ Errors clustered on genuine synonyms: "Fraud or scam" ↔ "Unauthorized transact
 "Closing an account". Both members of each pair reach the **same team**.
 
 **Fix:** the 47 queues map to **7 teams** (`classifier/teams.py`), and routing is scored
-at team level, with exact-label accuracy still reported beside it so nothing is hidden.
+at team level, with exact-label agreement still reported beside it so nothing is hidden.
 A mid-size firm has teams, not 47 queues.
 
 ## The test that changed the conclusion
@@ -100,7 +101,7 @@ what a member of the public picked. It is not a record of which team should hand
 3. **The transparency mechanism is already proven.** 99.6% of the model's evidence quotes
    are genuinely verbatim from the complaint — it reliably shows its work. That is the
    part of Chleo's objection that has been answered by this POC.
-4. **Do not auto-route yet.** At a measured 64% team accuracy against the only labels
+4. **Do not auto-route yet.** At 64% team agreement against the only labels
    available, the honest configuration is assist-only: the model proposes a team and
    quotes its reason, a human confirms. Auto-routing is a decision for after the pilot,
    on real labels.

@@ -19,9 +19,9 @@ are ranked above opportunities with a better theoretical payoff and an opaque mi
 | O1 | **Complaint triage and routing** | Top 5 of 64 issue classes = 46.1% of volume; median narrative 1,201 chars | High — the input is text, the output is a label plus a reason | **Pitch it** |
 | O2 | **Transaction anomaly flagging for human review** | "Fraud or scam" 810 + "Unauthorized transactions" 437 = 7.4% of complaints | Medium-high if the flag carries its reason and a human decides | **Pitch it** |
 | O3 | **Regulatory and complaint reporting assistance** | 98.0% timely response is already a reported SLA; 19.7% relief rate is already tracked | High — drafts a document a human signs | **Pitch it** |
-| O4 | Early-warning on monetary-relief exposure | Credit card relief 17.2% vs vehicle 3.0% (5.7x) | Medium — a prediction with money attached | Round 2 candidate |
+| O4 | Early-warning on monetary-relief exposure | Credit card relief 17.2% vs vehicle 3.0% (5.7x) | Medium — a prediction with money attached | Round 2 candidate, under the guardrail that predicted payout never orders the queue |
 | O5 | Customer-facing chatbot for account queries | Not evidenced by this corpus | Low — the classic "what is the AI?" trap | **Do not pitch now** |
-| O6 | Credit scoring / automated lending decisions | Out of corpus scope | Low, and Annex III high-risk under the AI Act | **Do not pitch** |
+| O6 | Creditworthiness scoring / automated lending decisions | Out of corpus scope | Low, and Annex III high-risk under the AI Act | **Do not pitch** |
 
 **Why O5 and O6 are refused in the pitch.** A chatbot is the first thing a nervous CEO
 imagines and the worst possible opening move: it fails in public, in the customer's voice,
@@ -73,16 +73,19 @@ per risk is a Round 2 deliverable.
 
 ## 4. The compliance position, stated honestly
 
-**Preliminary view: complaint triage sits at limited risk under the EU AI Act, and the
-reasoning matters more than the label.**
+**Round 1 working view: on the intended use, complaint triage has not been identified as
+matching an Annex III high-risk use. This is not a tier classification and not a legal
+opinion — Round 2 owes the validation. The reasoning below matters more than any label.**
 
 - It is not Annex III creditworthiness assessment — it never evaluates a customer's
   credit or access to a financial product.
-- It classifies and routes; a human resolves. Keeping that boundary intact is what
-  keeps the classification defensible.
+- It classifies and routes; a human confirms and resolves. Keeping that boundary intact is
+  what keeps the position defensible. Autonomous routing would be a new assessment, not an
+  upgrade to this one.
 - Transparency obligations (Art. 50) apply if a customer is interacting with the AI
   directly. Under the design pitched here, they are not — it is an internal tool.
-- GDPR applies regardless of the AI Act tier. Complaint narratives are personal data.
+- GDPR applies regardless of any AI Act tier. Complaint narratives are personal data.
+- Hosting region and cross-border transfer controls are not yet verified.
 
 **This is deliberately not a final classification.** Round 2 owes the step-by-step
 reasoning, a conformity summary and a technical documentation outline. Presenting a
