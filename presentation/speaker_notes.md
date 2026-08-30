@@ -1,156 +1,147 @@
-# Slide 1 — Cover
-[Beat. Do not read the slide.]
-[Whole deck: you are in Chleo's meeting. Speak to the room as "you". The exception is the
-close, where you step out and address the staff.]
+# Round 1 Presentation — Clean Speaker Notes
 
-We met at a dinner, and you told me you don't trust AI because you can't see what it does.
+## Main presentation — Slides 1–5
 
-So this isn't a pitch about what AI could do for you. It's about one decision you can watch
-happen. Everything here runs, and every number traces back to a repository you can open.
+### Slide 1 — See exactly what the AI does
 
-# Slide 2 — Context
-You never asked me whether AI works. You asked what it *is*, and how you'd see it. Those
-are the two questions your regulator will ask you as well.
+We met over dinner, and you told me you do not trust AI because you cannot see what it does.
 
-So: a firm your size, and three candidates — triage, anomaly flagging, reporting help. They
-are ranked by one thing only, which is how visible the reasoning is. Not by which saves
-most. Triage is first because you can watch it work.
+So I am not asking you to believe a promise. I am going to show you a single decision from start to finish.
 
-And two I'm refusing. A chatbot fails in public, in your customer's voice. Credit scoring
-is high-risk under the AI Act — months of conformity work before a single decision goes
-live.
+The workflow runs, its reasoning is visible, and every number traces back to the project evidence.
 
-[Land this:] The fastest way to earn your trust is to tell you what not to buy.
+### Slide 2 — A mid-size bank needs AI it can inspect
 
-Let me show you what triage looks like on real complaints.
+You asked 2 questions: what exactly is the AI, and how would you see what it is doing?
 
-# Slide 3 — Dashboard
-[Switch to the live dashboard if you can. This screenshot is the fallback.]
+I considered 3 use cases: complaint triage, anomaly flagging, and reporting assistance. I ranked them by how clearly we can inspect the reasoning, not by the largest promised saving.
 
-First, whose numbers these are, because it matters — they're not yours. This is the public
-regulator's database standing in for your book until Phase 0 measures the real thing. The
-shape transfers: the mix of issues, the language, how cases end. The volume doesn't, and I
-won't pretend otherwise.
+Triage comes first because we can watch the decision. The system proposes a team, shows the supporting words, and lets a person confirm or reject it.
 
-Four numbers across the top. Two of them you already report to your regulator, so they need
-no explaining. The third is the only one in money — one complaint in eight ends with you
-paying something out.
+I am ruling out a chatbot because it can fail publicly in the firm’s voice. I am ruling out credit scoring because it is an Annex III high-risk use under the EU AI Act.
 
-The fourth is the one to hold on to. Forty-six per cent of everything that arrives sits in
-five of sixty-four categories. That's what makes this small enough to build honestly: I'm
-not asking a machine to be good at sixty-four things.
+The fastest way to earn your trust is to be clear about what you should not buy.
 
-Here it is doing that.
+Now let me show you the opportunity in real complaint data.
 
-# Slide 4 — POC and monitoring
-[Switch to the live n8n window, then the monitoring view. The screenshots are the fallback
-if either demo is cold.]
+### Slide 3 — 4 numbers define the opportunity
 
-On the left, the workflow running on a real complaint. Green ticks mean every step
-executed. It proposed Disputes and fraud — quoting your customer's own words as its reason
-— and then it stopped and waited for a person.
+This dashboard uses public CFPB data as a proxy. These are not your firm’s numbers; Phase 0 measures your real complaint mix and volume.
 
-On the right, that same decision opened up in monitoring.
+The analysis contains 16,839 complaints. 98.0% received a timely response, while 12.7% ended with monetary relief.
 
-[Point at the row of squares.] That is every decision it has made — one square each, none
-of them hidden. Blue, it proposed a team. Amber, it wasn't confident enough and said so.
+The key number is 46.1%: 5 of 64 issue categories account for almost half of the complaints. That suggests a bounded starting point instead of asking a model to handle every issue equally well.
 
-The red ones are the ones I'd want you to hear about. Four times it quoted a sentence that
-simply wasn't in the complaint. Confidently. The check caught every one and sent it to a
-person with the reason written down.
+The public data tells us where to investigate. Your own data decides what enters the pilot.
 
-[Point at the dark strip, let them read it.] Which is why I am not asking you to switch
-anything on today. Sixty per cent is on that strip, and I would rather you heard it from me
-now than found it in month three.
+Now let me show you a decision you can inspect.
 
-# Slide 5 — Cost, timeline and the ask
-Fixed fee per phase, because your problem is uncertainty and I won't hand you an open-ended
-commitment.
+### Slide 4 — Every decision is visible—and uncertain cases stop
 
-Phase 0 buys something odd: two of your handlers labelling three hundred complaints before
-any AI at all. That's the ground truth that doesn't exist today, and it's worth buying even
-if you never build this — it tells you whether your own categories can be applied
-consistently by anybody.
+Here is the workflow processing a real complaint. It proposes the Disputes and Fraud team, quotes the customer’s words as evidence, and stops for a person to confirm.
 
-[Point at the bar along the top.] That is where the running cost goes. The dark block is
-someone accountable for watching it, and I wouldn't remove it. The sliver on the right is
-the AI itself — twenty-nine cents a year.
+The monitoring view records every decision. Of 60 cases, 52 produced a proposal. 4 stopped for low confidence, and 4 because the quoted evidence was not in the complaint.
 
-Two assumptions, written on the slide rather than buried in an appendix. The second is the
-one that matters: I am not claiming we avoid four ombudsman referrals a year. That is
-precisely what the pilot is for.
+Those fabricated quotations matter most. The model sounded convincing, but the validation check caught them and sent each case to human review.
 
-Fourteen thousand to reach a decision. Not twenty-four and a half to a deployment.
+The broader evaluation produced 60.5% team-level agreement against consumer-selected CFPB labels. That is not deployment-quality evidence, and those labels are not expert routing decisions.
 
-# Slide 6 — Close
-[Stop pitching. Drop the client voice — this is to you as assessors, not as Chleo.]
+The process runs and can be observed. Accuracy must now be measured against the client’s expert-labelled complaints. That is why the proposal is staged.
 
-One thing I'd genuinely like taken apart.
+### Slide 5 — €14,000 to decide, not €24,500 to deploy
 
-I've built this pitch around admitting a weak number early rather than a confident one. I
-think an honest sixty per cent buys more trust from a sceptical client than a polished
-eighty-five would.
+The proposal uses a fixed fee for each phase because the problem is uncertainty.
 
-I think that's right. I'm not certain it survives contact with a real client, and that's
-what I'd most like you to push on.
+Phase 0 costs €5,600. 2 experienced handlers label 300 complaints independently, creating the trustworthy reference set we need.
 
-# Slide 7 — Backup: use cases and refusals
-[If asked why these three, or why not a chatbot.]
+Phase 1 costs €8,400 and runs an assist-only pilot beside the existing process. Together, the phases cost €14,000 and reach a real decision point.
 
-Ranked by visible reasoning. The refusals matter as much: a chatbot's errors are unbounded
-and public, and credit scoring is Annex III high-risk — conformity assessment and a
-fundamental-rights impact assessment before go-live.
+Annual operation is estimated at €7,400, almost entirely for human oversight and the platform. Under the stated assumptions, the model calls cost about €0.29 per year. The model is not the expensive part; accountable operation is.
 
-# Slide 8 — Backup: category concentration
-[If asked how the scope was bounded.]
+I am not claiming it will prevent 4 ombudsman referrals a year. The pilot must test that hypothesis.
 
-Five of sixty-four categories carry 46.1% of the volume. Concentration like that is a
-property of complaint books generally, not of one firm — which is why I'd expect it to
-hold for you even though the volume won't.
+The ask is €14,000 to reach an evidence-based decision, not €24,500 for a deployment that has not earned approval.
 
-# Slide 9 — Backup: volume vs cost
-[If asked where the money actually goes.]
+That is my proposal. Thank you. For Round 2, I would most value your view on whether the evidence, controls, and staged investment make Phase 0 a credible next step.
 
-Deposits and cards are two thirds of the volume here, but money leaves the building 5.7
-times more often on a card complaint than a vehicle loan. That ratio follows from how the
-products work, not from who the firm is — so it should hold for you.
+## Appendix for questions — Slides 6–13
 
-# Slide 10 — Backup: the full decision record
-[If asked how often it fails, or what happens then.]
+### Slide 6 — Why complaint triage comes first
 
-Fifty-two proposed cleanly. Four stopped because the quote wasn't real, four because
-confidence was too low. Bottom row is the one that matters: nothing was silently wrong.
+I ranked the 3 proposed use cases by how visible and controllable their reasoning can be.
 
-# Slide 11 — Backup: why 60% is not the model's fault
-[If challenged on accuracy.]
+Complaint triage can propose a team and show the exact evidence behind the proposal. Anomaly flagging can identify unusual patterns for a person to investigate. Reporting assistance can draft material while leaving approval with a named employee.
 
-Ask it the same complaint twice and it answers the same way nine times in ten — so it's
-consistent, it just disagrees with the official label. And that label was picked by the
-customer filing the complaint, from a dropdown, untrained.
+I ruled out 2 uses. A customer-facing chatbot could make public errors in the firm’s voice. Credit scoring directly affects access to financial services and is classified as high-risk under the EU AI Act.
 
-So the fix isn't a cleverer model, it's better labels. That is exactly what Phase 0 buys.
+The point is not to find the most impressive use case. It is to choose a use case whose risks can be bounded and whose decisions can be examined.
 
-# Slide 12 — Backup: data corrections
-[If data quality is questioned.]
+### Slide 7 — 5 categories account for 46.1% of complaints
 
-The July cliff would have caught me. The regulator only publishes a complaint once the firm
-has responded, so recent weeks are always thin — read naively that's a 73% collapse and a
-wonderful slide. It's an artefact. I cut the window at 27 June. The other two are the same
-pattern: confident, wrong, and invisible to any test.
+This chart explains how I bounded the initial scope.
 
-# Slide 13 — Backup: compliance
-[If the legal seat asks.]
+In the public dataset, 5 of 64 issue categories account for 46.1% of complaints. That makes it possible to test a narrow, high-volume starting point instead of pretending the model can handle the entire taxonomy equally well.
 
-Limited risk, and the reasoning matters more than the label: it classifies and routes, a
-human resolves, it never touches creditworthiness. What holds it there is the human
-decision boundary — if it ever routes on its own that's a new assessment, not an upgrade.
+I would not assume that 46.1% applies to the client. Phase 0 must measure the client’s own concentration and decide which categories belong in the pilot.
 
-I'm deliberately not giving a final classification today. Round 2 owes the step-by-step
-reasoning.
+The public result is a reason to investigate a focused scope, not a forecast of the client’s complaint book.
 
-# Slide 14 — Backup: sources
-[If sourcing is challenged.]
+### Slide 8 — Complaint volume does not predict monetary relief
 
-Everything is either measured by me or cited to a regulator. Where a figure is a judgement
-rather than a measurement — minutes per complaint, employer on-costs — it's labelled as a
-judgement in the cost model, not dressed up as a finding.
+This slide separates how often complaints occur from how consequential they may be.
+
+Checking and savings accounts and credit cards produce most of the complaint volume in this dataset. But monetary relief appears in 17.2% of credit-card complaints, compared with 3.0% for vehicle-lending complaints. That is a 5.7× difference.
+
+The implication is that routing priorities should not be based on volume alone. Product type and likely consequence also matter.
+
+This is a signal from public data, not a forecast for the client. The client’s own product mix, resolution costs, and escalation patterns must be measured during discovery and the pilot.
+
+### Slide 9 — All 60 monitored decisions are accounted for
+
+In the 60-case monitoring sample, 52 complaints passed all validation checks and produced a proposal.
+
+4 were sent to human review because the model’s evidence quotation was not present verbatim in the complaint. Another 4 were sent to human review because confidence was below the threshold.
+
+Every case in the sample has a recorded outcome and a reason code. 0 cases disappeared into an unexplained bucket.
+
+This does not prove that every proposal was correct. It proves that proposals, rejections, and non-decisions can all be traced and discussed.
+
+### Slide 10 — 60.5% agreement makes expert labels essential
+
+The 60.5% result should not be interpreted as a clean measure of model accuracy.
+
+When the same model classified the same complaints again, it selected the same team approximately 89% of the time. It was relatively consistent with itself but disagreed much more often with the CFPB label.
+
+The CFPB issue label is selected by the person filing the complaint, using a product-specific menu. It is not an expert judgement about which internal team should handle the case.
+
+This suggests label quality is a major measurement bottleneck, but it does not prove that the model is correct. Phase 0 resolves that uncertainty by asking experienced handlers to create an expert-labelled reference set and by measuring their agreement with one another.
+
+### Slide 11 — 3 data corrections changed the story
+
+3 data problems could have produced confident but misleading conclusions.
+
+First, recent complaint volume appeared to collapse by 73% because the regulator publishes complaints only after the company responds or enough time passes. I removed the incomplete period and ended the analysis window on 27 June.
+
+Second, the apparent response-time field was 0 for 96% of records because it measured the regulator’s routing process, not the firm’s handling time. I excluded it.
+
+Third, 2 different timeliness fields created apparently conflicting percentages. I separated their meanings instead of treating them as the same metric.
+
+The lesson is that a field can be complete and still mean the wrong thing for the business question.
+
+### Slide 12 — Human review bounds the compliance position
+
+My Round 1 compliance position is deliberately preliminary.
+
+This system proposes an internal complaint-routing team. It does not assess creditworthiness, determine access to a financial service, or make the final decision on a customer’s complaint. A human remains responsible for confirming the route and resolving the case.
+
+On that intended use, I do not currently see it matching the Annex III creditworthiness use that is classified as high-risk. However, classification depends on the exact intended purpose, deployment context, data flows, and degree of human control.
+
+Round 2 therefore needs a step-by-step classification and obligations assessment. If the system begins routing automatically or influencing substantive customer outcomes, that is a new assessment, not a minor product upgrade.
+
+### Slide 13 — Every number is measured, sourced, or assumed
+
+Every figure in the pitch fits 1 of 3 categories: measured in this project, taken from a named public source, or explicitly labelled as an assumption or professional judgement.
+
+The complaint analysis comes from the public CFPB dataset. The client-size and complaint-rate estimates use stated FCA benchmarks and scenario assumptions. The model behaviour comes from the project’s own evaluations. Soft inputs such as minutes per complaint, employer on-costs, and platform cost are labelled as judgements in the cost model.
+
+The purpose of this slide is not to claim certainty. It is to make clear which figures are evidence, which are external benchmarks, and which must be validated during Phase 0 and the pilot.
