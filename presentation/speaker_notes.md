@@ -8,7 +8,7 @@ Over dinner, you told me you do not trust AI because you cannot see what it does
 
 So I am not asking you to believe a promise. I am going to show you 1 complaint-routing decision from start to finish.
 
-The workflow runs, its reasoning is visible, and every number traces to project evidence.
+The workflow runs, its reasoning is visible, and every number traces to project evidence, including public complaint data from the U.S. Consumer Financial Protection Bureau, or CFPB.
 
 ### Slide 2 — A mid-size bank needs AI it can inspect
 
