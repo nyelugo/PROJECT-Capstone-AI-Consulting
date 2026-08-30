@@ -13,7 +13,7 @@ kickoff to production, if the pilot passes** — and passing is not assumed.
 ```
 Wk 1-2    Phase 0  Discovery + expert labelling        EUR 5,600
 Wk 3-5    Phase 1  Pilot build
-Wk 6-13   Phase 1  60-day shadow run (live, assist-only) EUR 8,400 (covers wk 3-13)
+Wk 6-13   Phase 1  60-day shadow run (live, no-action)   EUR 8,400 (covers wk 3-13)
 Wk 14              >>> DECISION GATE <<<
 Wk 15-18  Phase 2  Deployment (contingent)             EUR 10,500
 ```

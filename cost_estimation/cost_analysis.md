@@ -113,13 +113,14 @@ better triage reduces escalations. The pilot's job is to test it.
 
 ## 6. Upfront cost — fixed fee per phase
 
-Fixed fee, not day rate. A client whose stated objection is uncertainty should not be
-handed an open-ended commitment.
+The pricing basis is **€700 per consulting day**, but each phase is contracted as a fixed
+fee. A client whose stated objection is uncertainty should not be handed an open-ended
+commitment.
 
 | Phase | Days | Fee | What it buys |
 |---|---:|---:|---|
 | **0 — Discovery and expert labelling** | 8 | **€5,600** | Scope, data access, and 300 complaints labelled by two of the firm's own handlers — the ground truth that does not currently exist |
-| **1 — Pilot build and 60-day shadow run** | 12 | **€8,400** | Assist-only triage alongside the existing process, measured against the firm's own labels |
+| **1 — Pilot build and 60-day shadow run** | 12 | **€8,400** | Shadow triage alongside the existing process; handlers do not act on suggestions, and performance is measured against the firm's own labels |
 | **2 — Deployment, if the pilot passes** | 15 | **€10,500** | Case-system integration, handler training, monitoring, handover |
 | **Commitment to the pilot decision** | 20 | **€14,000** | |
 | **Full programme** | 35 | **€24,500** | |

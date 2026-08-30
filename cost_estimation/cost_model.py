@@ -71,7 +71,8 @@ PHASES = [
      "Scope, data access, and 300 complaints labelled by two of the firm's own handlers. "
      "Produces the ground truth that does not currently exist."),
     ("Phase 1 — Pilot build and 60-day shadow run", 12,
-     "Assist-only triage running alongside the existing process. Measures accuracy against "
+     "Shadow triage running alongside the existing process; handlers do not act on suggestions. "
+     "Measures accuracy against "
      "the firm's labels, not the public proxy."),
     ("Phase 2 — Deployment, if the pilot passes", 15,
      "Integration with the case system, handler training, monitoring and handover."),
