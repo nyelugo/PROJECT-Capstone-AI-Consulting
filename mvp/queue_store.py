@@ -154,3 +154,59 @@ def summary(items: list[dict], id_key: str = "item_id") -> dict:
     out["agreement_rate"] = (100 * out["agreed"] / (out["agreed"] + out["disagreed"])
                              if (out["agreed"] + out["disagreed"]) else None)
     return out
+
+
+# --------------------------------------------------------------------------- the clock
+# A complaints operation is measured against a deadline, and the Round 1 dashboard already
+# reported that 335 of this corpus missed one. A queue that cannot sort by age is a queue a
+# regulated firm cannot use, so age and time-remaining are computed here, once, for both the
+# queue page and the Overview.
+#
+# SLA_DAYS is an ASSUMPTION standing in for a first-response target, not a regulatory
+# citation. Complaint deadlines differ by product, member state and the firm's own policy —
+# a final-response deadline is commonly far longer — and the number the firm actually works
+# to is established in Phase 0. One constant, so changing it changes everything.
+#
+# Note when reading the demo: this batch is a HISTORICAL sample spanning 53 days of intake,
+# so a large share of it reads as breached. That is a property of the sample, not of any
+# firm's performance, and the page says so rather than letting the number alarm anyone.
+SLA_DAYS = 15
+DUE_SOON_DAYS = 5
+
+BREACHED, DUE_SOON, ON_TRACK = "breached", "due soon", "on track"
+
+
+def as_at(items: list[dict], date_key: str) -> str:
+    """The queue's reference date: the most recent item in it.
+
+    Deliberately NOT today's date. The corpus is a fixed historical batch, so measuring
+    against today would show every complaint as months overdue and make the whole column
+    meaningless. Measuring against the batch's own newest item gives the ages a live queue
+    would have, and the page says which date it is working from rather than implying it is
+    now.
+    """
+    dates = [i.get(date_key) for i in items if i.get(date_key)]
+    return max(dates) if dates else ""
+
+
+def _days(a: str, b: str) -> int:
+    from datetime import date
+    ya, ma, da = (int(x) for x in a.split("-"))
+    yb, mb, db = (int(x) for x in b.split("-"))
+    return (date(ya, ma, da) - date(yb, mb, db)).days
+
+
+def clock(item_date: str, reference: str) -> dict:
+    """Age, days remaining and SLA state for one item."""
+    if not item_date or not reference:
+        return {"age_days": None, "days_left": None, "sla": ""}
+    age = _days(reference, item_date)
+    left = SLA_DAYS - age
+    state = BREACHED if left < 0 else (DUE_SOON if left <= DUE_SOON_DAYS else ON_TRACK)
+    return {"age_days": age, "days_left": left, "sla": state}
+
+
+def with_clock(items: list[dict], date_key: str) -> tuple[list[dict], str]:
+    """Attach the clock to every item. Returns the items and the reference date used."""
+    ref = as_at(items, date_key)
+    return [{**i, **clock(i.get(date_key, ""), ref)} for i in items], ref

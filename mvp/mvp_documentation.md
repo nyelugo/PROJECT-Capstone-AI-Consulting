@@ -58,7 +58,7 @@ for the wrong reason, and the entire claim of this system is that a refusal says
 | **Overview** | Chleo, ops lead | What the system proposed, what was held and why, the agreement rate with its guard rails, what is running | None — a watching page |
 | **Complaint triage** | Handler | A standing queue, already classified. Proposed team, confidence, the sentence that decided it | Accept · reroute · escalate. Tick several for a bulk action |
 | **Anomaly review** | Fraud analyst | A standing queue, ranked by departure from each account's own normal. Case note already written | Escalate · dismiss · needs more |
-| **Reporting assistance** | Compliance officer | A drafted report section, every figure checked against what this system computed | Accept · reject |
+| **Reporting assistance** | Compliance officer | The **whole return**, all sections drafted, every figure checked against what this system computed | Sign off · reject, **per section** |
 | **Decision log** | Compliance, audit | One row per human action, in order. Filterable, exportable | None — export it |
 
 **The Round 1 dashboard is deliberately not in here.** It sized an opportunity from public
@@ -71,6 +71,20 @@ system. The AI runs over the batch beforehand (`python -m mvp.build_queues`), so
 renders instantly, shows the same thing every rehearsal, and does not put sixty live model
 calls in front of a panel. Handled items stay visible — an inbox that empties tells you
 nothing about what was decided this morning.
+
+**The clock.** Triage carries an age, days-to-target and a deadline state, computed in
+`queue_store.clock()` against the batch's own newest item rather than today's date — the
+corpus is a fixed historical batch, and measuring against today would show every complaint
+as months overdue and make the column meaningless. `SLA_DAYS` is an assumption standing in
+for a first-response target, not a regulatory citation; the firm's real target is set in
+Phase 0. Anomaly review carries an age but no target: a fraud pattern is not on a
+complaints deadline.
+
+**Nothing is rendered under a request it no longer matches.** The reporting page stores its
+drafts with the audience that produced them and clears them when that changes. An earlier
+version kept the last result and displayed it under whatever the form said now, so the page
+could show a draft of one section while the selector read another. A page that silently
+shows the wrong thing is worse than one that shows nothing.
 
 **One event log, two views.** Every human action is appended to
 `mvp/queues/decision_events.json`. The queues project it — an item's status is simply its

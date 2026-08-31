@@ -9,7 +9,8 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.ui import queue_filters, status_chip, ladder_html, action_bar, bulk_bar
+from mvp.ui import (queue_filters, status_chip, sla_chip, ladder_html,
+                    action_bar, bulk_bar)
 
 st.title("Complaint triage")
 st.caption("Every complaint in today's batch, already read. It proposes a team and must "
@@ -22,22 +23,37 @@ if not items:
     st.stop()
 
 latest = Q.latest_by_item()
-rows = []
-for it in items:
-    rows.append({**it, "status": Q.status_of(it["item_id"], it, latest)})
-df = pd.DataFrame(rows)
+dated, as_at = Q.with_clock(items, "received")
+df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in dated])
+
+breached = int((df["sla"] == Q.BREACHED).sum())
+due = int((df["sla"] == Q.DUE_SOON).sum())
+c1, c2, c3 = st.columns(3)
+c1.metric("Queue as at", as_at)
+c2.metric("Past the target", breached, help=f"Older than {Q.SLA_DAYS} days")
+c3.metric("Due within 5 days", due)
+st.caption(f"Target is **{Q.SLA_DAYS} days** to first response — an assumption; your own "
+           f"target is set in Phase 0. This batch is a historical sample spanning "
+           f"{int(df['age_days'].max())} days of intake, so a large share of it reads as "
+           f"past target. That is the sample's spread, not an operational failure.")
 
 view = queue_filters(df, extra_facets=[("product", "Product"),
-                                       ("proposed_team", "Proposed team")])
+                                       ("proposed_team", "Proposed team"),
+                                       ("sla", "Deadline")])
 if view.empty:
     st.info("Nothing matches those filters.")
     st.stop()
 
-table = view[["received", "product", "proposed_team", "confidence", "status", "reason_code"]]
+table = view[["received", "age_days", "days_left", "sla", "product", "proposed_team",
+              "confidence", "status", "reason_code"]]
 sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
     column_config={
         "received": st.column_config.DateColumn("Received", width="small"),
+        "age_days": st.column_config.NumberColumn("Age", format="%d d", width="small"),
+        "days_left": st.column_config.NumberColumn("Left", format="%d d", width="small",
+                                                   help="Days to the first-response target"),
+        "sla": st.column_config.TextColumn("Deadline", width="small"),
         "product": st.column_config.TextColumn("Product", width="medium"),
         "proposed_team": st.column_config.TextColumn("Proposed team", width="medium"),
         "confidence": st.column_config.ProgressColumn(
@@ -59,7 +75,8 @@ st.divider()
 
 left, right = st.columns([3, 2])
 with left:
-    st.markdown(f"{status_chip(it['status'])} :gray-badge[{it['reason_code']}]")
+    st.markdown(f"{status_chip(it['status'])} {sla_chip(it['sla'], it['days_left'])} "
+                f":gray-badge[{it['reason_code']}]")
     st.subheader(f"Route to {it['proposed_team']}"
                  if it["proposed_queue"] else "No team proposed")
     if it["proposed_queue"]:

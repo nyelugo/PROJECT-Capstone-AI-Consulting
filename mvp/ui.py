@@ -266,3 +266,15 @@ def bulk_bar(rows: "pd.DataFrame", *, capability: str, actions: dict) -> None:
                              reason_code=r.get("reason_code", ""),
                              note=f"bulk action over {len(rows)} items")
                 st.rerun()
+
+
+SLA_COLOUR = {"breached": "red", "due soon": "orange", "on track": "green"}
+
+
+def sla_chip(state: str, days_left) -> str:
+    """Deadline state as a badge. Empty when there is no target for this item type."""
+    if not state:
+        return ""
+    if state == "breached":
+        return f":red-badge[{abs(int(days_left))}d past target]"
+    return f":{SLA_COLOUR.get(state, 'gray')}-badge[{int(days_left)}d left]"

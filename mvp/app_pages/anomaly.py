@@ -22,7 +22,11 @@ if not items:
     st.stop()
 
 latest = Q.latest_by_item()
-df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in items])
+dated, as_at = Q.with_clock(items, "raised")
+df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in dated])
+st.caption(f"Batch as at **{as_at}**. Age is shown because a stale flag is a worse flag — "
+           f"but no first-response target applies here: a fraud pattern is not on a "
+           f"complaints deadline.")
 
 view = queue_filters(df, extra_facets=[("rule", "Pattern"), ("country", "Country")],
                      date_col="raised")
@@ -30,12 +34,13 @@ if view.empty:
     st.info("Nothing matches those filters.")
     st.stop()
 
-table = view[["raised", "rule", "times_normal", "amount_eur", "txn_count", "status",
-              "reason_code"]]
+table = view[["raised", "age_days", "rule", "times_normal", "amount_eur", "txn_count",
+              "status", "reason_code"]]
 sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
     column_config={
         "raised": st.column_config.DateColumn("Raised", width="small"),
+        "age_days": st.column_config.NumberColumn("Age", format="%d d", width="small"),
         "rule": st.column_config.TextColumn("Pattern", width="medium"),
         "times_normal": st.column_config.NumberColumn("× normal", format="%.1f×",
                                                       width="small"),
