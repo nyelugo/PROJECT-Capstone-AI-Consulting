@@ -1,6 +1,10 @@
-pandas
-streamlit
-plotly
-python-dotenv
-langsmith
-openai
+# Floors, not pins — these are the versions this project was actually built and tested
+# against; newer is fine, older is not. The MVP uses recent Streamlit APIs
+# (st.navigation, st.container(horizontal=...), badge markdown) that fail on older
+# releases in ways that look like the app is broken rather than the environment.
+streamlit>=1.62.0
+pandas>=3.0.3
+plotly>=7.0.0
+openai>=2.45.0
+langsmith>=0.10.11
+python-dotenv>=1.2.2

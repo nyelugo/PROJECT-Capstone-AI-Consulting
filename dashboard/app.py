@@ -70,6 +70,14 @@ st.markdown(
     f"{h['complaints']:,} complaints across {h['firms']} firms</p>",
     unsafe_allow_html=True)
 
+# Stated at the TOP, not only in the caveat panel below the charts. Someone who reads the
+# four tiles and scrolls no further must still know two things: no model produced these
+# numbers, and they are not Chleo's. Claiming her data before Phase 0 has bought it would
+# contradict the one position this whole engagement rests on.
+st.info("**No AI on this page.** These are counts and percentages over the public CFPB "
+        "complaint database — a proxy for the *shape* of a complaint book, not this firm's "
+        "own data. Phase 0 is what replaces it.", icon=":material/functions:")
+
 # --- KPI row ---------------------------------------------------------------------
 tiles = [
     ("Complaints handled", f"{h['complaints']:,}",
