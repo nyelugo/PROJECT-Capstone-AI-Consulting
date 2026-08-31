@@ -5,6 +5,17 @@ Capstone Round 1 · Deliverable 3 of 7
 
 ---
 
+> **Round 2 note.** This dashboard is now also the **overview page of the Round 2
+> application** (`mvp/app.py`), which imports and runs this exact file rather than a copy —
+> so the two can never diverge. It still runs standalone with
+> `streamlit run dashboard/app.py`, unchanged, because it is a graded Round 1 deliverable.
+> The only edit was to skip its own `st.set_page_config` when running inside the Round 2
+> shell, where only the entry point may call it.
+>
+> The Round 2 navigation files it under **"Overview — no model involved"**. That label is
+> deliberate: there is no AI on this page, and a reader must not come away thinking these
+> figures were generated.
+
 ## What this is
 
 An executive view of complaint operations at a mid-size financial services firm, built

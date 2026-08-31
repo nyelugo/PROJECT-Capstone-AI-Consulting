@@ -11,13 +11,13 @@ business whose reasoning you can watch happen on a screen.
 proposed use cases rather than triage alone, and all three now run. See
 [`feedback/round1_decision.md`](feedback/round1_decision.md).
 
-**Everything behind one shortcut:** run `./make_desktop_app.sh` once to build
-**`Capstone.app`** on the Desktop. Double-clicking it starts both apps and opens a
-launchpad linking every deliverable, both demos, the deck, n8n and LangSmith.
-Stop the apps with `pkill -f "streamlit run"`.
+**Run it:** `streamlit run mvp/app.py`, or build a Desktop shortcut once with
+`./make_desktop_app.sh` and double-click **`Assist.app`**. One application, five pages,
+left-hand navigation — the Round 1 dashboard is a page inside it, not a second server.
+Stop it with `pkill -f "streamlit run mvp/app.py"`.
 
-Individually: `streamlit run mvp/app.py` (8502) · `run_dashboard.command` (8501). They use
-different ports and run side by side.
+`dashboard/app.py` still runs on its own (`run_dashboard.command`), because it is a graded
+Round 1 deliverable. It is reused by the Round 2 app, never copied.
 
 ---
 

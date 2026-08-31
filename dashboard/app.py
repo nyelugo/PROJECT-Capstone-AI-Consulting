@@ -20,8 +20,13 @@ GOOD, CRITICAL = "#0ca30c", "#d03b3b"
 INK, INK_2, INK_MUTED = "#0b0b0b", "#52514e", "#8a8880"
 SURFACE, GRID = "#fcfcfb", "#e8e7e3"
 
-st.set_page_config(page_title="Complaint Operations", layout="wide",
-                   initial_sidebar_state="collapsed")
+# This file is BOTH a standalone Round 1 deliverable (`streamlit run dashboard/app.py`)
+# and the overview page of the Round 2 app, which reuses it rather than copying it. Only
+# the entry point may call set_page_config, so it is skipped when running inside the shell
+# — where the sidebar is the navigator and must not start collapsed.
+if not st.session_state.get("_shell"):
+    st.set_page_config(page_title="Complaint Operations", layout="wide",
+                       initial_sidebar_state="collapsed")
 
 st.markdown(f"""<style>
  .stApp {{ background:{SURFACE}; }}
