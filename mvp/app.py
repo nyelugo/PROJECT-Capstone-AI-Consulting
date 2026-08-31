@@ -2,18 +2,19 @@
 
 Run:  streamlit run mvp/app.py
 
-Why the Round 1 dashboard is a page in here rather than a second app on a second port.
-Two ports is a seam the audience sees, and it quietly contradicts the thing the deck
-claims: that this is one system. Chleo would never experience it as two products, so the
-demo should not either.
+This is Chleo's product, and only her product. The Round 1 dashboard is deliberately NOT
+in here: it sized an opportunity from public data for a pitch, which is a different job for
+a different audience, and a page needing a label telling you which part to ignore belongs
+somewhere else. It stays at `dashboard/app.py`, runs standalone, and is shown from the deck.
 
-What must survive that merge is the distinction the dashboard exists to make. It has NO
-model in it — the figures are arithmetic over public data. Navigation is a flat list of
-five, so that distinction is carried on the Overview page itself rather than by a section
-heading, where it cannot be scrolled past or lost in a redesign.
+Overview is therefore an operations view — what the system proposed and what her people did
+about it. Every figure on it describes the system's own behaviour, which is true whether the
+complaints came from her intake or a public corpus. That is why it can be honest today,
+before Phase 0 has bought any of her data.
 
-`dashboard/app.py` is reused, not copied, and still runs standalone as the Round 1
-deliverable it is.
+Triage and anomaly review are standing work queues rather than forms. Work is already sorted
+when she arrives, handled items stay visible afterwards, and every human action is appended
+to one event log that the queues project and the Decision log page reads in full.
 """
 from __future__ import annotations
 
@@ -40,8 +41,8 @@ init_state()
 
 nav = st.navigation(
     [
-        st.Page("../dashboard/app.py", title="Overview",
-                icon=":material/insights:", url_path="overview", default=True),
+        st.Page("app_pages/overview.py", title="Overview",
+                icon=":material/insights:", default=True),
         st.Page("app_pages/triage.py", title="Complaint triage",
                 icon=":material/alt_route:"),
         st.Page("app_pages/anomaly.py", title="Anomaly review",
@@ -56,6 +57,10 @@ nav = st.navigation(
 
 with st.sidebar:
     st.divider()
+    # Every recorded action carries a name. An audit record that cannot say who decided is
+    # not an audit record — it is a list.
+    st.text_input("Signed in as", key="operator", value=st.session_state.get(
+        "operator", "U. Ahukannah"), help="Recorded against every decision you take.")
     ok_model = R.env("OPENAI_API_KEY") is not None
     st.caption(
         f"{':green-badge[model]' if ok_model else ':red-badge[model]'} "

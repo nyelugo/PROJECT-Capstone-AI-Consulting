@@ -1,31 +1,86 @@
-"""UC-2 — explain a flagged transaction pattern, grounded in the record's own values."""
+"""UC-2 — the anomaly review queue.
+
+A deterministic detector selects what is unusual; the model only writes the case note. The
+queue is standing and keeps handled items, because an analyst's morning is as much about
+what was already dismissed as about what is new.
+"""
+import pandas as pd
 import streamlit as st
 
-from mvp.capabilities.anomaly import Anomaly, detect, RULES
-from mvp.ui import fire, show, model_ready
+from mvp import queue_store as Q
+from mvp.capabilities.anomaly import RULES
+from mvp.ui import queue_filters, status_chip, ladder_html, action_bar, bulk_bar
 
-st.title("Review a flagged pattern")
-st.caption("A deterministic detector selects; the model only explains. Ranked by how far "
-           "a pattern departs from that account's own normal — never by the amount.")
+st.title("Anomaly review")
+st.caption("Ranked by how far a pattern departs from that account's own normal — never by "
+           "the amount. A large but ordinary payment on a wealthy account does not outrank "
+           "a small impossible one on a modest account.")
 
-cands = detect()
-labels = [f"{c['candidate_id']} · {c['rule'].replace('_', ' ')} · {c['times_normal']}x normal "
-          f"· {c['txn_count']} txn · €{c['amount_eur']:,.2f}" for c in cands]
-pick = st.selectbox(f"Candidates raised on this batch ({len(cands)})", range(len(cands)),
-                    format_func=lambda i: labels[i])
-c = cands[pick]
+items = Q.load_anomaly()
+if not items:
+    st.warning("The queue has not been built yet. Run `python -m mvp.build_queues`.")
+    st.stop()
 
-with st.container(border=True):
-    st.markdown(f"**{c['rule'].replace('_', ' ').capitalize()}** — {RULES[c['rule']]}")
+latest = Q.latest_by_item()
+df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in items])
+
+view = queue_filters(df, extra_facets=[("rule", "Pattern"), ("country", "Country")],
+                     date_col="raised")
+if view.empty:
+    st.info("Nothing matches those filters.")
+    st.stop()
+
+table = view[["raised", "rule", "times_normal", "amount_eur", "txn_count", "status",
+              "reason_code"]]
+sel = st.dataframe(
+    table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
+    column_config={
+        "raised": st.column_config.DateColumn("Raised", width="small"),
+        "rule": st.column_config.TextColumn("Pattern", width="medium"),
+        "times_normal": st.column_config.NumberColumn("× normal", format="%.1f×",
+                                                      width="small"),
+        "amount_eur": st.column_config.NumberColumn("Amount", format="€%.2f",
+                                                    width="small"),
+        "txn_count": st.column_config.NumberColumn("Txns", width="small"),
+        "status": st.column_config.TextColumn("Status", width="small"),
+        "reason_code": st.column_config.TextColumn("Why held", width="medium"),
+    })
+
+picked = sel.selection.rows
+if len(picked) > 1:
+    bulk_bar(view.iloc[picked], capability="anomaly", actions=Q.ANOMALY_ACTIONS)
+    st.stop()
+if not picked:
+    st.caption(f"{len(view)} of {len(df)} candidates shown. Tick one to read the case note, or several to act together.")
+    st.stop()
+
+it = view.iloc[picked[0]].to_dict()
+st.divider()
+
+left, right = st.columns([3, 2])
+with left:
+    st.markdown(f"{status_chip(it['status'])} :gray-badge[{it['reason_code']}]")
+    st.subheader(it["rule"].replace("_", " ").capitalize())
+    st.caption(RULES.get(it["rule"], ""))
     m = st.columns(4)
-    m[0].metric("Transactions", c["txn_count"])
-    m[1].metric("Total", f"€{c['amount_eur']:,.0f}")
-    m[2].metric("This account's median", f"€{c['account_median_eur']:,.0f}")
-    m[3].metric("Times normal", f"{c['times_normal']}x")
-    st.caption(f"{c['date']} · {c['category']} · {c['channel']} · {c['country']}")
+    m[0].metric("Transactions", int(it["txn_count"]))
+    m[1].metric("Total", f"€{it['amount_eur']:,.0f}")
+    m[2].metric("Account median", f"€{it['account_median_eur']:,.0f}")
+    m[3].metric("Times normal", f"{it['times_normal']:.1f}×")
+    if it["explanation"]:
+        st.markdown("**Case note:**")
+        st.info(it["explanation"])
+    if it["next_check"]:
+        st.markdown(f"**Fastest check:** {it['next_check']}")
 
-if st.button("Explain this flag", type="primary", disabled=not model_ready(),
-             icon=":material/travel_explore:"):
-    fire(Anomaly(), {"candidate": c}, "anomaly")
+with right:
+    with st.container(border=True):
+        st.markdown("**Checks**")
+        st.html(ladder_html(it["reason_code"]))
+        conf = it["confidence"]
+        st.caption(f"confidence {conf:.2f} · {it['latency_ms']} ms · {it['model']} · "
+                   f"ref {it['ref']}" if pd.notna(conf) else f"ref {it['ref']}")
+    st.caption(f"{it['category']} · {it['channel']} · {it['country']}")
 
-show("anomaly", accept_label="Escalate to an analyst", review_label="Dismiss")
+action_bar(it, capability="anomaly", actions=Q.ANOMALY_ACTIONS,
+           proposed=f"{it['rule']} — {it['times_normal']:.1f}× normal")

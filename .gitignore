@@ -34,3 +34,6 @@ dashboard/__pycache__/
 
 # Office lock files (a deck open in PowerPoint leaves one behind)
 ~$*
+
+# Operator working state — one machine's decisions, not part of the deliverable
+mvp/queues/decision_events.json

@@ -70,6 +70,25 @@ GUARD_ORDER = [
 
 STAGES = ["input", "call", "parse", "scope", "confidence", "grounding"]
 
+# Which guard stage each code belongs to. Derived from GUARD_ORDER above and kept here so
+# a stored reason_code — a queue row, a trace, an export — can be rendered with the same
+# ladder as a live Decision, without needing the Decision object it came from.
+STAGE_OF = {
+    "REJECT_INVALID_INPUT": "input",
+    "ERROR_MODEL_CALL": "call",
+    "REJECT_MALFORMED_OUTPUT": "parse",
+    "REJECT_QUEUE_NOT_IN_PRODUCT": "scope",
+    "REJECT_OUT_OF_TAXONOMY": "scope",
+    "REJECT_METRIC_NOT_PUBLISHED": "scope",
+    "REJECT_ACCOUNT_NOT_IN_LEDGER": "scope",
+    "REJECT_LOW_CONFIDENCE": "confidence",
+    "REJECT_EVIDENCE_NOT_VERBATIM": "grounding",
+    "REJECT_FIGURE_NOT_COMPUTED": "grounding",
+    "REJECT_VALUE_MISMATCH": "grounding",
+    "OK_PROPOSED": None,
+}
+assert set(STAGE_OF) == set(REASONS), "every reason code needs a stage"
+
 
 @dataclass
 class Decision:
