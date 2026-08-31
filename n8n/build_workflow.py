@@ -123,6 +123,28 @@ def node(name, ntype, tv, pos, params, **extra):
     return n
 
 
+
+def _credential_id(env_var: str, node_name: str) -> str:
+    """Resolve a credential id: environment first, then whatever is already in the file.
+
+    The fallback matters. Regenerating without the environment variables set silently
+    replaced two working credential ids with "SET_ON_IMPORT", and the damage would only
+    have shown up on re-import into n8n — as an auth failure, on the day of a demo.
+    Credential ids are references, not secrets; the secrets stay in n8n.
+    """
+    v = os.environ.get(env_var)
+    if v:
+        return v
+    existing = Path(__file__).parent / "workflow.json"
+    if existing.exists():
+        for node in json.loads(existing.read_text()).get("nodes", []):
+            if node.get("name") == node_name:
+                for cred in (node.get("credentials") or {}).values():
+                    if cred.get("id") and cred["id"] != "SET_ON_IMPORT":
+                        return cred["id"]
+    return "SET_ON_IMPORT"
+
+
 nodes = [
     node("Run demo", "n8n-nodes-base.manualTrigger", 1, [-560, 60], {}),
     node("Complaint received", "n8n-nodes-base.webhook", 2, [-560, 260], {
@@ -153,7 +175,7 @@ nodes = [
                     "  ]\n}) }}",
         "options": {}},
          credentials={"openAiApi": {
-             "id": os.environ.get("N8N_OPENAI_CREDENTIAL_ID", "SET_ON_IMPORT"),
+             "id": _credential_id("N8N_OPENAI_CREDENTIAL_ID", "Classify complaint"),
              "name": os.environ.get("N8N_OPENAI_CREDENTIAL_NAME", "Ugo_OpenAI")}}),
     node("Validate and route", "n8n-nodes-base.code", 2, [320, 160], {
         "jsCode": PARSE_CODE}),
@@ -189,7 +211,7 @@ nodes = [
          # complaint still gets routed. Telemetry is fire-and-forget.
          onError="continueRegularOutput",
          credentials={"httpHeaderAuth": {
-             "id": os.environ.get("N8N_LANGSMITH_CREDENTIAL_ID", "SET_ON_IMPORT"),
+             "id": _credential_id("N8N_LANGSMITH_CREDENTIAL_ID", "Trace to LangSmith"),
              "name": os.environ.get("N8N_LANGSMITH_CREDENTIAL_NAME", "Ugo_LangSmith")}}),
     node("Safe to propose?", "n8n-nodes-base.if", 2, [760, 160], {
         "conditions": {"options": {"caseSensitive": True, "version": 2},
@@ -242,9 +264,17 @@ wf = {"name": "Capstone — Complaint Triage POC (assist-only)",
       "nodes": nodes, "connections": connections,
       "settings": {"executionOrder": "v1"}, "pinData": {}}
 
-out = Path(__file__).parent / "workflow.json"
-out.write_text(json.dumps(wf, indent=2))
-print(f"wrote {out}  ({len(nodes)} nodes)")
+# Written to both locations from this one source. Round 2's deliverables page names
+# poc/poc_workflow.json specifically; Round 1 shipped n8n/workflow.json and the page also
+# says to keep Round 1 artifacts. Two hand-maintained copies would drift, so both are
+# generated here and neither is authoritative over the other.
+payload = json.dumps(wf, indent=2)
+targets = [Path(__file__).parent / "workflow.json",
+           Path(__file__).resolve().parents[1] / "poc" / "poc_workflow.json"]
+for out in targets:
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(payload)
+    print(f"wrote {out}  ({len(nodes)} nodes)")
 print(f"sample complaint: {SAMPLE_PRODUCT} | true label: {SAMPLE_TRUTH} | "
       f"{len(SAMPLE_NARRATIVE)} chars")
 (Path(__file__).parent / "sample_complaint.json").write_text(json.dumps(
