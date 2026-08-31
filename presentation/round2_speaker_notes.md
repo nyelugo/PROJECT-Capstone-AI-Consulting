@@ -49,8 +49,11 @@ Every capability is those same four steps. The only thing that changes is what c
 evidence — a sentence from the complaint, a figure we computed, or the transaction's own
 values.
 
-[Land this:] Which is why adding the second and third use cases cost me a prompt and a
-check, not a new system. Building all three cost 1.3 times building one — not three times.
+[Land this:] Which is why building all three cost 1.3 times building one — not three times.
+
+[Point at the strip.] And the checks earn it. On one batch this week it caught a fabrication
+in all three: two quotes that weren't in the complaint, six values that weren't in the
+transaction, one figure we never computed.
 
 # Slide 5 — The proof of concept
 [Switch to the live n8n window. This slide is your fallback if it's cold.]
@@ -152,18 +155,18 @@ outputs reaching a person. That last one is absolute.
 
 The workflow showed you it was possible. This is the product.
 
-[Point at the checks column.] Every check it ran, by name, and the one it failed. That's
-your answer to "I can't see what it does" — not a confidence score, a list.
+[Point at the list.] It's a queue — read overnight. Nobody types a complaint into a box it
+already arrived in.
 
-[Point at the button.] And nothing has happened yet. It's proposed. Someone has to press
-that.
+[Point at the deadline column.] And that's the column your regulator asks about. Your own
+book had three hundred and thirty-five that missed a deadline; this one sorts by it.
 
-[Click it, then open the log.] Now look — what it proposed sits next to what your handler
-actually did. That pairing is the audit record. A proposal with nobody's decision beside it
+[Open a row.] Every check it ran, by name, and the one it failed. Not a confidence score —
+a list.
+
+[Point at the buttons.] Nothing has happened yet. Someone has to press that, and the press
+is recorded next to what the system proposed. A proposal with nobody's decision beside it
 isn't a decision, it's a suggestion nobody owns.
-
-Same screen runs all three. And twenty-seven checks pass with no network at all, so I can
-prove the safety logic works without spending a penny.
 
 # Slide 11 — What I'm asking for
 [Stop pitching.]
@@ -236,6 +239,9 @@ every time. The model only explains why, in language an analyst can act on. A la
 can't compute a baseline and its mistakes aren't auditable, so it never chooses what to look
 at.
 
-And it ranks by how far something departs from that account's own normal, never by the
-amount. A large-but-ordinary payment on a wealthy account doesn't outrank a small impossible
-one on a modest account. A predicted payout never orders the queue.
+It ranks by how far something departs from that account's own normal, never by the amount. A
+large but ordinary payment on a wealthy account doesn't outrank a small impossible one on a
+modest account. A predicted payout never orders the queue.
+
+And the guard earns its place here too. Six of fifty-six case notes quoted a figure that
+wasn't in the transaction record. Every one was stopped before an analyst saw it.
