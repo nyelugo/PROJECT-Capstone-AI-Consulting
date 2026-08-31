@@ -3,6 +3,13 @@
 Author: Ugo Ahukannah
 Capstone Round 1 · Client: "Chleo", CEO of a mid-size EU financial services firm
 
+> **Round 2 update (2026-08-31).** This document is the Round 1 proposal and is kept as
+> written. One thing in it is now out of date on purpose: the "Round 2 MVP?" column said
+> UC-1 only. After the staff presentation the recommendation was to build all three, and
+> all three now run on a shared decision spine. See
+> [`../use_case_definition.md`](../use_case_definition.md) and
+> [`../feedback/round1_decision.md`](../feedback/round1_decision.md).
+
 ---
 
 ## Why these three, and why in this order
@@ -17,11 +24,11 @@ her question:
 They also escalate in risk deliberately. UC-1 is the safest thing that is still worth
 doing. If the pilot on UC-1 fails, nothing expensive has happened.
 
-| | Use case | AI capability | Human role | Preliminary AI Act view | Round 2 MVP? |
+| | Use case | AI capability | Human role | Preliminary AI Act view | Built in Round 2? |
 |---|---|---|---|---|---|
-| **UC-1** | Complaint triage and routing | Text classification + reason generation | Decides and resolves | Limited risk | **Yes — this one** |
-| **UC-2** | Transaction anomaly flagging for ops review | Anomaly detection + explanation | Confirms or dismisses every flag | Limited risk, subject to §UC-2 caveat | No |
-| **UC-3** | Complaint reporting assistance | Summarisation + drafting | Reviews and signs | Minimal risk | No |
+| **UC-1** | Complaint triage and routing | Text classification + reason generation | Decides and resolves | Limited risk | **Yes — the capability that must run** |
+| **UC-2** | Transaction anomaly flagging for ops review | Anomaly detection + explanation | Confirms or dismisses every flag | Limited risk, subject to §UC-2 caveat | **Yes — on synthetic transaction data** |
+| **UC-3** | Complaint reporting assistance | Summarisation + drafting | Reviews and signs | Minimal risk | **Yes** |
 
 ---
 
@@ -58,9 +65,11 @@ the decision, and an explicit `UNSURE` option that routes to a human.
 customer-facing surface. UC-1 hands a labelled, explained complaint to a person; the
 person does the rest.
 
-**Why this is the Round 2 MVP.** It is the one capability that can be built to actually
+**Why this leads the Round 2 MVP.** It is the capability that can be built to actually
 run, end to end, in the time available — and the rubric is explicit that a small MVP that
-runs scores above an ambitious one that does not.
+runs scores above an ambitious one that does not. It was therefore hardened and verified
+*first*, before UC-3 and UC-2 were started, so the requirement was banked before anything
+speculative began.
 
 ---
 
