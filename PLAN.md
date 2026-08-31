@@ -44,7 +44,7 @@ Weights: ROI/risk 20 · EU AI Act 20 · use case+POC 15 · MVP 15 · GDPR 10 · 
 |---|---|---|
 | Use cases | UC-1 complaint triage · UC-2 anomaly flagging · UC-3 reporting assistance | `research/use_cases.md` |
 | Dataset | CFPB Consumer Complaint Database, public API, 16,839 curated records | `research/sector_research.md` |
-| MVP capability | UC-1 only — classify a complaint, give a reason, abstain when unsure | `research/use_cases.md` |
+| MVP capability | UC-1 (triage) must run end to end. Staff recommended all 3 use cases; built on one shared spine, riskiest last — see `feedback/round1_decision.md` | `research/use_cases.md` |
 | BI tool | **Python** (Streamlit + Plotly) | `dashboard/dashboard_documentation.md` |
 
 **Python instead of PowerBI/Tableau.** Confirmed with the instructor that Python is an
@@ -53,4 +53,3 @@ into, and so dashboard figures and document figures share one module.
 
 ## Open decisions
 
-- [ ] `feedback/round1_decision.md` — after the staff presentation

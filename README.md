@@ -20,7 +20,7 @@ business whose reasoning you can watch happen on a screen.
 | LangSmith monitoring sample | **Done** — `langsmith/`, 60 traced decisions, EU workspace |
 | Cost + timeline estimate | **Done** — `cost_estimation/`, model + assumptions table |
 | Round 1 presentation deck | **Done** — `presentation/`, 14 slides + speaker notes |
-| `round1_decision.md` | **Scaffolded** — `feedback/`, filled in after the staff presentation |
+| `round1_decision.md` | **Done** — `feedback/`, decision is KEEP with widened Round 2 scope |
 
 ## What each part does
 
