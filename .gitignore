@@ -31,3 +31,6 @@ dashboard/__pycache__/
 
 # Local Streamlit config — machine-specific, and credentials.toml carries an email stamp
 .streamlit/
+
+# Office lock files (a deck open in PowerPoint leaves one behind)
+~$*
