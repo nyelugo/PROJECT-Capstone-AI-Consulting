@@ -78,6 +78,74 @@ def test_triage():
     assert "1234" not in json.dumps(d.as_dict()), "raw identifier leaked into the record"
 
 
+def test_reporting():
+    from .capabilities.reporting import Reporting, fact_sheet
+    cap = Reporting()
+    sheet = fact_sheet()
+    good = {"section": "Timeliness", "audience": "the board risk committee"}
+    print("\nreporting")
+    check("input: unknown section", cap, {**good, "section": "Vibes"},
+          {}, "REJECT_INVALID_INPUT", "input")
+    check("input: no audience", cap, {**good, "audience": ""},
+          {}, "REJECT_INVALID_INPUT", "input")
+    check("call: model raises", cap, good, TimeoutError("read timeout"),
+          "ERROR_MODEL_CALL", "call")
+    check("parse: not JSON", cap, good, "Here is your section.",
+          "REJECT_MALFORMED_OUTPUT", "parse")
+    check("scope: metric not in this section", cap, good,
+          {"narrative": "Nothing to report.", "figures_used": ["monetary_pct"], "confidence": 0.9},
+          "REJECT_METRIC_NOT_PUBLISHED", "scope")
+    check("confidence: below threshold", cap, good,
+          {"narrative": "Nothing to report.", "figures_used": ["complaints"], "confidence": 0.2},
+          "REJECT_LOW_CONFIDENCE", "confidence")
+    # An invented figure: 88.0% is not the timeliness rate, and no sheet entry is near it.
+    check("grounding: invented percentage", cap, good,
+          {"narrative": "Firms responded on time in 88.0% of cases this window.",
+           "figures_used": ["timely_pct"], "confidence": 0.95},
+          "REJECT_FIGURE_NOT_COMPUTED", "grounding")
+    # The same sentence with the figure this repo actually computed.
+    real = (f"Firms responded on time in {sheet['timely_pct']['v']:.1f}% of cases, with "
+            f"{sheet['untimely_n']['v']} complaints missing the deadline.")
+    d = check("clean draft, every figure real", cap, good,
+              {"narrative": real, "figures_used": ["timely_pct", "untimely_n"], "confidence": 0.9},
+              "OK_PROPOSED", None)
+    assert "trace to the fact sheet" in d.grounding_detail
+    # Rounding must be allowed, or the guard is unusable in practice.
+    rounded = f"Firms responded on time in {sheet['timely_pct']['v']:.0f}% of cases."
+    check("clean draft, figure rounded to 0dp", cap, good,
+          {"narrative": rounded, "figures_used": ["timely_pct"], "confidence": 0.9},
+          "OK_PROPOSED", None)
+
+
+def test_anomaly():
+    from .capabilities.anomaly import Anomaly, detect
+    cap = Anomaly()
+    cand = detect()[0]
+    good = {"candidate": cand}
+    ok = {"explanation": f"Five transactions totalling EUR {cand['amount_eur']} were seen.",
+          "next_check": "Call the customer.", "confidence": 0.9}
+    print("\nanomaly")
+    check("input: no candidate (model may not select)", cap, {},
+          {}, "REJECT_INVALID_INPUT", "input")
+    check("input: unknown rule", cap, {"candidate": {**cand, "rule": "hunch"}},
+          {}, "REJECT_INVALID_INPUT", "input")
+    check("call: model raises", cap, good, ConnectionError("dns failure"),
+          "ERROR_MODEL_CALL", "call")
+    check("parse: not JSON", cap, good, "Looks dodgy to me.",
+          "REJECT_MALFORMED_OUTPUT", "parse")
+    check("scope: transaction not in the batch", cap,
+          {"candidate": {**cand, "txn_ids": ["t999999"]}}, ok,
+          "REJECT_ACCOUNT_NOT_IN_LEDGER", "scope")
+    check("confidence: below threshold", cap, good, {**ok, "confidence": 0.3},
+          "REJECT_LOW_CONFIDENCE", "confidence")
+    check("grounding: invented amount", cap, good,
+          {**ok, "explanation": "A single payment of EUR 12345.67 was made."},
+          "REJECT_VALUE_MISMATCH", "grounding")
+    d = check("clean case note", cap, good, ok, "OK_PROPOSED", None)
+    assert d.ref.startswith("cx_"), "account reference must be pseudonymous"
+    assert cand["account_ref"] not in json.dumps(d.as_dict()), "raw account ref leaked"
+
+
 def main() -> int:
     print("Guard ladder, declared order:")
     for c in GUARD_ORDER:
