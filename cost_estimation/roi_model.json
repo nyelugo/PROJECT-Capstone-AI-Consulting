@@ -1,0 +1,217 @@
+{
+  "annual_value_eur": {
+    "UC-1 triage \u2014 handler time displaced": 4578,
+    "UC-3 reporting \u2014 drafting time displaced": 2830,
+    "UC-2 anomaly \u2014 losses avoided by earlier detection": 6876,
+    "UC-1 triage \u2014 ombudsman escalations avoided": 3042
+  },
+  "value_scenario": {
+    "UC-1 triage \u2014 handler time displaced": "conservative",
+    "UC-3 reporting \u2014 drafting time displaced": "conservative",
+    "UC-2 anomaly \u2014 losses avoided by earlier detection": "central",
+    "UC-1 triage \u2014 ombudsman escalations avoided": "central"
+  },
+  "annual_running_cost_eur": {
+    "Model calls \u2014 triage": 0.29,
+    "Model calls \u2014 reporting": 0.0,
+    "Model calls \u2014 anomaly": 0.08,
+    "Platform (hosting, monitoring, logging)": 1800,
+    "Human oversight (quarterly review of three capabilities)": 8400
+  },
+  "annual_running_cost_total_eur": 10200,
+  "ai_share_of_running_cost_pct": 0.0,
+  "upfront_fixed_fee": {
+    "Phase 0 \u2014 Discovery and expert labelling": {
+      "days": 8,
+      "fee_eur": 5600,
+      "why": "Scope, data access, and 300 complaints labelled by two of the firm's own handlers. Unchanged from Round 1: labelling is triage-specific, discovery covers all three."
+    },
+    "Phase 1 \u2014 Pilot build and 60-day shadow run": {
+      "days": 18,
+      "fee_eur": 12600,
+      "why": "All three capabilities on the shared spine, running alongside the existing process. Round 1 costed 12 days for triage alone."
+    },
+    "Phase 2 \u2014 Deployment, if the pilot passes": {
+      "days": 20,
+      "fee_eur": 14000,
+      "why": "Case-system integration, handler and analyst training, monitoring handover. Round 1 costed 15 days for one capability."
+    }
+  },
+  "upfront_to_end_of_pilot_eur": 18200,
+  "upfront_full_eur": 32200,
+  "round1_upfront_full_eur": 24500,
+  "scope_multiple_for_3x_capabilities": 1.31,
+  "scenarios": {
+    "conservative": {
+      "annual_value_eur": 7408,
+      "roi_12m": {
+        "months": 12,
+        "earning_months": 6,
+        "total_benefit_eur": 3704,
+        "total_cost_eur": 42400,
+        "net_benefit_eur": -38696,
+        "roi_pct": -91.3
+      },
+      "roi_36m": {
+        "months": 36,
+        "earning_months": 30,
+        "total_benefit_eur": 18521,
+        "total_cost_eur": 62801,
+        "net_benefit_eur": -44280,
+        "roi_pct": -70.5
+      },
+      "break_even_month": null
+    },
+    "central": {
+      "annual_value_eur": 17326,
+      "roi_12m": {
+        "months": 12,
+        "earning_months": 6,
+        "total_benefit_eur": 8663,
+        "total_cost_eur": 42400,
+        "net_benefit_eur": -33737,
+        "roi_pct": -79.6
+      },
+      "roi_36m": {
+        "months": 36,
+        "earning_months": 30,
+        "total_benefit_eur": 43315,
+        "total_cost_eur": 62801,
+        "net_benefit_eur": -19486,
+        "roi_pct": -31.0
+      },
+      "break_even_month": 69
+    }
+  },
+  "sensitivity_36m_central_roi_pct": {
+    "base": -31.0,
+    "earlier_detection_rate_pct 15 -> 5": -49.3,
+    "report_time_reduction_pct 50 -> 20": -37.8,
+    "review_days_per_quarter 3 -> 6": -50.8,
+    "value_starts_month 7 -> 10": -37.9
+  },
+  "break_even_volume": {
+    "complaints_per_year_for_36m_payback": 3800,
+    "retail_accounts_implied": 391591,
+    "this_client_complaints_per_year": 2426,
+    "note": "At this client's volume the bespoke build does not pay back inside 36 months. This is the volume at which it would."
+  },
+  "productised": {
+    "clients_sharing_the_build": 5,
+    "per_client_build_eur": 6440,
+    "total_cost_36m_eur": 37041,
+    "total_benefit_36m_eur": 43315,
+    "net_benefit_36m_eur": 6274,
+    "roi_36m_pct": 16.9,
+    "note": "The build is bespoke today. Amortising it across five mid-size firms is what turns the same capability from a loss into a return for a client this size. It is a commercial decision, not a technical one."
+  },
+  "oversight_inhouse_day_eur": 283.05,
+  "levers_36m_central_roi_pct": {
+    "as proposed \u2014 bespoke build, consultant-run oversight": -31.0,
+    "oversight moved in-house after handover": -9.4,
+    "build amortised across 5 clients": 16.9,
+    "both \u2014 productised build AND in-house oversight": 96.6
+  },
+  "assumptions": {
+    "report_days_per_quarter_now": {
+      "value": 5,
+      "kind": "judgement",
+      "basis": "person-days assembling the quarterly complaints report by hand"
+    },
+    "report_time_reduction_pct": {
+      "value": 50,
+      "kind": "judgement",
+      "basis": "share of drafting time displaced; the review still happens in full"
+    },
+    "fraud_unauth_share_pct": {
+      "value": 7.4,
+      "kind": "measured",
+      "basis": "share of the reference corpus that is fraud or unauthorised transactions (810 + 437 of 16,839)"
+    },
+    "earlier_detection_rate_pct": {
+      "value": 15,
+      "kind": "judgement",
+      "basis": "share of those cases caught by monitoring before the customer complains. THE SOFTEST NUMBER IN THIS MODEL"
+    },
+    "avg_redress_gbp": {
+      "value": 215,
+      "kind": "sourced",
+      "basis": "FCA aggregate complaints data 2025 H2"
+    },
+    "avoided_ombudsman_cases": {
+      "value": 4,
+      "kind": "judgement",
+      "basis": "escalations avoided per year by routing correctly first time. Explicitly NOT claimed as a benefit today; the pilot exists to test it"
+    },
+    "ombudsman_case_fee_gbp": {
+      "value": 650,
+      "kind": "sourced",
+      "basis": "Financial Ombudsman Service case fee, frozen for 2025/26"
+    },
+    "platform_eur_month": {
+      "value": 150,
+      "kind": "judgement",
+      "basis": "n8n hosting + LangSmith + logging, unchanged"
+    },
+    "review_days_per_quarter": {
+      "value": 3,
+      "kind": "judgement",
+      "basis": "quarterly review of three capabilities rather than one. Round 1 assumed 2 for a single capability; this is the cost of the widened scope"
+    },
+    "reports_per_year": {
+      "value": 4,
+      "kind": "assumption",
+      "basis": "one complaints report per quarter, 4 sections each"
+    },
+    "anomaly_batches_per_year": {
+      "value": 12,
+      "kind": "assumption",
+      "basis": "monthly batch review"
+    },
+    "anomaly_candidates_per_batch": {
+      "value": 56,
+      "kind": "measured",
+      "basis": "candidates raised by the detector on the synthetic batch"
+    },
+    "report_tokens_in": {
+      "value": 900,
+      "kind": "measured",
+      "basis": "fact sheet + instruction, mvp/capabilities/reporting.py"
+    },
+    "report_tokens_out": {
+      "value": 180,
+      "kind": "measured",
+      "basis": "3-5 sentences plus keys"
+    },
+    "anomaly_tokens_in": {
+      "value": 420,
+      "kind": "measured",
+      "basis": "candidate record + instruction, mvp/capabilities/anomaly.py"
+    },
+    "anomaly_tokens_out": {
+      "value": 120,
+      "kind": "measured",
+      "basis": "case note plus next check"
+    },
+    "price_in_per_1m_usd": {
+      "value": 0.15,
+      "kind": "sourced",
+      "basis": "OpenAI list price, gpt-4o-mini input"
+    },
+    "price_out_per_1m_usd": {
+      "value": 0.6,
+      "kind": "sourced",
+      "basis": "OpenAI list price, gpt-4o-mini output"
+    },
+    "usd_eur": {
+      "value": 0.92,
+      "kind": "judgement",
+      "basis": "rounded mid-market rate, stated rather than hidden"
+    },
+    "value_starts_month": {
+      "value": 7,
+      "kind": "judgement",
+      "basis": "Phase 0 + 1 + 2 run about six months end to end, so benefits accrue from month 7. This is why the 12-month ROI is negative and the 36-month is not"
+    }
+  }
+}
