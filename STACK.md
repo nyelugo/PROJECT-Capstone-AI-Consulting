@@ -1,10 +1,14 @@
 # The Stack — what each element does
 
 Author: Ugo Ahukannah
-Capstone Round 1 · a high-level map, not a code tour
+Capstone Rounds 1 and 2 · a high-level map, not a code tour
 
-There are seven moving parts. Each answers one question, and the questions are different.
+There are nine moving parts. Each answers one question, and the questions are different.
 Where two of them look similar in a UI, this document says why they are not.
+
+**Round 2 added two of the nine** — the MVP and its synthetic transaction batch — and the
+scope widened from one use case to three. Everything Round 1 built is unchanged and still
+read by the newer parts rather than copied into them.
 
 ---
 
@@ -18,7 +22,9 @@ Where two of them look similar in a UI, this document says why they are not.
 | **n8n workflow** | 10 nodes on the cohort instance | Can she watch a decision happen? | Not production. Assist-only, a person decides |
 | **LangSmith experiment** | 60 examples with reference answers | How good is it? | Cannot judge a live complaint — no answer key exists yet |
 | **LangSmith tracing** | One record per real execution | What did it just do, and why? | Cannot score anything. No ground truth at run time |
-| **Cost model** | Python, every figure derived | What would this cost, and what must be true? | Not a quote. An order of magnitude with stated assumptions |
+| **Cost / ROI model** | Python, every figure derived | What would this cost, what does it return, and what must be true? | Not a quote. An order of magnitude with stated assumptions |
+| **MVP (`mvp/`)** | Streamlit app: one decision spine, three capabilities | Can a person actually use it, and is the human step real? | Not production. No case-system integration, no persistence beyond the session |
+| **Synthetic transactions** | 2,069 records, anomalies planted with labels | Does the anomaly detector find what it should? | Not real data, and not proof against a pattern nobody planted |
 
 ---
 
@@ -27,15 +33,28 @@ Where two of them look similar in a UI, this document says why they are not.
 ```
 complaint ─► Dashboard        aggregates it into the business picture (offline, no AI)
           │
-          └─► n8n workflow
-                 1. validate the input      reject unknown product / short text, before spending
-                 2. classify                one OpenAI call, product-scoped queue list
-                 3. check the answer        4 guards: shape, queue valid, confident, quote real
-                 4. fan out ──┬─ route      propose to a handler, or send to human review
-                              └─ trace      one record to LangSmith, off the critical path
+          ├─► n8n workflow    THE POC — can she watch a decision happen?
+          │      1. validate the input      reject unknown product / short text, before spending
+          │      2. classify                one OpenAI call, product-scoped queue list
+          │      3. check the answer        4 guards: shape, queue valid, confident, quote real
+          │      4. fan out ──┬─ route      propose to a handler, or send to human review
+          │                   └─ trace      one record to LangSmith, off the critical path
+          │
+          └─► MVP             THE PRODUCT — the same decision, plus the human step made real
+                 1. validate       same contract
+                 2. propose        same prompt, read from classifier/ rather than copied
+                 3. guard          6 stages, 11 reason codes, the ladder shown on screen
+                 4. A PERSON       accept or override — and the click is recorded beside
+                                   what was proposed. That pairing is the audit record
 ```
 
-Nothing is routed by the machine. Both branches end at a person.
+Nothing is routed by the machine. Every branch, in both runtimes, ends at a person.
+
+**The MVP runs three capabilities through that one spine.** Triage grounds its proposal in a
+verbatim quote, reporting in a figure `dashboard/metrics.py` computed, anomaly flagging in
+the transaction record's own values. The control structure is identical; only the definition
+of "grounded" changes. That is why the second and third capabilities cost a prompt and a
+check rather than a new system.
 
 ---
 
