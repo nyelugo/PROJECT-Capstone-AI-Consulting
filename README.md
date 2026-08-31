@@ -1,4 +1,4 @@
-# Capstone — AI Consulting Pitch (Round 1)
+# Capstone — AI Consulting Pitch (Round 1) + Consulting Package, Compliance and MVP (Round 2)
 
 **Author:** Ugo Ahukannah
 **Client scenario:** "Chleo", CEO of a mid-size EU financial services firm who believes
@@ -7,9 +7,47 @@ AI is not transparent and cannot say what "the AI" would be or how she would sig
 **The pitch in one line:** start with complaint triage — the one AI use case in her
 business whose reasoning you can watch happen on a screen.
 
+**Round 1 decision: KEEP**, presented 2026-08-30. The staff recommended building all three
+proposed use cases rather than triage alone, and all three now run. See
+[`feedback/round1_decision.md`](feedback/round1_decision.md).
+
+**Run the MVP:** `streamlit run mvp/app.py` (or double-click `run_mvp.command`).
+**Run the Round 1 dashboard:** `run_dashboard.command`. They use different ports and can
+run side by side.
+
 ---
 
-## Status
+## Round 2 deliverables
+
+| Deliverable | Weight | State |
+|---|---:|---|
+| [`use_case_definition.md`](use_case_definition.md) | 15* | **Done** — problem, profile, solution, stakeholders, success criteria, scope, Round 1 → 2 evolution |
+| [`poc/`](poc/) — `poc_workflow.json` + [`poc_documentation.md`](poc/poc_documentation.md) | 15* | **Done** — workflow generated from source; **demo recording outstanding** |
+| [`roi_risk_assessment.md`](roi_risk_assessment.md) | **20** | **Done** — 12/36-month ROI, break-even, sensitivity, 12 risks |
+| [`compliance/eu_ai_act_compliance.md`](compliance/eu_ai_act_compliance.md) | **20** | **Done** — step-by-step classification, conformity summary, Annex IV outline |
+| [`compliance/gdpr_documentation.md`](compliance/gdpr_documentation.md) | 10 | **Done** — data flow, Art. 30 register, DPIA, rights, transfers |
+| [`strategic_plan.md`](strategic_plan.md) | 10 | **Done** — POC → pilot → deployment, KPIs, GTM, commercialisation |
+| [`mvp/`](mvp/) + [`mvp_documentation.md`](mvp/mvp_documentation.md) | **15** | **Done** — three capabilities, one spine, 27 guard tests, verified end to end |
+| [`presentation.pdf`](presentation.pdf) | 10 | **Done** — 11 slides + 6 backups, speaker notes on all 18, ~10 min |
+
+\* shared weighting across use case definition and POC.
+
+**Outstanding, and mine to do:** the 2–5 minute POC demo recording, and the MVP demo backup
+recording for slide 9. Shot lists are in [`poc/poc_documentation.md`](poc/poc_documentation.md).
+
+### The two findings Round 2 turns on
+
+1. **A bespoke build does not pay back for a firm this size** — −31.0% at 36 months,
+   break-even month 69. It needs ~3,800 complaints a year; Chleo has 2,426. Productised
+   across five firms the same capability returns **+16.9%**, and **+96.6%** with oversight
+   in-house. The technology does not change — only who pays for the build.
+2. **Pseudonymisation here protects the reference, not the content.** The complaint narrative
+   goes to the model provider in full and the quoted sentence is stored in monitoring. The
+   transfer analysis, not the aliasing, is the load-bearing control.
+
+---
+
+## Status — Round 1
 
 | Round 1 deliverable | State |
 |---|---|
@@ -19,7 +57,7 @@ business whose reasoning you can watch happen on a screen.
 | n8n POC + docs | **Done** — `n8n/`, run on the cohort instance, both branches verified |
 | LangSmith monitoring sample | **Done** — `langsmith/`, 60 traced decisions, EU workspace |
 | Cost + timeline estimate | **Done** — `cost_estimation/`, model + assumptions table |
-| Round 1 presentation deck | **Done** — `presentation/`, 14 slides + speaker notes |
+| Round 1 presentation deck | **Done** — `presentation/round1_pitch.pptx`, as delivered |
 | `round1_decision.md` | **Done** — `feedback/`, decision is KEEP with widened Round 2 scope |
 
 ## What each part does

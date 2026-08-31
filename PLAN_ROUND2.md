@@ -110,10 +110,40 @@ to reason through, the GDPR doc three data flows, the ROI model three value stre
 the strategic plan a real sequencing argument. That is where the recommendation is worth
 honouring in full.
 
-**Recommendation: all three in the documents, one shared spine in the code, triage as the
-capability that must run.** Reporting assistance added as a second thin capability only
-once triage is finished and the docs are done. Anomaly flagging shipped as a documented
-design, not code — it needs synthetic transaction data the repo does not have.
+**DECIDED 2026-08-31 (Ugo): build all three.** The staff recommendation is followed
+literally — all three use cases are implemented in the MVP, not just documented. My reading
+of the brief was that one runnable capability is the safer play; Ugo's call is to honour the
+room's advice, and the risk it carries is managed rather than avoided:
+
+| Risk the brief warns about | How this build answers it |
+|---|---|
+| "four half-wired screens" | One shared spine, three thin capabilities on top. The control structure is built and tested once |
+| A capability that does not run on the day | Triage is hardened and banked **first**, before either new one starts. It already runs |
+| Anomaly flagging has no data | Synthetic transaction data, which the brief permits explicitly under Scope and Constraints |
+| Time competing with 60 points of documents | The documents get *easier*, not harder — each describes something that actually runs |
+
+**The shared spine, which is the architecture argument for the deck:**
+
+```
+validate input → LLM proposes → guards verify the proposal is grounded → human confirms
+```
+
+Every capability is the same shape — a model proposes something, guards check it is grounded
+in evidence that actually exists, and a person decides. What differs is only what "grounded"
+means:
+
+| | UC-1 Triage | UC-3 Reporting | UC-2 Anomaly |
+|---|---|---|---|
+| Proposes | A routing queue | A report narrative | An explanation of a flag |
+| Grounded in | A verbatim quote from the complaint | Figures computed by `dashboard/metrics.py` | The transaction's own values |
+| Guard checks | The quote appears in the text | Every number cited was computed, not invented | Every figure cited matches the record |
+| Human confirms | The routing | The report | The escalation |
+
+One reason-code vocabulary, one trace path, one error-handling story. Adding a capability
+costs a prompt and a guard, not a new system — which is a stronger thing to say to a CTO
+than "I built one thing."
+
+Standing guardrail, unchanged: **a predicted payout never orders the queue.**
 
 ## Build order
 
@@ -127,7 +157,8 @@ Highest weight first, and the MVP banked before anything speculative.
 6. `strategic_plan.md` (10).
 7. POC rehome to `poc/` + `poc_documentation.md` + **record the 2–5 min demo**.
 8. `presentation.pdf` to the 10-slide structure + **record the MVP demo backup**.
-9. Second capability (reporting assistance) only if 1–8 are done.
+9. Order within step 2: triage hardened and banked first, then reporting assistance (no new
+   data), then anomaly flagging (synthetic transaction data, generated first).
 
 ## Open
 
