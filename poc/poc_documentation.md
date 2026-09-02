@@ -144,14 +144,34 @@ The POC's guards are generated from the same `classifier/decide.py` those tests 
 
 ## Demo recording
 
-A 2–5 minute end-to-end recording is required by the deliverables page and is listed in
-[`../README.md`](../README.md) as an outstanding item. Suggested run, about three minutes:
+**Required as a file** by the deliverables page: *"Demo recording (2–5 minutes), end to
+end."* It is a separate checkbox from the presentation, so demoing live on the day does not
+discharge it.
 
-1. **(0:00)** Show the canvas. Nine nodes, left to right. "This is the whole system."
-2. **(0:30)** Click **Run demo**. Green ticks appear in sequence.
-3. **(1:00)** Open **Propose to handler**. Read out the queue, the confidence, and the
-   customer's own sentence. "It quoted her, and the quote was checked."
-4. **(1:45)** Edit the narrative to something unrelated. Run again. It goes to review —
-   **read the reason code aloud**. "It didn't fail. It said which check stopped it."
-5. **(2:30)** Open LangSmith. One row per run, reason codes visible.
-6. **(2:50)** "That is the POC. The application it became is next."
+**Target three minutes.** The deliverable allows 2–5, but pf-05 gives Slide 4 a **2–3 minute**
+slot — so a five-minute recording satisfies the file and overruns the talk. Three does both.
+
+pf-05 asks you to *narrate as it runs*, in these three beats:
+
+| Beat | Say | On screen |
+|---|---|---|
+| **The trigger** | "This is the trigger — a complaint arrives on a known product." | Click **Run demo**; the pinned sample loads |
+| **The AI** | "Here it reads the complaint and proposes a queue, and it has to quote the sentence that decided it." | Green ticks moving through **Classify** and **Validate and route** |
+| **The output** | "And this is what the handler receives — a team, a confidence, and the customer's own words." | Open **Propose to handler** |
+
+Then the second run, which is the one worth the time: edit the pinned narrative to something
+unrelated to the product and run again. It goes to review. **Read the reason code aloud** —
+"it didn't fail, it said which check stopped it."
+
+Close on LangSmith: project `capstone-triage-live`, one row per run, reason codes visible.
+
+**pf-05 also asks for three things after the demo.** Say them over the last shot:
+
+1. **Tools, and why** — n8n, because a client's team can read it as boxes and arrows; a
+   Python script would have been faster to write and impossible to show a CEO.
+2. **What it does and does not prove** — it proves the decision is inspectable and that a
+   fabricated quotation gets caught. It does **not** prove accuracy: 60.5% is agreement with
+   labels a complainant chose from a dropdown.
+3. **What production changes** — the trigger becomes a case-system event rather than a
+   button, rejected inputs get traced too, and delivery is confirmed back rather than
+   assumed.

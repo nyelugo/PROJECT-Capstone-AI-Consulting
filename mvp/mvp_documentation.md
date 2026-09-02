@@ -178,6 +178,34 @@ nothing, and every presence check passed while the key was useless.
 
 ---
 
+## Demo recording (the backup for Slide 9)
+
+pf-05 makes the MVP demo **required** on Slide 9, gives it **1–2 minutes**, and is blunt
+about the fallback: *"A live failure with no fallback costs you the easiest points in the
+deck."* The rubric's presentation line accepts either — *"MVP demo works or backup recording
+used"* — so the recording protects ten points at no cost.
+
+Unlike the POC recording, this one is **not** a deliverable in its own right. It is
+insurance.
+
+The brief the guide sets is to **demo the upgrade**: *"Here is what the POC showed was
+possible. Here is the beginning of the real product."* So lead with what the workflow could
+not do.
+
+| ~Time | Show | Say |
+|---|---|---|
+| 0:00 | **Complaint triage**, the queue | "The workflow classified one complaint. This is a morning's work, already read." |
+| 0:20 | The **deadline** column, sorted | "And that is the column your regulator asks about." |
+| 0:35 | Tick a row — the proposal, the quoted sentence | "It proposes a team, and quotes the sentence that decided it." |
+| 0:55 | The **Checks** panel | "Every check it ran, by name, and the one it failed." |
+| 1:10 | Press **Send to that team** | "Nothing happened until someone pressed that." |
+| 1:20 | **Decision log** | "And the press is recorded beside what was proposed. That pairing is the audit record." |
+| 1:35 | **Overview** | "Which is what she sees: what it proposed, what her people did, and how often they agreed." |
+
+Record it at 1600×1500 or wider so the queue and the opened item fit one frame without
+scrolling — the same window size the slide screenshots were taken at.
+
+
 ## What is measured, and what is not
 
 **Triage.** 60.5% agreement with CFPB labels; 88.0% self-agreement on repeat runs. This is

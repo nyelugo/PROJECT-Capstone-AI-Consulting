@@ -27,11 +27,11 @@ wrong, but because neighbouring categories describe the same event.
 Reporting: the regulatory return gets built by hand, under deadline, by the people who can
 least afford the day.
 
-And fraud. Seven per cent of your complaints are unauthorised transactions — which means by
-the time you hear about it, the money has already gone.
+And fraud. Seven per cent of your complaints are unauthorised transactions — by the time you
+hear about it, the money has gone.
 
-[Land this:] High volume, low complexity, unstructured text. That's the shape a firm your
-size can neither automate with rules nor afford to staff properly.
+[Land this:] High volume, low complexity, unstructured text. The shape a firm your size can
+neither automate with rules nor afford to staff properly.
 
 But the reason you haven't solved it isn't technical. It's that you told me you don't trust
 AI, because you can't see what it does.
@@ -42,12 +42,11 @@ So here's the answer to that.
 Four steps. It validates what comes in. The model proposes something. Guards check the
 proposal is actually grounded in evidence that exists. And then a person decides.
 
-[Point at the last arrow.] That step is not a feature. It is the whole design. There is no
+[Point at the last arrow.] That step is not a feature, it is the whole design. There is no
 setting where this routes, files or blocks anything by itself.
 
-Every capability is those same four steps. The only thing that changes is what counts as
-evidence — a sentence from the complaint, a figure we computed, or the transaction's own
-values.
+Every capability is those same four steps. Only the evidence changes — a sentence from the
+complaint, a figure we computed, or the transaction's own values.
 
 [Land this:] Which is why building all three cost 1.3 times building one — not three times.
 
@@ -68,10 +67,17 @@ Then it stopped and waited for a person.
 [If time, edit the complaint and re-run.] Watch what happens when it isn't sure. It doesn't
 fail. It says which check stopped it, in words your handler can act on.
 
-What this does not prove is accuracy. It agrees with the public dataset's labels sixty per
-cent of the time — and those labels were picked by the customer filing the complaint, from
-a dropdown, untrained. That's agreement, not accuracy. There is no accuracy number for this
-system yet, and I'll come back to what it costs to get one.
+[Three things to say before you move on.]
+
+Tools: n8n, because your team can read it as boxes and arrows — a Python script would have
+been quicker to write and impossible to show you.
+
+What it does not prove is accuracy. It agrees with the public dataset's labels sixty per
+cent of the time, and those labels were picked by the customer filing the complaint, from a
+dropdown. That's agreement, not accuracy — and I'll come back to what it costs to fix.
+
+In production the trigger is your case system rather than a button, rejected inputs get
+traced too, and delivery is confirmed back — today it records the decision, not the receipt.
 
 # Slide 6 — The number I'd rather you heard from me
 [Slow down. Do not apologise for this slide.]
