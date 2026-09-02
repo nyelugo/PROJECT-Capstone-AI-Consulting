@@ -41,8 +41,8 @@ recording for slide 9. Shot lists are in [`poc/poc_documentation.md`](poc/poc_do
 
 **Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
 30 user stories across the six people who would actually touch this, each checked
-against the running app. 13 met, 5 partial, 12 not. Twelve of the 17 shortfalls are buildable
-now; five genuinely need Phase 2.
+against the running app. **21 met, 3 partial, 6 not** — Chleo and the ops lead are at 100%.
+Six of the nine remaining shortfalls are buildable now; three need Phase 2.
 
 ### The two findings Round 2 turns on
 

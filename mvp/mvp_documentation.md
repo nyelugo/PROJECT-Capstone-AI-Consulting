@@ -55,7 +55,8 @@ for the wrong reason, and the entire claim of this system is that a refusal says
 
 | Page | Who it is for | What it shows | The action |
 |---|---|---|---|
-| **Overview** | Chleo, ops lead | What the system proposed, what was held and why, the agreement rate with its guard rails, what is running | None — a watching page |
+| **Overview** | Chleo, **weekly** | Was this a normal week — this week against last, nine weeks of receipts, what was held and why, agreement, cost, and a switch per capability | Switch a capability off |
+| **Operations** | Ops lead, **daily** | What is past target and untouched, outstanding by team, where the model is overridden and **where handlers sent it instead**, acceptance per handler | None — a directing page |
 | **Complaint triage** | Handler | A standing queue, already classified. Proposed team, confidence, the sentence that decided it | Accept · reroute · escalate. Tick several for a bulk action |
 | **Anomaly review** | Fraud analyst | A standing queue, ranked by departure from each account's own normal. Case note already written | Escalate · dismiss · needs more |
 | **Reporting assistance** | Compliance officer | The **whole return**, all sections drafted, every figure checked against what this system computed | Sign off · reject, **per section** |
@@ -233,27 +234,28 @@ four patterns rather than only the easy one, and its false-positive rate is meas
 2. **Reporting confidence is weakly calibrated** — observed at 1.00 on live runs where a
    0.85 would have been more honest. The grounding guard, not the confidence, is what
    actually protects this capability.
-3. **Decisions persist to a local file, not to a case system.** `queues/decision_events.json`
+3. **`/overview` deep-links to a "page not found" dialog.** Streamlit serves the default
+   page only at `/`, and the dialog sits over the app swallowing clicks. Reach Overview from
+   the sidebar, or link to `/`.
+4. **Decisions persist to a local file, not to a case system.** `queues/decision_events.json`
    survives a refresh, a restart and a reboot — but it lives on one machine, and a fresh
    clone starts with an empty log. A production version writes to the case system, which is
    also where receipt would be confirmed.
-4. **The trace records the decision, not the delivery.** A successful trace proves the
+5. **The trace records the decision, not the delivery.** A successful trace proves the
    system decided, not that a handler received it. Carried over from Round 1, still open.
-5. **Anomaly detection runs on a fixed batch**, not a stream. Thresholds are static and
+6. **Anomaly detection runs on a fixed batch**, not a stream. Thresholds are static and
    would need per-portfolio tuning before a pilot.
-6. **Rejected input is traced only from the MVP**, not from the n8n POC, where validation
+7. **Rejected input is traced only from the MVP**, not from the n8n POC, where validation
    throws before the trace fan-out.
-7. **One model, one temperature.** No fallback if `gpt-4o-mini` is unavailable; the call
+8. **One model, one temperature.** No fallback if `gpt-4o-mini` is unavailable; the call
    surfaces as `ERROR_MODEL_CALL` and the work goes to a person, which is the correct
    failure but not a resilient one.
-8. **Sign-in is a name typed into a box.** It records who *said* they decided, not who did.
+9. **Sign-in is a name typed into a box.** It records who *said* they decided, not who did.
    For a page that calls itself an audit record that is a real limit, and it closes with the
    case-system integration in Phase 2, not before.
-9. **No per-capability off switch.** A capability cannot be disabled from the UI; it needs a
-   restart. Chleo asked for this directly and it is Phase 2 work.
-10. **One fixed batch, no rolling period.** Every figure is over the precomputed queue, so
-    there is no "this week versus last" and no trend line until decisions span more than one
-    day. Also means the queue does not grow: new complaints do not arrive.
+10. **One fixed batch: no new work arrives.** Week-on-week comparison IS available — the
+    batch carries nine ISO weeks of real receipt dates — but the queue never grows, so
+    nothing new turns up between visits. That waits on the Phase 2 feed.
 
 ## What would be different in production
 

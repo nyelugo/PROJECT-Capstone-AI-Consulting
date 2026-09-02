@@ -25,6 +25,13 @@ st.caption(f"The complaints return for {sheet['window_start']['v']} to "
            f"{sheet['window_end']['v']}. Every section is drafted from figures this system "
            f"computed — a number that is not on the fact sheet never reaches the page.")
 
+# An off switch is only real if the page honours it. Chleo can disable this from Overview
+# and it takes effect for everyone immediately, without a restart or a developer.
+if not Q.is_on("reporting"):
+    st.warning("**Reporting assistance is switched off.** Turn it back on from Overview.",
+               icon=":material/toggle_off:")
+    st.stop()
+
 if "report" not in st.session_state:
     st.session_state.report = {"audience": None, "sections": {}}
 store = st.session_state.report

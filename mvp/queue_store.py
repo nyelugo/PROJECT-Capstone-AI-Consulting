@@ -31,6 +31,7 @@ QUEUES = HERE / "queues"
 TRIAGE_FILE = QUEUES / "triage_queue.json"
 ANOMALY_FILE = QUEUES / "anomaly_queue.json"
 EVENTS_FILE = QUEUES / "decision_events.json"
+SETTINGS_FILE = QUEUES / "settings.json"
 
 _lock = threading.Lock()
 
@@ -40,9 +41,15 @@ _lock = threading.Lock()
 PENDING = "pending"
 TRIAGE_ACTIONS = {
     "accepted": "Accepted — routed as proposed",
-    "rerouted": "Rerouted — handler chose a different team",
+    "rerouted": "Rerouted — send to a different team",
     "escalated": "Sent to a person for full review",
 }
+
+# A reroute that does not say WHERE is the most expensive omission in this system. The
+# correction is the only signal that says how the model is wrong rather than merely that it
+# was wrong: it is what improves the prompt, and it is what lets the ops lead see which
+# teams the model confuses. `destination` carries it.
+NEEDS_DESTINATION = {"rerouted"}
 ANOMALY_ACTIONS = {
     "escalated": "Escalated to an analyst",
     "dismissed": "Dismissed — ordinary for this account",
@@ -84,7 +91,8 @@ def events() -> list[dict]:
 
 
 def record(item_id: str, action: str, *, capability: str, by: str,
-           proposed: str = "", reason_code: str = "", note: str = "") -> None:
+           proposed: str = "", reason_code: str = "", note: str = "",
+           destination: str = "") -> None:
     """Append one human action. Read-modify-write under a lock.
 
     Streamlit serves every browser session from one process, so two tabs on the same queue
@@ -97,6 +105,7 @@ def record(item_id: str, action: str, *, capability: str, by: str,
             "at": datetime.now().isoformat(timespec="seconds"),
             "item_id": item_id, "capability": capability, "action": action,
             "proposed": proposed, "reason_code": reason_code, "by": by, "note": note,
+            "destination": destination,
         })
         EVENTS_FILE.parent.mkdir(parents=True, exist_ok=True)
         EVENTS_FILE.write_text(json.dumps(log, indent=2))
@@ -210,3 +219,167 @@ def with_clock(items: list[dict], date_key: str) -> tuple[list[dict], str]:
     """Attach the clock to every item. Returns the items and the reference date used."""
     ref = as_at(items, date_key)
     return [{**i, **clock(i.get(date_key, ""), ref)} for i in items], ref
+
+
+# ------------------------------------------------------------------------------- weeks
+# Chleo opens this weekly, so "is this a normal week" is the question her whole cadence
+# rests on — and it needs a last week to compare against. The batch carries nine distinct
+# ISO weeks of real receipt dates, so this is measured, not synthesised. What a fixed batch
+# genuinely cannot show is NEW work arriving; comparing the weeks it already contains is
+# honest.
+def iso_week(date_str: str) -> str:
+    from datetime import date
+    y, m, d = (int(x) for x in date_str.split("-"))
+    iy, iw, _ = date(y, m, d).isocalendar()
+    return f"{iy}-W{iw:02d}"
+
+
+def by_week(items: list[dict], date_key: str) -> list[dict]:
+    """Per-week counts, oldest first: volume, held, and how many a person has decided."""
+    latest = latest_by_item()
+    buckets: dict[str, dict] = {}
+    for it in items:
+        if not it.get(date_key):
+            continue
+        w = buckets.setdefault(iso_week(it[date_key]),
+                               {"week": iso_week(it[date_key]), "items": 0, "held": 0,
+                                "agreed": 0, "disagreed": 0, "decided": 0})
+        w["items"] += 1
+        if it.get("decision") != "PROPOSE_TO_HANDLER":
+            w["held"] += 1
+        s = status_of(it["item_id"], it, latest)
+        if s not in PENDING_STATUSES:
+            w["decided"] += 1
+            if s in DISAGREEMENTS:
+                w["disagreed"] += 1
+            elif s in ("accepted", "escalated"):
+                w["agreed"] += 1
+    rows = sorted(buckets.values(), key=lambda r: r["week"])
+    for r in rows:
+        r["held_pct"] = 100 * r["held"] / r["items"] if r["items"] else 0.0
+        r["agreement_pct"] = (100 * r["agreed"] / (r["agreed"] + r["disagreed"])
+                              if (r["agreed"] + r["disagreed"]) else None)
+    return rows
+
+
+def week_on_week(rows: list[dict]) -> dict:
+    """The last complete week against the one before it. None when there is no comparison."""
+    if len(rows) < 2:
+        return {}
+    cur, prev = rows[-1], rows[-2]
+    return {"current": cur, "previous": prev,
+            "items_delta": cur["items"] - prev["items"],
+            "held_pct_delta": cur["held_pct"] - prev["held_pct"]}
+
+
+# ------------------------------------------------------------------------ on/off switches
+# Chleo asked for this directly: she wants to disable a capability on a Monday morning
+# without phoning a consultant. It lives in a file rather than in code precisely so that
+# turning something off is an operational act, not a deployment.
+CAPABILITIES = {
+    "triage": "Complaint triage",
+    "anomaly": "Anomaly review",
+    "reporting": "Reporting assistance",
+}
+
+
+def settings() -> dict:
+    s = _read(SETTINGS_FILE, {})
+    return {k: bool(s.get(k, True)) for k in CAPABILITIES}     # on unless switched off
+
+
+def is_on(capability: str) -> bool:
+    return settings().get(capability, True)
+
+
+def set_capability(capability: str, on: bool, *, by: str) -> None:
+    """Switch one capability on or off, and record it — turning a capability off is a
+    decision about the system and belongs in the same log as decisions about cases."""
+    with _lock:
+        s = _read(SETTINGS_FILE, {})
+        s[capability] = bool(on)
+        SETTINGS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        SETTINGS_FILE.write_text(json.dumps(s, indent=2, sort_keys=True))
+    record(f"capability:{capability}", "switched_on" if on else "switched_off",
+           capability=capability, by=by,
+           proposed=f"{CAPABILITIES.get(capability, capability)} "
+                    f"{'enabled' if on else 'disabled'}")
+
+
+# ------------------------------------------------------------- supervision breakdowns
+def by_proposed_team(items: list[dict]) -> list[dict]:
+    """Where the model is overridden, grouped by the team it proposed (O2).
+
+    The ops lead's question is not "how often is it wrong" but "wrong about what". A team
+    with a high override rate is either a team the model confuses or a taxonomy that needs
+    fixing — and those need different responses.
+    """
+    latest = latest_by_item()
+    rows: dict[str, dict] = {}
+    for it in items:
+        team = it.get("proposed_team") or "—"
+        r = rows.setdefault(team, {"team": team, "items": 0, "decided": 0,
+                                   "agreed": 0, "overridden": 0, "sent_instead": {}})
+        r["items"] += 1
+        e = latest.get(it["item_id"])
+        if not e:
+            continue
+        r["decided"] += 1
+        if e["action"] in DISAGREEMENTS:
+            r["overridden"] += 1
+            d = e.get("destination")
+            if d:
+                r["sent_instead"][d] = r["sent_instead"].get(d, 0) + 1
+        elif e["action"] in ("accepted", "escalated"):
+            r["agreed"] += 1
+    out = []
+    for r in rows.values():
+        r["override_pct"] = (100 * r["overridden"] / r["decided"]) if r["decided"] else None
+        r["sent_instead"] = ", ".join(f"{k} ×{v}" for k, v in
+                                      sorted(r["sent_instead"].items(), key=lambda kv: -kv[1]))
+        out.append(r)
+    return sorted(out, key=lambda r: -r["items"])
+
+
+def by_handler() -> list[dict]:
+    """Acceptance per person (O3).
+
+    Risk R2 is automation bias, rated 4 x 4, and its stated mitigation is "measured per
+    handler". Until this existed the register promised a control that did not exist, which
+    is worse than not claiming it. A rate near 100% is a warning, not a success.
+    """
+    rows: dict[str, dict] = {}
+    for e in events():
+        if e["action"] in ("switched_on", "switched_off"):
+            continue
+        r = rows.setdefault(e["by"], {"handler": e["by"], "decisions": 0,
+                                      "agreed": 0, "overridden": 0})
+        r["decisions"] += 1
+        if e["action"] in DISAGREEMENTS:
+            r["overridden"] += 1
+        elif e["action"] in ("accepted", "escalated"):
+            r["agreed"] += 1
+    out = []
+    for r in rows.values():
+        d = r["agreed"] + r["overridden"]
+        r["acceptance_pct"] = (100 * r["agreed"] / d) if d else None
+        r["flag"] = ("rubber-stamping?" if r["acceptance_pct"] is not None
+                     and d >= 10 and r["acceptance_pct"] > 97 else "")
+        out.append(r)
+    return sorted(out, key=lambda r: -r["decisions"])
+
+
+def outstanding_by_team(items: list[dict]) -> list[dict]:
+    """What is still waiting, per proposed team (O4) — so the day can be balanced."""
+    latest = latest_by_item()
+    rows: dict[str, dict] = {}
+    for it in items:
+        s = status_of(it["item_id"], it, latest)
+        if s not in PENDING_STATUSES:
+            continue
+        team = it.get("proposed_team") or "—"
+        r = rows.setdefault(team, {"team": team, "waiting": 0, "past_target": 0})
+        r["waiting"] += 1
+        if it.get("sla") == BREACHED:
+            r["past_target"] += 1
+    return sorted(rows.values(), key=lambda r: (-r["past_target"], -r["waiting"]))

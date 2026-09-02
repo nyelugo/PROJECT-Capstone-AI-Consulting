@@ -41,8 +41,14 @@ init_state()
 
 nav = st.navigation(
     [
+        # Streamlit serves the DEFAULT page only at "/". A deep link to /overview raises a
+        # "page not found" dialog that sits over the app and swallows clicks — which looks
+        # like the app is broken. Setting url_path does not change that; it is a property
+        # of how st.navigation routes the default. Link to "/" for Overview.
         st.Page("app_pages/overview.py", title="Overview",
                 icon=":material/insights:", default=True),
+        st.Page("app_pages/operations.py", title="Operations",
+                icon=":material/monitoring:"),
         st.Page("app_pages/triage.py", title="Complaint triage",
                 icon=":material/alt_route:"),
         st.Page("app_pages/anomaly.py", title="Anomaly review",

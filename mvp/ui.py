@@ -157,6 +157,16 @@ def conf_txt(v) -> str:
     return f"{v:.2f}" if isinstance(v, (int, float)) and v == v else "—"
 
 
+@st.cache_data(show_spinner=False)
+def team_names() -> list[str]:
+    """The teams a handler can reroute to — the same seven the classifier maps onto, read
+    from `classifier/teams.py` rather than retyped, so a correction cannot name a team the
+    system does not have."""
+    from .capabilities import _shared  # noqa: F401  (path setup)
+    import teams as T
+    return [t for t in T.TEAMS]
+
+
 def status_chip(status: str) -> str:
     return (f":{STATUS_COLOUR.get(status, 'gray')}-badge"
             f"[{STATUS_LABEL.get(status, status)}]")
@@ -230,19 +240,37 @@ def action_bar(item: dict, *, capability: str, actions: dict, proposed: str = ""
     """
     prior = Q.latest_by_item().get(item["item_id"])
     if prior:
+        extra = ""
+        if prior.get("destination"):
+            extra += f" → **{prior['destination']}**"
+        if prior.get("note"):
+            extra += f" — {prior['note']}"
         st.success(f"**{STATUS_LABEL.get(prior['action'], prior['action'])}** "
-                   f"by {prior['by']} at {prior['at'].replace('T', ' ')}"
-                   + (f" — {prior['note']}" if prior.get("note") else ""))
+                   f"by {prior['by']} at {prior['at'].replace('T', ' ')}{extra}")
 
     st.markdown("**Nothing has happened yet. A person decides.**"
                 if not prior else "**Change the decision?** The original stays in the log.")
+
+    # A correction that does not say WHERE it should have gone is the most expensive
+    # omission in this system: it records that the model was wrong without recording HOW,
+    # which is the only version of the fact that can improve anything.
+    dest, note = "", ""
+    if actions.keys() & Q.NEEDS_DESTINATION:
+        a, b = st.columns([2, 3])
+        dest = a.selectbox("If rerouting, the right team is",
+                           team_names(), key=f"dest_{capability}_{item['item_id']}")
+        note = b.text_input("Note (optional)", key=f"note_{capability}_{item['item_id']}",
+                            placeholder="why the proposal was wrong")
+
     with st.container(horizontal=True):
         for action, label in actions.items():
             if st.button(label, key=f"{capability}_{item['item_id']}_{action}",
                          type="primary" if action in ("accepted", "escalated") else "secondary"):
                 Q.record(item["item_id"], action, capability=capability,
                          by=st.session_state.get("operator", "unknown"),
-                         proposed=proposed, reason_code=item.get("reason_code", ""))
+                         proposed=proposed, reason_code=item.get("reason_code", ""),
+                         note=note,
+                         destination=dest if action in Q.NEEDS_DESTINATION else "")
                 st.rerun()
 
 

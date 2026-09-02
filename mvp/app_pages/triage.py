@@ -17,6 +17,13 @@ st.caption("Every complaint in today's batch, already read. It proposes a team a
            "quote the sentence that decided it — a guard checks that sentence is really "
            "in the complaint.")
 
+# An off switch is only real if the page honours it. Chleo can disable this from Overview
+# and it takes effect for everyone immediately, without a restart or a developer.
+if not Q.is_on("triage"):
+    st.warning("**Complaint triage is switched off.** Turn it back on from Overview.",
+               icon=":material/toggle_off:")
+    st.stop()
+
 items = Q.load_triage()
 if not items:
     st.warning("The queue has not been built yet. Run `python -m mvp.build_queues`.")

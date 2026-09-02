@@ -41,3 +41,4 @@ mvp/queues/decision_events.json
 # requires the POC demo as a file, so ignoring them would hide a deliverable.
 demo/build/
 demo/.browser-profile/
+mvp/queues/settings.json
