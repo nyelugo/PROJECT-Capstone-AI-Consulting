@@ -219,11 +219,11 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 
 | | Chleo | Ops lead | Handler | Analyst | Compliance | Audit | **Total** |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| MET | 3 | 1 | 4 | 2 | 3 | 1 | **14** |
+| MET | 3 | 1 | 4 | 2 | 2 | 1 | **13** |
 | PARTIAL | 1 | 0 | 2 | 0 | 1 | 1 | **5** |
-| NOT MET | 2 | 3 | 1 | 2 | 1 | 3 | **7** |
+| NOT MET | 2 | 3 | 1 | 2 | 1 | 3 | **12** |
 
-**14 of 26 fully met.** The handler is well served — which is right, since triage is the
+**13 of 30 fully met.** The handler is well served — which is right, since triage is the
 capability that must run. **The ops lead and the auditor are the two worst-served roles**,
 and both of their gaps are about the same thing: the system records *that* a decision
 happened but very little *about* it.
@@ -256,10 +256,10 @@ reference; the MVP has no path for it.
 
 | | |
 |---|---|
-| **Fixable now** | H4 reroute destination · H5 note field · O3 per-handler rate · O2 overrides by team · A3 transaction listing · R4 export · D4 date filter · D5 erasure by ref · C6 a counted zero |
+| **Fixable now** | H4 reroute destination · H5 note field · O2 overrides by team · O3 per-handler rate · O4 outstanding per team · A3 transaction listing · R2 figure provenance · R4 export · D1 link a log row back to its item · D4 date filter · D5 erasure by ref · C6 a counted zero |
 | **Needs Phase 2** | C3 periods (needs a live feed — one fixed batch cannot have a last week) · C4 off switches (needs config outside the code) · D3 real identity (needs the case system's auth) · H7 customer-facing references (needs the case system) · A4 threshold tuning (needs per-portfolio config) |
 
-Nine of the sixteen shortfalls are buildable without waiting for anything. That is the
+Twelve of the 17 shortfalls are buildable without waiting for anything. That is the
 honest answer to "is the MVP ready": it **runs**, it meets every graded criterion, and it
 serves the handler well — and it is thin for the two roles who arrive when something has
 gone wrong.

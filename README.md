@@ -40,9 +40,9 @@ Round 1 deliverable. It is reused by the Round 2 app, never copied.
 recording for slide 9. Shot lists are in [`poc/poc_documentation.md`](poc/poc_documentation.md).
 
 **Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
-26 user stories across the six people who would actually touch this, each checked against
-the running app. 14 met, 5 partial, 7 not. Nine of the shortfalls are buildable now; seven
-genuinely need Phase 2.
+30 user stories across the six people who would actually touch this, each checked
+against the running app. 13 met, 5 partial, 12 not. Twelve of the 17 shortfalls are buildable
+now; five genuinely need Phase 2.
 
 ### The two findings Round 2 turns on
 
