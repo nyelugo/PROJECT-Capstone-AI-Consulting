@@ -36,6 +36,11 @@ HERE = Path(__file__).resolve().parent
 WORK = HERE / "build"
 OUT = HERE / "recordings"
 PROFILE = HERE / ".browser-profile"      # gitignored; holds the n8n session, never a key
+# The browse profile the agent's own browser uses. It is often already signed in to the
+# gated targets, which saves a second login. Pointed at directly rather than exporting its
+# cookies to a file: a session cookie sitting in JSON on disk is credential material, and
+# not creating it is better than remembering to delete it.
+SHARED_PROFILE = Path.home() / ".claude" / "browse-profile"
 
 TTS_MODEL = "tts-1"
 VOICE = "nova"                       # Podcast Studio's default, kept for continuity
@@ -319,7 +324,8 @@ def open_login(url: str) -> int:
     return 0
 
 
-def capture(script: list[dict], segs: list[Path], headed: bool) -> tuple[Path, list[float]]:
+def capture(script: list[dict], segs: list[Path], headed: bool,
+            profile: Path = PROFILE) -> tuple[Path, list[float]]:
     """Drive the browser, recording. Returns the video and the action time per cue."""
     from playwright.sync_api import sync_playwright
 
@@ -333,7 +339,7 @@ def capture(script: list[dict], segs: list[Path], headed: bool) -> tuple[Path, l
         # into once and stay logged in. Nothing secret is stored by us — it is the browser's
         # own cookie jar, and the directory is gitignored.
         ctx = pw.chromium.launch_persistent_context(
-            str(PROFILE), headless=not headed, viewport=VIEWPORT,
+            str(profile), headless=not headed, viewport=VIEWPORT,
             record_video_dir=str(vid_dir), record_video_size=VIEWPORT)
         page = ctx.pages[0] if ctx.pages else ctx.new_page()
         page.wait_for_timeout(1200)                     # a moment of stillness to open on
@@ -418,6 +424,9 @@ def main() -> int:
     ap.add_argument("--headed", action="store_true",
                     help="watch it record; useful when a selector stops matching")
     ap.add_argument("--voice", default=VOICE)
+    ap.add_argument("--profile", default=None,
+                    help="browser profile to record with. Use 'shared' for the agent's "
+                         "browse profile, which is often already signed in to gated targets")
     ap.add_argument("--login", action="store_true",
                     help="open the target headed so you can sign in once; the recorder "
                          "reuses that session afterwards")
@@ -437,9 +446,17 @@ def main() -> int:
     print(f"narrating {len(script)} cues…")
     segs = narrate(script, a.voice)
 
+    profile = PROFILE
+    if a.profile == "shared":
+        profile = SHARED_PROFILE
+    elif a.profile:
+        profile = Path(a.profile).expanduser()
+    if profile != PROFILE:
+        print(f"using profile {profile}")
+
     print("recording…")
     try:
-        video, lead_in = capture(script, segs, a.headed)
+        video, lead_in = capture(script, segs, a.headed, profile)
     except RuntimeError as exc:
         sys.stdout.flush()          # so the message lands after the progress, not before
         # These are the expected failures — a sign-in wall, a renamed button. They deserve
