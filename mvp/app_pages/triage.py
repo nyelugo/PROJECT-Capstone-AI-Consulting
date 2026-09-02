@@ -10,7 +10,7 @@ import streamlit as st
 
 from mvp import queue_store as Q
 from mvp.ui import (queue_filters, status_chip, sla_chip, ladder_html,
-                    action_bar, bulk_bar)
+                    action_bar, bulk_bar, conf_txt)
 
 st.title("Complaint triage")
 st.caption("Every complaint in today's batch, already read. It proposes a team and must "
@@ -92,7 +92,7 @@ with right:
     with st.container(border=True):
         st.markdown("**Checks**")
         st.html(ladder_html(it["reason_code"]))
-        st.caption(f"confidence {it['confidence']:.2f} · {it['latency_ms']} ms · "
+        st.caption(f"confidence {conf_txt(it['confidence'])} · {it['latency_ms']} ms · "
                    f"{it['model']} · ref {it['ref']}")
 
 action_bar(it, capability="triage", actions=Q.TRIAGE_ACTIONS,

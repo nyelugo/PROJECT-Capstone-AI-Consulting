@@ -146,11 +146,32 @@ def test_anomaly():
     assert cand["account_ref"] not in json.dumps(d.as_dict()), "raw account ref leaked"
 
 
+def test_confidence_rendering():
+    """A malformed response has no confidence, and the page must still render.
+
+    This crashed once: the Checks panel formatted confidence with :.2f, so the UI died
+    precisely when it had REJECT_MALFORMED_OUTPUT to report. The guard ladder's whole job
+    is to turn a bad response into an observable outcome rather than a crash.
+
+    Imported inside the function so the rest of this file stays free of Streamlit.
+    """
+    from .ui import conf_txt
+    print("\nconfidence rendering")
+    cases = [(None, "—"), (float("nan"), "—"), ("high", "—"), (0.9, "0.90"), (1, "1.00")]
+    for value, expect in cases:
+        got = conf_txt(value)
+        ok = got == expect
+        print(f"  {'PASS' if ok else 'FAIL'}  conf_txt({value!r:<12}) -> {got!r}")
+        if not ok:
+            FAILURES.append(f"conf_txt({value!r}) gave {got!r}, expected {expect!r}")
+
+
 def main() -> int:
     print("Guard ladder, declared order:")
     for c in GUARD_ORDER:
         print(f"  {c:<32} {REASONS[c]}")
     test_triage()
+    test_confidence_rendering()
     try:
         from .capabilities.reporting import Reporting  # noqa: F401
         test_reporting()

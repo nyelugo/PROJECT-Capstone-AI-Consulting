@@ -88,7 +88,7 @@ def render(d, key: str, *, accept_label: str, review_label: str) -> None:
         with st.container(border=True):
             st.markdown("**Checks**")
             st.html(_ladder(d))
-            c = f"{d.confidence:.2f}" if isinstance(d.confidence, (int, float)) else "—"
+            c = conf_txt(d.confidence)
             st.caption(f"confidence {c} · {d.latency_ms} ms · {d.model} · ref {d.ref}")
 
     if key in st.session_state.recorded:
@@ -145,6 +145,16 @@ STATUS_LABEL = {
     "accepted": "Accepted", "rerouted": "Rerouted", "escalated": "Escalated",
     "dismissed": "Dismissed", "more_info": "Needs more",
 }
+
+
+def conf_txt(v) -> str:
+    """Render a confidence, or an em dash when there isn't one.
+
+    `confidence` is None whenever the model returned malformed JSON — which is exactly the
+    case the Checks panel exists to display. Formatting None with :.2f raises TypeError, so
+    the page would crash precisely when it had something important to say.
+    """
+    return f"{v:.2f}" if isinstance(v, (int, float)) and v == v else "—"
 
 
 def status_chip(status: str) -> str:

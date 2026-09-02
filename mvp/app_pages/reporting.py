@@ -17,7 +17,7 @@ from mvp import queue_store as Q
 from mvp.capabilities.reporting import Reporting, SECTIONS, fact_sheet
 from mvp.runtime import call_model
 from mvp.spine import run, PROPOSE
-from mvp.ui import ladder_html, model_ready, status_chip
+from mvp.ui import conf_txt, ladder_html, model_ready, status_chip
 
 st.title("Reporting assistance")
 sheet = fact_sheet()
@@ -101,7 +101,7 @@ for name, sec in store["sections"].items():
         with b:
             with st.expander("Checks"):
                 st.html(ladder_html(sec["reason_code"]))
-                st.caption(f"confidence {sec['confidence']:.2f} · {sec['latency_ms']} ms · "
+                st.caption(f"confidence {conf_txt(sec['confidence'])} · {sec['latency_ms']} ms · "
                            f"{sec['model']}")
 
         if prior:
