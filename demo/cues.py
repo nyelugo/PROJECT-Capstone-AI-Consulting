@@ -14,6 +14,7 @@ Actions:
     ("click", "text")    click a button whose label contains text
     ("row", n)           select row n of the canvas data grid
     ("scroll_to", "text") scroll until the element containing text is in view
+    ("point", "text")    glide the cursor onto that element without clicking
     ("wait", seconds)    do nothing; let the narration run over a still frame
 """
 from __future__ import annotations
@@ -24,42 +25,47 @@ MVP_URL = "http://localhost:8502"
 # pf-05 gives slide 9 one to two minutes and asks for the UPGRADE: "here is what the POC
 # showed was possible, here is the beginning of the real product." So it opens on the thing
 # the workflow could not do — a queue — rather than on a classification.
+# Every beat moves the cursor to the thing being described. A cue that only talks leaves a
+# still frame, which is what the first cut was: correct, complete, and unwatchable.
 MVP = [
     {"do": ("goto", MVP_URL + "/triage"),
      "say": "The workflow classified one complaint at a time. This is a morning's work, "
             "already read."},
-    {"do": ("scroll_to", "Tick one to read it"),
-     "say": "Sixty complaints, each one proposed a team overnight. Nobody typed them in — "
+    {"do": ("point", "Tick one to read it"),
+     "say": "Sixty complaints, each one already proposed a team. Nobody typed them in — "
             "they arrived in the case system and the queue picked them up."},
-    {"do": ("scroll_to", "Past the target"),
-     "say": "And this is the column a regulated firm actually lives on: how old each "
-            "complaint is, and how long is left before the first-response target. "
-            "Forty-two of these are already past it."},
+    {"do": ("point", "Past the target"),
+     "say": "And this is what a regulated firm actually lives on. How old each complaint "
+            "is, and how long is left before the first-response target."},
+    {"do": ("point", "Target is 15 days"),
+     "say": "Forty-two of these are already past it. You can sort on that column, and "
+            "filter down to just the ones that need a person."},
     {"do": ("row", 0),
      "say": "Open one."},
-    {"do": ("scroll_to", "Because the customer wrote"),
+    {"do": ("point", "Because the customer wrote"),
      "say": "It proposes a team, and it has to quote the sentence that decided it — the "
             "customer's own words, not a summary. A guard checks that sentence is really "
             "in the complaint."},
-    {"do": ("scroll_to", "Checks"),
+    {"do": ("point", "Checks"),
      "say": "On the right, every check it ran, by name, and the one it failed. Not a "
             "confidence score. A list."},
-    # The press has to be VISIBLE before it happens. In the first cut the click fired at
-    # the top of the cue and the narration played over the aftermath, so the one moment the
-    # whole design rests on was never on screen.
-    {"do": ("scroll_to", "A person decides"),
+    {"do": ("point", "A person decides"),
      "say": "And nothing has happened yet. The system has proposed. Someone still has to "
-            "press that."},
+            "press this."},
     {"do": ("click", "Accepted — routed as proposed"),
-     "say": "Pressed. It leaves the queue, and the press is recorded beside what the system "
-            "proposed."},
+     "say": "Pressed. It leaves the queue."},
     {"do": ("nav", "Decision log"),
-     "say": "That pairing is the audit record. A proposal with nobody's decision next to it "
-            "is a suggestion nobody owns."},
+     "say": "And the press is recorded beside what the system proposed."},
+    {"do": ("point", "Items revisited"),
+     "say": "That pairing is the audit record. A proposal with nobody's decision next to "
+            "it is a suggestion nobody owns."},
     {"do": ("nav", "Overview"),
-     "say": "And this is what the chief executive sees: what it proposed, what her people "
-            "did about it, and how often they agreed. Same six checks behind all three "
-            "capabilities — only the evidence changes."},
+     "say": "This is what the chief executive sees. What it proposed, what was held back "
+            "and why."},
+    {"do": ("point", "Agreement rate"),
+     "say": "And how often her people actually agreed with it — the number that says "
+            "whether this is working. Same six checks behind all three capabilities. Only "
+            "the evidence changes."},
 ]
 
 # --------------------------------------------------------------------------------- POC

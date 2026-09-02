@@ -30,6 +30,27 @@ Text-to-speech is lifted from **PROJECT-Podcast-Studio** (`src/tts_generator.py`
 Anand and Ugo) — same model, same streaming-to-disk approach, kept recognisable rather than
 rewritten.
 
+## Why there is a cursor drawn into the page
+
+Playwright dispatches input without moving a pointer, and the OS cursor is not captured in
+the video either — so the first version had nothing moving on screen at all. Correct,
+complete, and unwatchable.
+
+So the recorder draws an arrow into the page and keeps it in step with **real** mouse
+movement. The mouse genuinely moves and clicks, which is why the canvas data grid now
+responds to an ordinary click rather than the synthetic event dispatch it needed before.
+Movement is eased rather than linear, because a constant-velocity cursor reads as a machine
+— this is the one place in the project where looking human is the actual requirement. A blue
+ring pulses at each click, and the recorder pauses briefly before pressing, as a person does.
+
+The `point` action moves the cursor to a thing **without** clicking it, so the viewer's eye
+goes where the narration is. That is what turns a talking cue into something worth watching.
+
+Text lookups for `point` and `scroll_to` are scoped to the main content area, never the
+sidebar. Without that, `point("Checks")` matched the sidebar caption *"…all run the same six
+checks"* and the cursor confidently pointed at the wrong thing while the narrator described
+the right one — the sidebar repeats much of the vocabulary the narration uses.
+
 ## What it refuses to do
 
 - **Film a login page.** The POC target is the cohort n8n instance. If the session has

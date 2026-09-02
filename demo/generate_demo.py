@@ -109,6 +109,105 @@ SELECT_ROW = """
 """
 
 
+
+# ------------------------------------------------------------------------------- cursor
+# Playwright dispatches input without moving a pointer, and the OS cursor is not captured
+# in the video either — so the first cut had nothing moving on screen at all. A demo where
+# the viewer cannot see what is being pointed at is a slideshow with a voiceover.
+#
+# So: an arrow drawn INTO the page, kept in step with real mouse movement. The mouse moves
+# for real (so the app receives genuine events, including on the canvas grid where
+# synthetic dispatch was needed before), and the drawn arrow follows it frame by frame.
+CURSOR_JS = """
+() => {
+  if (document.getElementById('demo-cursor')) return;
+  const c = document.createElement('div');
+  c.id = 'demo-cursor';
+  c.style.cssText = 'position:fixed;left:0;top:0;width:26px;height:26px;z-index:2147483647;'
+    + 'pointer-events:none;transition:transform .06s linear;will-change:transform;'
+    + 'filter:drop-shadow(0 2px 4px rgba(0,0,0,.45))';
+  c.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26">'
+    + '<path d="M5 2 L5 20 L10 15.5 L13 22 L16 20.5 L13 14.5 L19.5 14.5 Z" '
+    + 'fill="#ffffff" stroke="#1D2A32" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+  document.body.appendChild(c);
+
+  const ring = document.createElement('div');
+  ring.id = 'demo-ring';
+  ring.style.cssText = 'position:fixed;left:0;top:0;width:40px;height:40px;border-radius:50%;'
+    + 'border:3px solid #2a78d6;opacity:0;z-index:2147483646;pointer-events:none;'
+    + 'margin:-20px 0 0 -20px';
+  document.body.appendChild(ring);
+
+  window.__cur = (x, y) => {
+    c.style.transform = `translate(${x}px, ${y}px)`;
+    ring.style.left = x + 'px';
+    ring.style.top = y + 'px';
+  };
+  window.__ping = () => {
+    ring.animate(
+      [{opacity: 1, transform: 'scale(.35)'}, {opacity: 0, transform: 'scale(1.9)'}],
+      {duration: 650, easing: 'ease-out'});
+  };
+}
+"""
+
+
+def ensure_cursor(page) -> None:
+    """Idempotent. Streamlit reruns keep the node, a navigation does not."""
+    try:
+        page.evaluate(CURSOR_JS)
+    except Exception:
+        pass
+
+
+def glide(page, x: float, y: float, steps: int = 26) -> None:
+    """Move the real mouse to (x, y) along an eased path, arrow following.
+
+    Eased rather than linear because a constant-velocity cursor reads as a machine. This
+    is the one place in the project where looking human is the actual requirement.
+    """
+    ensure_cursor(page)
+    sx, sy = page.evaluate("() => window.__mx ?? [80, 80]") if False else (
+        getattr(page, "_demo_x", 80.0), getattr(page, "_demo_y", 80.0))
+    for i in range(1, steps + 1):
+        u = i / steps
+        e = 1 - (1 - u) ** 3                       # ease-out cubic
+        nx, ny = sx + (x - sx) * e, sy + (y - sy) * e
+        page.mouse.move(nx, ny)
+        page.evaluate("([x, y]) => window.__cur && window.__cur(x, y)", [nx, ny])
+        page.wait_for_timeout(12)
+    page._demo_x, page._demo_y = x, y
+
+
+def in_main(page, text: str):
+    """Find text in the CONTENT area, never the sidebar.
+
+    `get_by_text("Checks")` matched the sidebar caption "...all run the same six checks"
+    before it reached the Checks panel, so the cursor confidently pointed at the wrong
+    thing while the narrator described the right one. Scoping to stMain removes a whole
+    class of that: the sidebar repeats a lot of the vocabulary the narration uses.
+    """
+    return (page.locator('[data-testid="stMain"]')
+            .get_by_text(text, exact=False).locator("visible=true").first)
+
+
+def centre_of(page, locator) -> tuple[float, float]:
+    locator.scroll_into_view_if_needed(timeout=6000)
+    page.wait_for_timeout(350)
+    b = locator.bounding_box()
+    if not b:
+        raise RuntimeError("element has no box on screen")
+    return b["x"] + b["width"] / 2, b["y"] + b["height"] / 2
+
+
+def click_at(page, x: float, y: float) -> None:
+    glide(page, x, y)
+    page.wait_for_timeout(320)                     # a beat before pressing, as a person does
+    page.evaluate("() => window.__ping && window.__ping()")
+    page.wait_for_timeout(220)                     # let the ripple start before the rerun
+    page.mouse.click(x, y)
+
+
 def settle(page, seconds: float = 2.5) -> None:
     """Streamlit reruns on every interaction; give it time to finish drawing."""
     try:
@@ -123,47 +222,70 @@ def act(page, do: tuple) -> None:
     if kind == "goto":
         page.goto(arg, wait_until="domcontentloaded")
         settle(page, 4)
+        ensure_cursor(page)
+        glide(page, 300, 260, steps=18)            # bring the pointer on screen gently
+
     elif kind == "nav":
         loc = page.locator(f'section[data-testid="stSidebar"] a:has-text("{arg}")').first
         try:
-            loc.click(timeout=6000)
+            x, y = centre_of(page, loc)
         except Exception:
             pages = page.eval_on_selector_all(
                 'section[data-testid="stSidebar"] a',
                 "els => els.map(e => e.innerText.replace(/\\n+/g, ' ').trim())")
             raise RuntimeError(f"no sidebar page matching {arg!r}. Pages: "
-                               + ", ".join(repr(x) for x in pages if x)) from None
+                               + ", ".join(repr(p) for p in pages if p)) from None
+        click_at(page, x, y)
         settle(page, 3)
+        ensure_cursor(page)
+
     elif kind == "click":
-        # Fail fast and say what IS on the page. A 30-second Playwright timeout tells you
-        # a selector missed; it does not tell you the button was renamed, which is what
-        # actually happens when the UI moves on and a cue does not.
         loc = page.locator(f'button:has-text("{arg}")').first
         try:
-            loc.click(timeout=6000)
+            x, y = centre_of(page, loc)
         except Exception:
             labels = page.eval_on_selector_all(
                 "button", "els => els.map(e => e.innerText.replace(/\\n+/g, ' ').trim())")
             raise RuntimeError(
                 f"no button matching {arg!r}. Buttons on the page: "
                 + ", ".join(repr(x) for x in labels if x)) from None
+        click_at(page, x, y)
         settle(page, 3)
-    elif kind == "row":
-        page.evaluate(SELECT_ROW, arg)
-        settle(page, 3)
-    elif kind == "scroll_to":
-        # Non-fatal on purpose. A scroll is framing, not substance — if an anchor moves or
-        # is already in view, the narration should still play over a correct screen rather
-        # than the whole recording dying for a cosmetic step. Anything that MUST be on
-        # screen is reached by a click, which does fail loudly.
+        ensure_cursor(page)
+
+    elif kind == "point":
+        # Move to a thing WITHOUT clicking it, so the viewer's eye goes where the narration
+        # is. This is what makes a talking cue watchable instead of a still frame.
         try:
-            page.get_by_text(arg, exact=False).locator("visible=true").first \
-                .scroll_into_view_if_needed(timeout=4000)
+            x, y = centre_of(page, in_main(page, arg))
+        except Exception:
+            print(f"       (point at {arg!r} skipped — not on screen)")
+            return
+        glide(page, x, y)
+
+    elif kind == "row":
+        # Real mouse on the canvas grid's checkbox column. The earlier synthetic dispatch
+        # worked but was invisible; a genuine click is both visible and closer to the truth.
+        grid = page.locator('[data-testid="stDataFrame"]').first
+        grid.scroll_into_view_if_needed(timeout=6000)
+        b = grid.bounding_box()
+        if not b:
+            raise RuntimeError("the data grid is not on screen")
+        click_at(page, b["x"] + 16, b["y"] + 52 + int(arg) * 35)
+        settle(page, 3)
+        ensure_cursor(page)
+
+    elif kind == "scroll_to":
+        try:
+            in_main(page, arg).scroll_into_view_if_needed(timeout=4000)
         except Exception:
             print(f"       (scroll_to {arg!r} skipped — not visible or already in view)")
-        page.wait_for_timeout(1100)          # let the smooth scroll land before we speak
+        page.wait_for_timeout(1100)
+        ensure_cursor(page)
+
     elif kind == "wait":
         page.wait_for_timeout(int(float(arg) * 1000))
+
     else:
         raise ValueError(f"unknown action {kind!r}")
 
