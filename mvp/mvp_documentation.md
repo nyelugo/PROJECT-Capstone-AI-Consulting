@@ -233,8 +233,10 @@ four patterns rather than only the easy one, and its false-positive rate is meas
 2. **Reporting confidence is weakly calibrated** — observed at 1.00 on live runs where a
    0.85 would have been more honest. The grounding guard, not the confidence, is what
    actually protects this capability.
-3. **The decision log is per-session.** Closing the browser loses it. A production version
-   writes to the case system, which is also where receipt would be confirmed — see below.
+3. **Decisions persist to a local file, not to a case system.** `queues/decision_events.json`
+   survives a refresh, a restart and a reboot — but it lives on one machine, and a fresh
+   clone starts with an empty log. A production version writes to the case system, which is
+   also where receipt would be confirmed.
 4. **The trace records the decision, not the delivery.** A successful trace proves the
    system decided, not that a handler received it. Carried over from Round 1, still open.
 5. **Anomaly detection runs on a fixed batch**, not a stream. Thresholds are static and
@@ -244,6 +246,14 @@ four patterns rather than only the easy one, and its false-positive rate is meas
 7. **One model, one temperature.** No fallback if `gpt-4o-mini` is unavailable; the call
    surfaces as `ERROR_MODEL_CALL` and the work goes to a person, which is the correct
    failure but not a resilient one.
+8. **Sign-in is a name typed into a box.** It records who *said* they decided, not who did.
+   For a page that calls itself an audit record that is a real limit, and it closes with the
+   case-system integration in Phase 2, not before.
+9. **No per-capability off switch.** A capability cannot be disabled from the UI; it needs a
+   restart. Chleo asked for this directly and it is Phase 2 work.
+10. **One fixed batch, no rolling period.** Every figure is over the precomputed queue, so
+    there is no "this week versus last" and no trend line until decisions span more than one
+    day. Also means the queue does not grow: new complaints do not arrive.
 
 ## What would be different in production
 
