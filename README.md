@@ -39,6 +39,11 @@ Round 1 deliverable. It is reused by the Round 2 app, never copied.
 **Outstanding, and mine to do:** the 2–5 minute POC demo recording, and the MVP demo backup
 recording for slide 9. Shot lists are in [`poc/poc_documentation.md`](poc/poc_documentation.md).
 
+**Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
+26 user stories across the six people who would actually touch this, each checked against
+the running app. 14 met, 5 partial, 7 not. Nine of the shortfalls are buildable now; seven
+genuinely need Phase 2.
+
 ### The two findings Round 2 turns on
 
 1. **A bespoke build does not pay back for a firm this size** — −31.0% at 36 months,
