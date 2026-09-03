@@ -20,7 +20,9 @@ st.caption("Ranked by how far a pattern departs from that account's own normal â
 
 items = Q.load_anomaly()
 if not items:
-    st.warning("The queue has not been built yet. Run `python -m mvp.build_queues`.")
+    st.warning("The candidate queue has not been prepared for this batch yet.",
+               icon=":material/inbox:")
+    st.caption("Whoever set this up: run `python -m mvp.build_queues`.")
     st.stop()
 
 latest = Q.latest_by_item()

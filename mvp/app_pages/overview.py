@@ -46,7 +46,9 @@ st.title("Overview")
 
 tri_items, ano_items = Q.load_triage(), Q.load_anomaly()
 if not tri_items and not ano_items:
-    st.warning("No queues built yet. Run `python -m mvp.build_queues`.")
+    st.warning("This batch has not been prepared yet, so there is nothing to show here.",
+               icon=":material/inbox:")
+    st.caption("Whoever set this up: run `python -m mvp.build_queues`.")
     st.stop()
 
 tri, ano = Q.summary(tri_items), Q.summary(ano_items)
@@ -88,7 +90,9 @@ if rows:
                         legend=alt.Legend(orient="top", offset=4)),
         order=alt.Order("outcome:N", sort="descending"),
         opacity=alt.condition(is_latest, alt.value(1.0), alt.value(0.55)),
-        tooltip=["week", "outcome", "items"]), 230)
+        tooltip=[alt.Tooltip("week:O", title="Week"),
+                 alt.Tooltip("outcome:N", title="Outcome"),
+                 alt.Tooltip("items:Q", title="Items")]), 230)
 
     now, held_now = int(wk.iloc[-1][["Proposed", "Held for a person"]].sum()), int(wk.iloc[-1]["Held for a person"])
     avg = prior[["Proposed", "Held for a person"]].sum(axis=1).mean() if len(prior) else float("nan")
@@ -121,7 +125,9 @@ _chart(alt.Chart(did).mark_bar(size=30).encode(
                                     range=[SLATE, ACCENT, ALERT]),
                     legend=alt.Legend(orient="top", offset=4)),
     order=alt.Order("outcome:N", sort="descending"),
-    tooltip=["capability", "outcome", "n"]), 170)
+    tooltip=[alt.Tooltip("capability:N", title="Capability"),
+             alt.Tooltip("outcome:N", title="Outcome"),
+             alt.Tooltip("n:Q", title="Items")]), 170)
 
 tot = tri["total"] + ano["total"]
 st.caption(f"**{tot} items read · {tri['proposed'] + ano['proposed']} proposed · "
@@ -178,7 +184,10 @@ if out:
                                         range=[SLATE, ALERT]),
                         legend=alt.Legend(orient="top", offset=4)),
         order=alt.Order("state:N"),
-        tooltip=["team", "state", "n"]), max(190, 34 * len(wl)))
+        tooltip=[alt.Tooltip("team:N", title="Team"),
+                 alt.Tooltip("state:N", title="Against target"),
+                 alt.Tooltip("n:Q", title="Complaints")]),
+           max(190, 34 * len(wl)))
 
 # The corpus arrives pre-aged: these complaints were filed before this batch was ever loaded,
 # so the clock measures the age of the DATA, not how long anyone sat on it. Saying "nobody has
@@ -223,7 +232,9 @@ _chart((alt.Chart(ev).mark_bar(size=34).encode(
                             scale=alt.Scale(domain=["Accepted", "Overridden"],
                                             range=[ACCENT, ALERT]),
                             legend=alt.Legend(orient="top", offset=4)),
-            order=alt.Order("k:N"), tooltip=["k", "n"])
+            order=alt.Order("k:N"),
+            tooltip=[alt.Tooltip("k:N", title="Outcome"),
+                     alt.Tooltip("n:Q", title="Decisions")])
         + alt.Chart(pd.DataFrame({"x": [MIN_SAMPLE]})).mark_rule(
             strokeDash=[4, 4], color=FAINT).encode(x="x:Q")
         + alt.Chart(pd.DataFrame({"x": [MIN_SAMPLE], "t": [f"{MIN_SAMPLE} needed"]})).mark_text(
@@ -258,7 +269,11 @@ if teams:
                         scale=alt.Scale(domain=["Accepted", "Overridden"],
                                         range=[ACCENT, ALERT]),
                         legend=alt.Legend(orient="top", offset=4)),
-        order=alt.Order("k:N"), tooltip=["team", "k", "n"]), max(230, 44 * len(tm)))
+        order=alt.Order("k:N"),
+        tooltip=[alt.Tooltip("team:N", title="Team"),
+                 alt.Tooltip("k:N", title="Outcome"),
+                 alt.Tooltip("n:Q", title="Decisions")]),
+           max(230, 44 * len(tm)))
 
     # Counts, never rates. One team has a single decision on it, and a 100% override rate off
     # one decision is the same base-rate artefact the weekly charts avoid.
@@ -300,8 +315,12 @@ if handlers:
                     f"datum.acceptance_pct > {Q.FLAG_ACCEPTANCE} && datum.enough",
                     alt.value(ALERT), alt.value(SLATE)),
                 opacity=alt.condition("datum.enough", alt.value(1.0), alt.value(0.5)),
-                tooltip=["handler", "decisions", "agreed", "overridden",
-                         alt.Tooltip("acceptance_pct:Q", format=".1f")])
+                tooltip=[alt.Tooltip("handler:N", title="Handler"),
+                         alt.Tooltip("decisions:Q", title="Decisions"),
+                         alt.Tooltip("agreed:Q", title="Accepted"),
+                         alt.Tooltip("overridden:Q", title="Overridden"),
+                         alt.Tooltip("acceptance_pct:Q", title="% accepted",
+                                     format=".1f")])
             + alt.Chart(pd.DataFrame({"x": [Q.FLAG_ACCEPTANCE]})).mark_rule(
                 strokeDash=[4, 4], color=FAINT).encode(x="x:Q")), max(130, 34 * len(hd)))
 
