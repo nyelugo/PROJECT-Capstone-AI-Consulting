@@ -83,7 +83,7 @@ with st.sidebar:
     st.divider()
     # Every recorded action carries a name. An audit record that cannot say who decided is
     # not an audit record — it is a list.
-    st.text_input("Demo operator", key="operator", value=st.session_state.get(
+    st.text_input("Demo operator", key="operator", max_chars=40, value=st.session_state.get(
         "operator", "U. Ahukannah"),
         help="Recorded against every decision you take. A typed name, not an authenticated identity — real sign-in arrives with the Phase 2 case-system integration.")
     ok_model = R.env("OPENAI_API_KEY") is not None

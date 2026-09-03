@@ -12,7 +12,7 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp import runtime as R
+from mvp.ui import current_operator
 
 ROI = Path(__file__).resolve().parents[2] / "cost_estimation" / "roi_model.json"
 
@@ -175,12 +175,9 @@ cols = st.columns(len(Q.CAPABILITIES))
 for col, (key, label) in zip(cols, Q.CAPABILITIES.items()):
     on = col.toggle(label, value=settings[key], key=f"cap_{key}")
     if on != settings[key]:
-        Q.set_capability(key, on, by=st.session_state.get("operator", "unknown"))
+        Q.set_capability(key, on, by=current_operator())
         st.rerun()
 
-a, b = st.columns(2)
-a.markdown(f"Model — {':green-badge[configured]' if R.env('OPENAI_API_KEY') else ':red-badge[missing]'}")
-b.markdown(f"Monitoring — {':green-badge[receiving]' if R.env('LANGSMITH_API_KEY') else ':orange-badge[not configured]'}")
 
 st.divider()
 st.caption(

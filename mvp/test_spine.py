@@ -42,7 +42,19 @@ def check(label, cap, request, reply, expect_code, expect_stage):
     return d
 
 
+
+def _no_new_failures(n0: int) -> None:
+    """Assert nothing was recorded since n0.
+
+    Without this each test function recorded its failures into FAILURES and returned None,
+    so pytest saw a passing test while `python -m mvp.test_spine` exited 1 on the same run —
+    a green that measured nothing.
+    """
+    assert len(FAILURES) == n0, "\n".join(FAILURES[n0:])
+
+
 def test_triage():
+    _n0 = len(FAILURES)
     from .capabilities.triage import Triage
     cap = Triage()
     good = {"complaint_id": "1234", "product": PRODUCT, "narrative": NARRATIVE}
@@ -76,9 +88,11 @@ def test_triage():
               "OK_PROPOSED", None)
     assert d.ref.startswith("cx_"), "subject reference must be pseudonymous"
     assert "1234" not in json.dumps(d.as_dict()), "raw identifier leaked into the record"
+    _no_new_failures(_n0)
 
 
 def test_reporting():
+    _n0 = len(FAILURES)
     from .capabilities.reporting import Reporting, fact_sheet
     cap = Reporting()
     sheet = fact_sheet()
@@ -115,9 +129,11 @@ def test_reporting():
     check("clean draft, figure rounded to 0dp", cap, good,
           {"narrative": rounded, "figures_used": ["timely_pct"], "confidence": 0.9},
           "OK_PROPOSED", None)
+    _no_new_failures(_n0)
 
 
 def test_anomaly():
+    _n0 = len(FAILURES)
     from .capabilities.anomaly import Anomaly, detect
     cap = Anomaly()
     cand = detect()[0]
@@ -144,9 +160,11 @@ def test_anomaly():
     d = check("clean case note", cap, good, ok, "OK_PROPOSED", None)
     assert d.ref.startswith("cx_"), "account reference must be pseudonymous"
     assert cand["account_ref"] not in json.dumps(d.as_dict()), "raw account ref leaked"
+    _no_new_failures(_n0)
 
 
 def test_confidence_rendering():
+    _n0 = len(FAILURES)
     """A malformed response has no confidence, and the page must still render.
 
     This crashed once: the Checks panel formatted confidence with :.2f, so the UI died
@@ -157,13 +175,14 @@ def test_confidence_rendering():
     """
     from .ui import conf_txt
     print("\nconfidence rendering")
-    cases = [(None, "—"), (float("nan"), "—"), ("high", "—"), (0.9, "0.90"), (1, "1.00")]
+    cases = [(None, "—"), (float("nan"), "—"), ("high", "—"), (0.9, "90%"), (1, "100%")]
     for value, expect in cases:
         got = conf_txt(value)
         ok = got == expect
         print(f"  {'PASS' if ok else 'FAIL'}  conf_txt({value!r:<12}) -> {got!r}")
         if not ok:
             FAILURES.append(f"conf_txt({value!r}) gave {got!r}, expected {expect!r}")
+    _no_new_failures(_n0)
 
 
 def main() -> int:

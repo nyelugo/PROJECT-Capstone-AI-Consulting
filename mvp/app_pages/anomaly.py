@@ -10,7 +10,7 @@ import streamlit as st
 from mvp import queue_store as Q
 from mvp.capabilities.anomaly import RULES, transactions_for
 from mvp.ui import (queue_filters, status_chip, ladder_html, action_bar, bulk_bar,
-                    conf_txt)
+                    conf_txt, reason_chip)
 
 st.title("Anomaly review")
 st.caption("Ranked by how far a pattern departs from that account's own normal — never by "
@@ -72,7 +72,7 @@ st.divider()
 
 left, right = st.columns([3, 2])
 with left:
-    st.markdown(f"{status_chip(it['status'])} :gray-badge[{it['reason_code']}]")
+    st.markdown(f"{status_chip(it['status'])}{reason_chip(it['reason_code'])}")
     st.subheader(it["rule"].replace("_", " ").capitalize())
     st.caption(RULES.get(it["rule"], ""))
     m = st.columns(4)
@@ -115,7 +115,7 @@ with right:
         st.markdown("**Checks**")
         st.html(ladder_html(it["reason_code"]))
         st.caption(f"confidence {conf_txt(it['confidence'])} · {it['latency_ms']} ms · "
-                   f"{it['model']} · ref {it['ref']}")
+                   f"{it['model']} · ref {it['ref']} · code `{it['reason_code']}`")
     st.caption(f"{it['category']} · {it['channel']} · {it['country']}")
 
 action_bar(it, capability="anomaly", actions=Q.ANOMALY_ACTIONS,

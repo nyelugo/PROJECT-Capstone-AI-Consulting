@@ -22,7 +22,7 @@ from mvp.capabilities.reporting import (AUDIENCES, MAX_AUDIENCE_CHARS, OTHER_AUD
                                         fact_sheet, period_for, periods)
 from mvp.runtime import call_model
 from mvp.spine import run, PROPOSE
-from mvp.ui import conf_txt, ladder_html, model_ready, status_chip
+from mvp.ui import conf_txt, ladder_html, model_ready, status_chip, current_operator, reason_chip
 
 st.title("Reporting assistance")
 
@@ -137,7 +137,7 @@ for name, sec in store["sections"].items():
         head.subheader(name)
         head.caption(SECTIONS[name]["brief"])
         side.markdown(f"{status_chip(prior['action'] if prior else ('proposed' if ok else 'held'))}"
-                      f" :gray-badge[{sec['reason_code']}]")
+                      f"{reason_chip(sec['reason_code'])}")
 
         if ok:
             st.write(sec["narrative"])
@@ -175,7 +175,7 @@ for name, sec in store["sections"].items():
             with st.expander("Checks"):
                 st.html(ladder_html(sec["reason_code"]))
                 st.caption(f"confidence {conf_txt(sec['confidence'])} · {sec['latency_ms']} ms · "
-                           f"{sec['model']}")
+                           f"{sec['model']} · code `{sec['reason_code']}`")
 
         if prior:
             st.success(f"**{prior['action'].title()}** by {prior['by']} at "
@@ -184,12 +184,12 @@ for name, sec in store["sections"].items():
             if st.button("Sign off this section", key=f"acc_{item_id}", type="primary",
                          disabled=not ok, icon=":material/draw:"):
                 Q.record(item_id, "accepted", capability="reporting",
-                         by=st.session_state.get("operator", "unknown"),
+                         by=current_operator(),
                          proposed=name, reason_code=sec["reason_code"])
                 st.rerun()
             if st.button("Reject", key=f"rej_{item_id}", icon=":material/close:"):
                 Q.record(item_id, "rerouted", capability="reporting",
-                         by=st.session_state.get("operator", "unknown"),
+                         by=current_operator(),
                          proposed=name, reason_code=sec["reason_code"],
                          note="section rejected by the reviewer")
                 st.rerun()

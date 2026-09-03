@@ -69,7 +69,7 @@ def render(d, key: str, *, accept_label: str, review_label: str) -> None:
     left, right = st.columns([3, 2])
     with left:
         st.markdown(f":{'blue' if proposed else 'orange'}-badge[{label}] "
-                    f":gray-badge[{d.reason_code}]")
+                    f"{reason_chip(d.reason_code)}")
         st.subheader(d.summary)
         st.caption(d.reason)
 
@@ -150,6 +150,41 @@ STATUS_LABEL = {
 }
 
 
+# The raw code belongs in the Checks panel beside the ladder, not in a badge on a queue row.
+# A handler needs to know what was wrong, not what the constant is called.
+REASON_LABEL = {
+    "OK_PROPOSED": "",
+    "REJECT_INVALID_INPUT": "Input rejected",
+    "ERROR_MODEL_CALL": "Model call failed",
+    "REJECT_MALFORMED_OUTPUT": "Unreadable reply",
+    "REJECT_QUEUE_NOT_IN_PRODUCT": "Queue not on this product",
+    "REJECT_OUT_OF_TAXONOMY": "No queue fits",
+    "REJECT_METRIC_NOT_PUBLISHED": "Metric not published",
+    "REJECT_ACCOUNT_NOT_IN_LEDGER": "Not in this batch",
+    "REJECT_LOW_CONFIDENCE": "Below the confidence threshold",
+    "REJECT_EVIDENCE_NOT_VERBATIM": "Quote not found in the complaint",
+    "REJECT_FIGURE_NOT_COMPUTED": "Figure not computed from the data",
+    "REJECT_VALUE_MISMATCH": "Value does not match the record",
+}
+
+
+def reason_chip(code: str) -> str:
+    """A plain-English badge, or nothing when the proposal passed."""
+    label = REASON_LABEL.get(code, code)
+    return f" :gray-badge[{label}]" if label else ""
+
+
+MAX_OPERATOR_CHARS = 40
+MAX_NOTE_CHARS = 200
+
+
+def current_operator() -> str:
+    """Who is acting, normalised. Never blank: an audit row that cannot say who decided is
+    not an audit row, and the field is a free-text box that can be emptied."""
+    name = " ".join(str(st.session_state.get("operator", "")).split())[:MAX_OPERATOR_CHARS]
+    return name or "unknown"
+
+
 def conf_txt(v) -> str:
     """Render a confidence, or an em dash when there isn't one.
 
@@ -157,7 +192,7 @@ def conf_txt(v) -> str:
     case the Checks panel exists to display. Formatting None with :.2f raises TypeError, so
     the page would crash precisely when it had something important to say.
     """
-    return f"{v:.2f}" if isinstance(v, (int, float)) and v == v else "—"
+    return f"{v:.0%}" if isinstance(v, (int, float)) and v == v else "—"
 
 
 @st.cache_data(show_spinner=False)
@@ -263,6 +298,7 @@ def action_bar(item: dict, *, capability: str, actions: dict, proposed: str = ""
         dest = a.selectbox("If rerouting, the right team is",
                            team_names(), key=f"dest_{capability}_{item['item_id']}")
         note = b.text_input("Note (optional)", key=f"note_{capability}_{item['item_id']}",
+                            max_chars=MAX_NOTE_CHARS,
                             placeholder="why the proposal was wrong")
 
     with st.container(horizontal=True):
@@ -270,7 +306,7 @@ def action_bar(item: dict, *, capability: str, actions: dict, proposed: str = ""
             if st.button(label, key=f"{capability}_{item['item_id']}_{action}",
                          type="primary" if action in ("accepted", "escalated") else "secondary"):
                 Q.record(item["item_id"], action, capability=capability,
-                         by=st.session_state.get("operator", "unknown"),
+                         by=current_operator(),
                          proposed=proposed, reason_code=item.get("reason_code", ""),
                          note=note,
                          destination=dest if action in Q.NEEDS_DESTINATION else "")
@@ -305,7 +341,7 @@ def bulk_bar(rows: "pd.DataFrame", *, capability: str, actions: dict) -> None:
             if st.button(f"{label} — all {len(rows)}", key=f"bulk_{capability}_{action}"):
                 for _, r in rows.iterrows():
                     Q.record(r["item_id"], action, capability=capability,
-                             by=st.session_state.get("operator", "unknown"),
+                             by=current_operator(),
                              proposed=str(r.get("proposed_team") or r.get("rule", "")),
                              reason_code=r.get("reason_code", ""),
                              note=f"bulk action over {len(rows)} items")

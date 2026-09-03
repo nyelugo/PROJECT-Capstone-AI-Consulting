@@ -12,6 +12,7 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
+from mvp.ui import STATUS_LABEL, current_operator
 
 st.title("Decision log")
 st.caption("Every proposal beside the human action taken on it. This pairing is the audit "
@@ -29,6 +30,9 @@ for col in ("note", "destination", "reason_code", "proposed"):
 df[["note", "destination", "reason_code", "proposed"]] = (
     df[["note", "destination", "reason_code", "proposed"]].fillna(""))
 df["_day"] = pd.to_datetime(df["at"]).dt.date
+# "2026-08-31T17:49:04" is a machine's idea of a timestamp.
+df["when"] = pd.to_datetime(df["at"]).dt.strftime("%d %b %Y, %H:%M")
+df["did"] = df["action"].map(lambda a: STATUS_LABEL.get(a, a.replace("_", " ").capitalize()))
 
 with st.container(border=True):
     c = st.columns([1.4, 1, 1, 1, 1.5])
@@ -66,21 +70,21 @@ m[2].metric("Items revisited", revisited,
 # What a person did, what they said about it, and where they sent it. The reason code is the
 # system's own vocabulary and lives under Technical details.
 sel = st.dataframe(
-    view[["at", "capability", "item_id", "proposed", "action", "by", "note", "destination"]],
+    view[["when", "capability", "item_id", "proposed", "did", "by", "note", "destination"]],
     width="stretch", hide_index=True, on_select="rerun", selection_mode="single-row",
     column_config={
-        "at": st.column_config.TextColumn("When", width="small"),
+        "when": st.column_config.TextColumn("When", width="small"),
         "capability": st.column_config.TextColumn("Capability", width="small"),
         "item_id": st.column_config.TextColumn("Item", width="small"),
         "proposed": st.column_config.TextColumn("What it proposed", width="large"),
-        "action": st.column_config.TextColumn("Human action", width="small"),
+        "did": st.column_config.TextColumn("Human action", width="small"),
         "by": st.column_config.TextColumn("By", width="small"),
         "note": st.column_config.TextColumn("Note left", width="medium"),
         "destination": st.column_config.TextColumn("Sent to", width="small"),
     })
 
 with st.expander("Technical details — reason codes"):
-    st.dataframe(view[["at", "item_id", "reason_code"]], width="stretch", hide_index=True)
+    st.dataframe(view[["when", "item_id", "reason_code"]], width="stretch", hide_index=True)
     st.caption("The code the guard ladder stopped on, if any. The vocabulary is the system's, "
                "not an auditor's — kept out of the main table on purpose.")
 
@@ -112,11 +116,11 @@ if picked:
                 st.info(case["explanation"])
         with b:
             st.markdown("**Every action on this item**")
-            hist = df[df["item_id"] == item_id][["at", "action", "by", "note", "destination"]]
+            hist = df[df["item_id"] == item_id][["when", "did", "by", "note", "destination"]]
             st.dataframe(hist, width="stretch", hide_index=True)
             st.caption(f"confidence {case.get('confidence', '—')} · {case.get('model', '—')}")
 
-st.download_button("Export as CSV", view.drop(columns="_day").to_csv(index=False).encode(),
+st.download_button("Export as CSV", view.drop(columns=["_day", "when", "did"]).to_csv(index=False).encode(),
                    "decision_log.csv", "text/csv", icon=":material/download:")
 
 # ------------------------------------------------------------------------------- erasure
@@ -139,6 +143,6 @@ with st.expander("Erase a data subject's record (GDPR Art. 17)"):
         confirm = st.checkbox("I have verified this request and its identity", key="erase_ok")
         if st.button("Erase this subject's record", type="primary", disabled=not confirm,
                      icon=":material/delete_forever:"):
-            n = Q.redact_ref(ref, by=st.session_state.get("operator", "unknown"))
+            n = Q.redact_ref(ref, by=current_operator())
             st.success(f"Redacted {n} row(s) and recorded the erasure.")
             st.rerun()

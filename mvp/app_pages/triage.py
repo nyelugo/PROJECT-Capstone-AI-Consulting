@@ -10,7 +10,7 @@ import streamlit as st
 
 from mvp import queue_store as Q
 from mvp.ui import (queue_filters, status_chip, sla_chip, ladder_html,
-                    action_bar, bulk_bar, conf_txt)
+                    action_bar, bulk_bar, conf_txt, reason_chip)
 
 st.title("Complaint triage")
 st.caption("Every complaint in today's batch, already read. It proposes a team and must "
@@ -83,7 +83,7 @@ st.divider()
 left, right = st.columns([3, 2])
 with left:
     st.markdown(f"{status_chip(it['status'])} {sla_chip(it['sla'], it['days_left'])} "
-                f":gray-badge[{it['reason_code']}]")
+                f"{reason_chip(it['reason_code'])}")
     st.subheader(f"Route to {it['proposed_team']}"
                  if it["proposed_queue"] else "No team proposed")
     if it["proposed_queue"]:
