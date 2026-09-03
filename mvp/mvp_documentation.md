@@ -19,10 +19,13 @@ Opens on <http://localhost:8502>. Editing a module under `mvp/` — as opposed t
 page script — needs a server restart, not just a browser refresh. On macOS, double-click **`Assist.app`** on the Desktop
 (build it once with `./make_desktop_app.sh`); on Windows, **`run_mvp.bat`**.
 
-**One app, five pages, left-hand navigation.** The Round 1 dashboard is a page inside this
-application rather than a second server on a second port — two ports is a seam the audience
-sees, and it contradicts the claim that this is one system. `dashboard/app.py` is *reused*,
-not copied, and still runs standalone as the Round 1 deliverable it is.
+**One app, six pages, left-hand navigation.** Two of them are for the people who supervise
+rather than operate — Overview for the chief executive, weekly; Operations for the ops lead,
+daily — and one screen serving both was this MVP's original design error.
+
+**The Round 1 dashboard is not in here.** It sized an opportunity from public data for a
+pitch: a different job, a different audience, and data that is not the client's. It stays at
+`dashboard/app.py`, runs standalone with `run_dashboard.command`, and is shown from the deck.
 
 ### Keys
 

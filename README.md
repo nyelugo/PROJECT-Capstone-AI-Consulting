@@ -12,12 +12,14 @@ proposed use cases rather than triage alone, and all three now run. See
 [`feedback/round1_decision.md`](feedback/round1_decision.md).
 
 **Run it:** `streamlit run mvp/app.py`, or build a Desktop shortcut once with
-`./make_desktop_app.sh` and double-click **`Assist.app`**. One application, five pages,
-left-hand navigation — the Round 1 dashboard is a page inside it, not a second server.
+`./make_desktop_app.sh` and double-click **`Assist.app`**. One application, six pages,
+left-hand navigation: Overview and Operations for the two supervisors, then triage, anomaly
+review, reporting and the decision log.
 Stop it with `pkill -f "streamlit run mvp/app.py"`.
 
-`dashboard/app.py` still runs on its own (`run_dashboard.command`), because it is a graded
-Round 1 deliverable. It is reused by the Round 2 app, never copied.
+`dashboard/app.py` runs separately (`run_dashboard.command`). It is a Round 1 pitch artifact
+on public data, deliberately **not** a page in the product — you show it from the deck when
+you size the opportunity.
 
 ---
 
@@ -75,7 +77,7 @@ Six of the nine remaining shortfalls are buildable now; three need Phase 2.
 
 ## What each part does
 
-`STACK.md` is the high-level map: what each of the seven elements is for, how a complaint
+`STACK.md` is the high-level map: what each of the ten elements is for, how a complaint
 moves through them, why there are two LangSmith artifacts, and where the honest limits are.
 
 ## The data

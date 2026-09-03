@@ -3,10 +3,10 @@
 Author: Ugo Ahukannah
 Capstone Rounds 1 and 2 · a high-level map, not a code tour
 
-There are nine moving parts. Each answers one question, and the questions are different.
+There are ten moving parts. Each answers one question, and the questions are different.
 Where two of them look similar in a UI, this document says why they are not.
 
-**Round 2 added two of the nine** — the MVP and its synthetic transaction batch — and the
+**Round 2 added three of the ten** — the MVP and its synthetic transaction batch — and the
 scope widened from one use case to three. Everything Round 1 built is unchanged and still
 read by the newer parts rather than copied into them.
 
@@ -17,13 +17,14 @@ read by the newer parts rather than copied into them.
 | Element | What it is | The question it answers | What it is **not** |
 |---|---|---|---|
 | **Data** | 16,839 curated public CFPB complaints | What does a complaint book look like? | Not the client's data. A structural proxy |
-| **Dashboard** | Streamlit + Plotly, 6 metrics. Runs standalone *and* as the MVP's overview page | Can a CEO see her own problem? | Not an AI product. There is no model in it — which the MVP's navigation states rather than blurs |
+| **Dashboard** | Streamlit + Plotly, 6 metrics. Runs standalone | Can a CEO see her own problem? | Not an AI product, and not part of the product either — a pitch artifact on public data, shown from the deck |
 | **Classifier** | Prompt, taxonomy, team map, decision rules | Given one complaint, which team? | Not a service. It is the logic two runtimes share |
 | **n8n workflow** | 10 nodes on the cohort instance | Can she watch a decision happen? | Not production. Assist-only, a person decides |
 | **LangSmith experiment** | 60 examples with reference answers | How good is it? | Cannot judge a live complaint — no answer key exists yet |
 | **LangSmith tracing** | One record per real execution | What did it just do, and why? | Cannot score anything. No ground truth at run time |
 | **Cost / ROI model** | Python, every figure derived | What would this cost, what does it return, and what must be true? | Not a quote. An order of magnitude with stated assumptions |
-| **MVP (`mvp/`)** | One Streamlit app, five pages: the dashboard plus three capabilities on one decision spine, and the decision log | Can a person actually use it, and is the human step real? | Not production. No case-system integration, no persistence beyond the session |
+| **MVP (`mvp/`)** | One Streamlit app, six pages: Overview and Operations for the two supervisors, three capabilities on one decision spine, and the decision log | Can a person actually use it, and is the human step real? | Not production. No case-system integration, and decisions persist to one machine rather than to a case system |
+| **Demo recorder (`demo/`)** | A cue list, TTS and a driven browser | Can the demos be re-made after a UI change? | Not a product feature. Tooling, and the recordings are the deliverable |
 | **Synthetic transactions** | 2,069 records, anomalies planted with labels | Does the anomaly detector find what it should? | Not real data, and not proof against a pattern nobody planted |
 
 ---

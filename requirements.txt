@@ -8,3 +8,5 @@ plotly>=7.0.0
 openai>=2.45.0
 langsmith>=0.10.11
 python-dotenv>=1.2.2
+# demo/ only — recording the POC and MVP demos. Not needed to run the MVP.
+playwright>=1.62.0
