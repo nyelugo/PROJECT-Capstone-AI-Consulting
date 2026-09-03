@@ -70,6 +70,21 @@ in-house after handover it costs €283/day loaded — €3,397 — which is the
 Round 1 assumed 2 review days per quarter for one capability; this assumes 3 for three. That
 increase is the honest running cost of the widened scope.
 
+**What the anomaly line is, and is not.** It costs a **capped monthly review batch** — 56
+candidates, the number the detector raised on a 40-account, 90-day synthetic fixture — not a
+scan of the firm's transaction book. That distinction is worth stating because `detect()`
+applies no cap: it returns every amount spike, every rapid burst and every foreign-device day
+it finds. At the fixture's own rate of 2.71% of transactions, 330,000 accounts would raise in
+the order of **154,000 candidates a month**. The model calls would still be immaterial — about
+**€230 a year rather than €0.08** — but reviewing them at two minutes each is roughly **37
+full-time analysts**, against a benefit of catching ~27 cases a year.
+
+So UC-2 is deliberately scoped as a bounded queue an analyst team can actually work, and the
+thresholds that make it bounded are a Phase 1 calibration on real traffic, not a solved
+problem. This is **R9** with numbers on it. It is also why the value line below is anchored to
+complaints rather than to transactions: the benefit claimed is early detection among cases that
+would have reached us anyway, not a promise to police every payment.
+
 ## Quantified business value
 
 | Value line | Per year | Counted in |
@@ -145,7 +160,7 @@ repeated here.
 | `value_starts_month` | 7 | judgement | Phases 0–2 run about six months, so benefits accrue from month 7 |
 | `reports_per_year` | 4 | assumption | One complaints report per quarter, four sections each |
 | `anomaly_batches_per_year` | 12 | assumption | Monthly batch review |
-| `anomaly_candidates_per_batch` | 56 | measured | Candidates raised by the detector on the synthetic batch |
+| `anomaly_candidates_per_batch` | 56 | assumption | Size of one **capped** monthly review batch. Raised by the detector on the 40-account synthetic fixture — not the client's transaction book |
 | `report_tokens_in` / `out` | 900 / 180 | measured | `mvp/capabilities/reporting.py` |
 | `anomaly_tokens_in` / `out` | 420 / 120 | measured | `mvp/capabilities/anomaly.py` |
 | `day_rate_eur` | 700 | set by consultant | Fixed fee per phase |
@@ -183,7 +198,7 @@ Likelihood and impact on 1–5. Ordered by exposure (L × I).
 | R6 | **Personal data is processed without a lawful basis, or leaves the EU** | Regulatory | 2 | 5 | 10 | Pseudonymisation at the boundary, verified by test rather than assumed. EU-hosted monitoring endpoint set explicitly. Register, retention and DPIA in [`compliance/gdpr_documentation.md`](compliance/gdpr_documentation.md). The model provider's terms are a Phase 0 gate, not a Phase 2 discovery |
 | R7 | **The model provider changes, deprecates or reprices the model** | Technical | 3 | 3 | 9 | Prompts and guards are provider-agnostic and live in version control, not in a vendor console. API cost is 0.004% of running cost, so even a 20× price rise is immaterial — measured, not assumed |
 | R8 | **Complaint mix shifts and the classifier silently degrades** | Technical | 3 | 3 | 9 | Reason-code distribution is monitored continuously; a rising abstention rate is the leading indicator and is visible before accuracy moves. Quarterly review is funded in the running cost |
-| R9 | **Anomaly flagging produces more work than it removes** — analysts drown in false positives | Operational | 3 | 3 | 9 | Candidates rank by departure from each account's own baseline, and volume is capped by batch. Precision is measured against planted ground truth today and against analyst dispositions in the pilot. If the ratio is wrong, UC-2 is switched off without touching the other two |
+| R9 | **Anomaly flagging produces more work than it removes** — analysts drown in false positives | Operational | 3 | 3 | 9 | Candidates are sorted by departure from each account's own baseline, so the queue is worked worst-first; volume is bounded by the batch under review rather than by a cut, and because the list is already ranked a top-N cap is a one-line change once real traffic sets the threshold. Precision is measured against planted ground truth today and against analyst dispositions in the pilot. If the ratio is wrong, UC-2 is switched off without touching the other two |
 | R11 | **Scope creeps from assist into automation** because the results look good | Operational | 3 | 3 | 9 | The guardrail is written into the use case definition and the AI Act assessment: the system proposes, a person decides. `decision` has exactly two possible values in code. Removing the human step requires a new conformity assessment |
 | R10 | **Flagging correlates with a protected characteristic** — anomaly detection disadvantages a customer group | Ethical | 2 | 4 | 8 | Detection uses transaction behaviour relative to the account's own history, never demographic attributes. Flag rates are reviewed by segment in the pilot. Every flag ends at a human, and no customer is contacted or restricted by the system |
 | R12 | **The trace records the decision but not the delivery** — a proposal is recorded as made when nothing received it | Technical | 3 | 2 | 6 | Known and documented rather than hidden (Round 1 open item). Closed in Phase 2 by acknowledging receipt from the case system. Until then, delivery is not claimed |

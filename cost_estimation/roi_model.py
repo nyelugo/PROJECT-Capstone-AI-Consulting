@@ -67,8 +67,12 @@ A2 = {
         "single capability; this is the cost of the widened scope"),
     "reports_per_year": (4, "assumption", "one complaints report per quarter, 4 sections each"),
     "anomaly_batches_per_year": (12, "assumption", "monthly batch review"),
-    "anomaly_candidates_per_batch": (56, "measured",
-        "candidates raised by the detector on the synthetic batch"),
+    "anomaly_candidates_per_batch": (56, "assumption",
+        "candidates in ONE capped monthly review batch. The 56 was raised by the detector on "
+        "the 40-account, 90-day synthetic fixture, so it sizes a bounded analyst queue rather "
+        "than the client's transaction book. detect() applies no cap, so at the same 2.71% "
+        "flag rate the full book would raise ~154,000 a month. UC-2 is costed as a reviewed "
+        "batch on purpose; the unbounded version is R9, and it is arithmetic, not a worry"),
     # -- token costs for the two new capabilities
     "report_tokens_in": (900, "measured", "fact sheet + instruction, mvp/capabilities/reporting.py"),
     "report_tokens_out": (180, "measured", "3-5 sentences plus keys"),
