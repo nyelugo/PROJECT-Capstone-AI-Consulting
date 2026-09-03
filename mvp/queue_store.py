@@ -311,16 +311,6 @@ def by_week(items: list[dict], date_key: str) -> list[dict]:
     return rows
 
 
-def week_on_week(rows: list[dict]) -> dict:
-    """The last complete week against the one before it. None when there is no comparison."""
-    if len(rows) < 2:
-        return {}
-    cur, prev = rows[-1], rows[-2]
-    return {"current": cur, "previous": prev,
-            "items_delta": cur["items"] - prev["items"],
-            "held_pct_delta": cur["held_pct"] - prev["held_pct"]}
-
-
 # ------------------------------------------------------------------------ on/off switches
 # Chleo asked for this directly: she wants to disable a capability on a Monday morning
 # without phoning a consultant. It lives in a file rather than in code precisely so that
