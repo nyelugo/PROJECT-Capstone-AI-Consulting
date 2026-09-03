@@ -27,8 +27,16 @@ class Triage:
     def ref(self, request: dict) -> str:
         return pseudonymise(request.get("complaint_id", "unknown"))
 
+    @staticmethod
+    def _product(request: dict) -> str:
+        """Normalise once. The n8n POC does the same in its Normalise node — the MVP had
+        drifted, stripping in validate() only, so " Credit card " passed validation and then
+        matched no queue: the model was handed ["OTHER"] and its answer rejected as
+        out-of-taxonomy."""
+        return (request.get("product") or "").strip()
+
     def validate(self, request: dict) -> str | None:
-        product = (request.get("product") or "").strip()
+        product = self._product(request)
         narrative = (request.get("narrative") or "").strip()
         if product not in P.PRODUCT_QUEUES:
             return f"'{product}' is not a product this system handles"
@@ -40,7 +48,8 @@ class Triage:
         return [
             {"role": "system", "content": P.SYSTEM_PROMPT},
             {"role": "user", "content": P.build_user_message(
-                request["product"], request["narrative"].strip()[:MAX_NARRATIVE_CHARS])},
+                self._product(request),
+                request["narrative"].strip()[:MAX_NARRATIVE_CHARS])},
         ]
 
     def parse(self, text: str) -> dict:
@@ -50,9 +59,7 @@ class Triage:
                 "evidence": str(o.get("evidence", "")).strip()}
 
     def scope_check(self, parsed: dict, request: dict) -> str | None:
-        # validate() compares the STRIPPED product, so strip here too — otherwise
-        # "Credit card " passes validation and then matches no queue at all.
-        valid = P.PRODUCT_QUEUES.get((request.get("product") or "").strip(), [])
+        valid = P.PRODUCT_QUEUES.get(self._product(request), [])
         if parsed["queue"] not in valid:
             return "REJECT_QUEUE_NOT_IN_PRODUCT"
         if parsed["queue"] == "OTHER":

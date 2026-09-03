@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import os
 import re
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ENV_FILE = Path.home() / ".config/ironhack/.env.local"
@@ -120,10 +121,18 @@ def trace(decision, request_meta: dict) -> bool:
         return False
     try:
         from langsmith import Client
+        # A run created without an end_time stays "pending" forever: it never completes, and
+        # the Monitoring charts that are the whole point of this deliverable cannot measure
+        # latency or success over it. latency_ms is already on the Decision, so the window is
+        # recorded accurately rather than as a zero-length blip.
+        ended = datetime.now(timezone.utc)
+        started = ended - timedelta(milliseconds=max(int(decision.latency_ms or 0), 0))
         Client().create_run(
             name=f"mvp_{decision.capability}",
             run_type="chain",
             project_name=TRACING_PROJECT,
+            start_time=started,
+            end_time=ended,
             inputs={"capability": decision.capability, "ref": decision.ref, **request_meta},
             outputs=decision.as_dict(),
             extra={"metadata": {
