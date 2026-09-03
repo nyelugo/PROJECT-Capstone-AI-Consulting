@@ -240,6 +240,24 @@ the agreement figure. The caveat is bound to the figure in `score()`'s return va
 lifted onto a slide alone. What it does establish: the detector is deterministic, covers all
 four patterns rather than only the easy one, and its false-positive rate is measurable.
 
+**And precision is a function of the base rate, which this batch sets far too high.** 100 of
+2,069 transactions were planted — **4.83% anomalous**, where card fraud in the wild runs
+nearer 0.05–0.1%. The measured false-positive rate is 0.152% of normal transactions, and that
+is the number that travels; the precision does not. Hold the detector exactly as it is and
+move only the base rate:
+
+| Anomalies in the population | Precision |
+|---:|---:|
+| 4.83% — this batch | **97.1%** |
+| 0.50% | 76.7% |
+| 0.10% | 39.6% |
+| 0.05% | **24.7%** |
+
+So 97.1% is not a claim about the client's traffic and would not survive it. Phase 1 measures
+precision against analyst dispositions on real transactions, at whatever base rate the book
+actually has, and the thresholds are calibrated there rather than here. This is the same
+arithmetic that sizes the review queue in `roi_risk_assessment.md` — R9.
+
 ## Known limitations
 
 1. **The grounding scan reads digits, not words.** "five transactions" is not checked;
