@@ -82,6 +82,14 @@ model's own words. The committed batch is the one the screenshots and the demo r
 so rebuild it deliberately rather than as a way of checking the app still works — `python -m
 mvp.test_spine` does that with no network and no key.
 
+**Sign the return, not four sections.** One button signs everything that passed its checks
+and names anything it is skipping; per-section sign-off stays as the override. A section can
+also be edited in place, and a saved edit is re-checked exactly as the model's draft was —
+a figure that is not on the fact sheet stops the section whoever wrote it. Without that the
+page would still claim "all figures trace to the fact sheet" about text nobody had checked,
+which is the moment the guarantee would quietly go false. Citations are recomputed from the
+edited prose, and the audit row records that a person edited before signing.
+
 **Every input is a closed set.** Section, period, product and rule were always checked
 against a known list before a token was spent; the audience was not, and it was interpolated
 into the prompt. It is a list now, with an "Other…" escape capped at one line and 60

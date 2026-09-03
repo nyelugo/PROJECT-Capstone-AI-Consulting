@@ -184,6 +184,16 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > *Accept: per-section sign-off, with a name and time.*
 > **MET.**
 
+> **R6.** As the compliance officer, I want to **edit a section before signing it**, so that
+> I can fix what it emphasises without discarding a draft whose figures are already checked.
+> *Accept: edit in place, and the same grounding check applied to the edit.*
+> **MET** — every section is editable, and a saved edit is re-checked exactly as the model's
+> draft was: figures that are not on the fact sheet stop it, whoever wrote them. Citations are
+> recomputed from the edited text, so the figure list cannot describe a draft that no longer
+> exists, and the audit row records `edited before signing`. Signing is one action for the
+> whole return; per-section sign-off remains as the override, which is what the record needs
+> and not what a reviewer should have to click four times.
+
 > **R5.** As the compliance officer, I want to **choose the period the return covers**, so
 > that I produce a return for a quarter rather than for whatever the system was pointed at.
 > *Accept: a period control, and figures that change with it.*
@@ -243,11 +253,11 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 
 | | Chleo | Ops lead | Handler | Analyst | Compliance | Audit | **Total** |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| MET | 6 | 4 | 6 | 3 | 5 | 4 | **28** |
+| MET | 6 | 4 | 6 | 3 | 6 | 4 | **29** |
 | PARTIAL | 0 | 0 | 1 | 0 | 0 | 0 | **1** |
 | NOT MET | 0 | 0 | 0 | 1 | 0 | 1 | **2** |
 
-**28 of 31 fully met.** After Chleo's review,  Chleo and the ops lead are at **100%** — that was the scope
+**29 of 32 fully met.** After Chleo's review,  Chleo and the ops lead are at **100%** — that was the scope
 decision and it is done. The handler is one story short, and that one waits on the case
 system. What is left belongs to the analyst, the compliance officer and the auditor.
 

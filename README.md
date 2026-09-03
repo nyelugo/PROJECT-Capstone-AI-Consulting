@@ -46,8 +46,8 @@ UI change costs a command, not an afternoon.
 **Outstanding:** submitting the repo URL to Campus under `final-project`.
 
 **Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
-31 user stories across the six people who would actually touch this, each checked
-against the running app. **28 met, 1 partial, 2 not** — Chleo, the ops lead and the
+32 user stories across the six people who would actually touch this, each checked
+against the running app. **29 met, 1 partial, 2 not** — Chleo, the ops lead and the
 compliance officer are at 100%. What is left is a handler search that pseudonymity makes
 hard, analyst-tunable thresholds, and authenticated identity, which is Phase 2.
 

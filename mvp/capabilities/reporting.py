@@ -213,6 +213,42 @@ def _unmatched(cited: float, allowed: set[float]) -> bool:
     return not any(abs(a - cited) <= tol for a in allowed)
 
 
+def recheck_narrative(section: str, narrative: str, start: str, end: str
+                      ) -> tuple[str | None, str, list[str]]:
+    """Run the grounding check over arbitrary prose, and say which figures it now cites.
+
+    A human edit gets exactly the check the model's draft got. Without this, editing a signed
+    section would leave the page still claiming "all figures trace to the fact sheet" about
+    text nobody had checked — the guarantee would go false at the moment a person touched it.
+
+    Returns (reason_code or None, detail, citations). Citations are recomputed from the
+    numbers actually present, so the list cannot describe a draft that no longer exists.
+    """
+    sheet = fact_sheet(start, end)
+    keys = SECTIONS[section]["keys"]
+    allowed = _allowed_numbers(keys, sheet)
+    text = (narrative or "").strip()
+    if not text:
+        return "REJECT_MALFORMED_OUTPUT", "the section is empty", []
+
+    bad = [n for n in _numbers_in(text) if _unmatched(n, allowed)]
+    if bad:
+        shown = ", ".join(f"{b:g}" for b in bad[:4])
+        return ("REJECT_FIGURE_NOT_COMPUTED",
+                f"{len(bad)} figure(s) in the edit were not computed from the data: {shown}",
+                [])
+
+    cites = []
+    for k in keys:
+        v = sheet.get(k, {}).get("v")
+        if isinstance(v, (int, float)) and any(not _unmatched(n, {float(v)})
+                                               for n in _numbers_in(text)):
+            shown = f"{v:.1f}" if isinstance(v, float) else v
+            cites.append(f"{k} = {shown}")
+    n = len(_numbers_in(text))
+    return None, f"all {n} figure(s) in the edit trace to the fact sheet", cites
+
+
 class Reporting:
     name = "reporting"
     title = "Reporting assistance"

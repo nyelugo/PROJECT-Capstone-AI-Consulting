@@ -19,9 +19,10 @@ import streamlit as st
 from mvp import queue_store as Q
 from mvp.capabilities.reporting import (AUDIENCES, MAX_AUDIENCE_CHARS, OTHER_AUDIENCE,
                                         Reporting, SECTIONS, audience_problem,
-                                        fact_sheet, period_for, periods)
+                                        fact_sheet, period_for, periods,
+                                        recheck_narrative)
 from mvp.runtime import call_model
-from mvp.spine import run, PROPOSE
+from mvp.spine import run, HUMAN, PROPOSE
 from mvp.ui import conf_txt, ladder_html, model_ready, status_chip, current_operator, reason_chip
 
 st.title("Reporting assistance")
@@ -102,6 +103,25 @@ signed = sum(1 for name in store["sections"]
 c2.metric("Sections signed off", f"{signed} of {len(store['sections'])}")
 st.caption(f"Drafted for **{store['audience']}** · period **{store['period']}**.")
 
+# Signing four sections one at a time was friction I invented: the per-section record is
+# what the audit needs, not what the reviewer should have to click. One button signs
+# everything that passed its checks; anything stopped is named rather than swept in.
+unsigned = [n for n, sec in store["sections"].items()
+            if sec["decision"] == PROPOSE and not latest.get(f"report-{n}")]
+stopped = [n for n, sec in store["sections"].items() if sec["decision"] != PROPOSE]
+if unsigned:
+    if st.button(f"Sign off the return — {len(unsigned)} section(s)", type="primary",
+                 icon=":material/draw:"):
+        for n in unsigned:
+            sec = store["sections"][n]
+            Q.record(f"report-{n}", "accepted", capability="reporting", by=current_operator(),
+                     proposed=n, reason_code=sec["reason_code"],
+                     note="edited before signing" if sec.get("edited") else "")
+        st.rerun()
+if stopped:
+    st.caption(f":orange[Not included — stopped by a check: {', '.join(stopped)}. "
+               f"Edit the section to fix the figure, or reject it.]")
+
 # R4: a return that cannot leave the screen is not a return. Only signed sections are
 # exported, each with the figures it used and who signed it, so the file is the evidence.
 signed_secs = [(n, sec) for n, sec in store["sections"].items()
@@ -177,15 +197,37 @@ for name, sec in store["sections"].items():
                 st.caption(f"confidence {conf_txt(sec['confidence'])} · {sec['latency_ms']} ms · "
                            f"{sec['model']} · code `{sec['reason_code']}`")
 
+        # A draft can be fully grounded and still emphasise the wrong thing, which is the
+        # reason a person signs it. Until now the only answer to that was Reject.
+        with st.expander("Edit this section" + (" · edited" if sec.get("edited") else "")):
+            draft = st.text_area("Narrative", sec["narrative"], height=170,
+                                 key=f"ed_{item_id}", label_visibility="collapsed")
+            if st.button("Save the edit", key=f"save_{item_id}",
+                         icon=":material/save:"):
+                code, detail, cites = recheck_narrative(name, draft, lo, hi)
+                sec["narrative"] = draft.strip()
+                sec["citations"] = cites
+                sec["grounding"] = detail
+                sec["reason"] = detail
+                sec["reason_code"] = code or "OK_PROPOSED"
+                sec["decision"] = PROPOSE if code is None else HUMAN
+                sec["edited"] = True
+                st.rerun()
+            st.caption("Saved edits are checked exactly as the draft was: a figure that is "
+                       "not on the fact sheet stops the section, whoever wrote it.")
+
+        if sec.get("edited"):
+            st.caption(":gray-badge[edited by a person] — the check above ran on the edited text.")
         if prior:
             st.success(f"**{prior['action'].title()}** by {prior['by']} at "
                        f"{prior['at'].replace('T', ' ')}")
         with st.container(horizontal=True):
-            if st.button("Sign off this section", key=f"acc_{item_id}", type="primary",
+            if st.button("Sign off this section", key=f"acc_{item_id}",
                          disabled=not ok, icon=":material/draw:"):
                 Q.record(item_id, "accepted", capability="reporting",
                          by=current_operator(),
-                         proposed=name, reason_code=sec["reason_code"])
+                         proposed=name, reason_code=sec["reason_code"],
+                         note="edited before signing" if sec.get("edited") else "")
                 st.rerun()
             if st.button("Reject", key=f"rej_{item_id}", icon=":material/close:"):
                 Q.record(item_id, "rerouted", capability="reporting",
