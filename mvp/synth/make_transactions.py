@@ -28,7 +28,7 @@ import pandas as pd
 
 OUT = Path(__file__).resolve().parent / "transactions.csv"
 SEED = 20260831
-N_ACCOUNTS = 40
+N_ACCOUNTS = 200
 DAYS = 90
 START = date(2026, 4, 1)
 

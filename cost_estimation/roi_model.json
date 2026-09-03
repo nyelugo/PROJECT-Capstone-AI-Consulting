@@ -14,12 +14,12 @@
   "annual_running_cost_eur": {
     "Model calls \u2014 triage": 0.29,
     "Model calls \u2014 reporting": 0.0,
-    "Model calls \u2014 anomaly": 0.08,
+    "Model calls \u2014 anomaly": 0.28,
     "Platform (hosting, monitoring, logging)": 1800,
     "Human oversight (quarterly review of three capabilities)": 8400
   },
-  "annual_running_cost_total_eur": 10200,
-  "ai_share_of_running_cost_pct": 0.0,
+  "annual_running_cost_total_eur": 10201,
+  "ai_share_of_running_cost_pct": 0.01,
   "upfront_fixed_fee": {
     "Phase 0 \u2014 Discovery and expert labelling": {
       "days": 8,
@@ -48,7 +48,7 @@
         "months": 12,
         "earning_months": 6,
         "total_benefit_eur": 3704,
-        "total_cost_eur": 42400,
+        "total_cost_eur": 42401,
         "net_benefit_eur": -38696,
         "roi_pct": -91.3
       },
@@ -56,7 +56,7 @@
         "months": 36,
         "earning_months": 30,
         "total_benefit_eur": 18521,
-        "total_cost_eur": 62801,
+        "total_cost_eur": 62802,
         "net_benefit_eur": -44280,
         "roi_pct": -70.5
       },
@@ -68,16 +68,16 @@
         "months": 12,
         "earning_months": 6,
         "total_benefit_eur": 8663,
-        "total_cost_eur": 42400,
-        "net_benefit_eur": -33737,
+        "total_cost_eur": 42401,
+        "net_benefit_eur": -33738,
         "roi_pct": -79.6
       },
       "roi_36m": {
         "months": 36,
         "earning_months": 30,
         "total_benefit_eur": 43315,
-        "total_cost_eur": 62801,
-        "net_benefit_eur": -19486,
+        "total_cost_eur": 62802,
+        "net_benefit_eur": -19487,
         "roi_pct": -31.0
       },
       "break_even_month": 69
@@ -99,9 +99,9 @@
   "productised": {
     "clients_sharing_the_build": 5,
     "per_client_build_eur": 6440,
-    "total_cost_36m_eur": 37041,
+    "total_cost_36m_eur": 37042,
     "total_benefit_36m_eur": 43315,
-    "net_benefit_36m_eur": 6274,
+    "net_benefit_36m_eur": 6273,
     "roi_36m_pct": 16.9,
     "note": "The build is bespoke today. Amortising it across five mid-size firms is what turns the same capability from a loss into a return for a client this size. It is a commercial decision, not a technical one."
   },
@@ -170,9 +170,9 @@
       "basis": "monthly batch review"
     },
     "anomaly_candidates_per_batch": {
-      "value": 56,
+      "value": 190,
       "kind": "assumption",
-      "basis": "candidates in ONE capped monthly review batch. The 56 was raised by the detector on the 40-account, 90-day synthetic fixture, so it sizes a bounded analyst queue rather than the client's transaction book. detect() applies no cap, so at the same 2.71% flag rate the full book would raise ~154,000 a month. UC-2 is costed as a reviewed batch on purpose; the unbounded version is R9, and it is arithmetic, not a worry"
+      "basis": "candidates in ONE capped monthly review batch. The 190 was raised by the detector on the 200-account, 90-day synthetic fixture, so it sizes a bounded analyst queue rather than the client's transaction book. detect() applies no cap, so at the same 1.71% rate the full book would raise ~104,500 a month. UC-2 is costed as a reviewed batch on purpose; the unbounded version is R9, and it is arithmetic, not a worry"
     },
     "report_tokens_in": {
       "value": 900,

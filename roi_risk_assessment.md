@@ -59,7 +59,7 @@ a new system.
 | Model calls — anomaly | €0.08 |
 | Platform (hosting, monitoring, logging) | €1,800 |
 | **Human oversight** (quarterly review of three capabilities) | **€8,400** |
-| **Total** | **€10,200** |
+| **Total** | **€10,201** |
 
 **The AI is 0.004% of the running cost.** Everything else is the platform it runs on and the
 person accountable for watching it. This is the number that most often surprises a board, and
@@ -70,13 +70,13 @@ in-house after handover it costs €283/day loaded — €3,397 — which is the
 Round 1 assumed 2 review days per quarter for one capability; this assumes 3 for three. That
 increase is the honest running cost of the widened scope.
 
-**What the anomaly line is, and is not.** It costs a **capped monthly review batch** — 56
-candidates, the number the detector raised on a 40-account, 90-day synthetic fixture — not a
+**What the anomaly line is, and is not.** It costs a **capped monthly review batch** — 190
+candidates, the number the detector raised on a 200-account, 90-day synthetic fixture — not a
 scan of the firm's transaction book. That distinction is worth stating because `detect()`
 applies no cap: it returns every amount spike, every rapid burst and every foreign-device day
-it finds. At the fixture's own rate of 2.71% of transactions, 330,000 accounts would raise in
-the order of **154,000 candidates a month**. The model calls would still be immaterial — about
-**€230 a year rather than €0.08** — but reviewing them at two minutes each is roughly **37
+it finds. At the fixture's own rate of 1.71% of transactions, 330,000 accounts would raise in
+the order of **104,500 candidates a month**. The model calls would still be immaterial — about
+**€154 a year rather than €0.28** — but reviewing them at two minutes each is roughly **25
 full-time analysts**, against a benefit of catching ~27 cases a year.
 
 So UC-2 is deliberately scoped as a bounded queue an analyst team can actually work, and the
@@ -112,10 +112,10 @@ be wrong.
 
 | | Earning months | Total benefit | Total cost | Net benefit | **ROI** |
 |---|---:|---:|---:|---:|---:|
-| **Conservative, 12 months** | 6 | €3,704 | €42,400 | −€38,696 | **−91.3%** |
-| **Conservative, 36 months** | 30 | €18,521 | €62,801 | −€44,280 | **−70.5%** |
-| **Central, 12 months** | 6 | €8,663 | €42,400 | −€33,737 | **−79.6%** |
-| **Central, 36 months** | 30 | €43,315 | €62,801 | −€19,486 | **−31.0%** |
+| **Conservative, 12 months** | 6 | €3,704 | €42,401 | −€38,696 | **−91.3%** |
+| **Conservative, 36 months** | 30 | €18,521 | €62,802 | −€44,280 | **−70.5%** |
+| **Central, 12 months** | 6 | €8,663 | €42,401 | −€33,738 | **−79.6%** |
+| **Central, 36 months** | 30 | €43,315 | €62,802 | −€19,487 | **−31.0%** |
 
 Total cost = €32,200 upfront + running cost for the period.
 
@@ -161,7 +161,7 @@ repeated here.
 | `value_starts_month` | 7 | judgement | Phases 0–2 run about six months, so benefits accrue from month 7 |
 | `reports_per_year` | 4 | assumption | One complaints report per quarter, four sections each |
 | `anomaly_batches_per_year` | 12 | assumption | Monthly batch review |
-| `anomaly_candidates_per_batch` | 56 | assumption | Size of one **capped** monthly review batch. Raised by the detector on the 40-account synthetic fixture — not the client's transaction book |
+| `anomaly_candidates_per_batch` | 190 | assumption | Size of one **capped** monthly review batch. Raised by the detector on the 200-account synthetic fixture — not the client's transaction book |
 | `report_tokens_in` / `out` | 900 / 180 | measured | `mvp/capabilities/reporting.py` |
 | `anomaly_tokens_in` / `out` | 420 / 120 | measured | `mvp/capabilities/anomaly.py` |
 | `day_rate_eur` | 700 | set by consultant | Fixed fee per phase |

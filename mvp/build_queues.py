@@ -125,12 +125,14 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--triage", type=int, default=DEFAULT_N)
     ap.add_argument("--skip-anomaly", action="store_true")
+    ap.add_argument("--skip-triage", action="store_true")
     a = ap.parse_args()
 
     QUEUES.mkdir(parents=True, exist_ok=True)
-    t = build_triage(a.triage)
-    TRIAGE_FILE.write_text(json.dumps(t, indent=2))
-    _report("triage", t)
+    if not a.skip_triage:
+        t = build_triage(a.triage)
+        TRIAGE_FILE.write_text(json.dumps(t, indent=2))
+        _report("triage", t)
 
     if not a.skip_anomaly:
         an = build_anomaly()
