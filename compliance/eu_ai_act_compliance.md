@@ -204,7 +204,9 @@ if any **[verify]** point resolves against us — most plausibly UC-2 — the ba
 its distance from compliance in days, not months. It is also the evidence Art. 95 voluntary
 codes of conduct contemplate.
 
-**Scope:** Assist v1, three capabilities, as built in `mvp/` and `poc/`.
+**Scope:** Assist v1, three capabilities, as built in `mvp/`. The `poc/` workflow
+implements the triage capability only — it is the no-code proof that the decision can be
+watched happen, not a second implementation of all three.
 **Method:** documentary review against Arts. 9–15, plus inspection of the running system.
 **Date:** 2026-08-31. **Assessor:** Ugo Ahukannah (self-assessment; not a notified body).
 

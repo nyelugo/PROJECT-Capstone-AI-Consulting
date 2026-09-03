@@ -76,6 +76,12 @@ renders instantly, shows the same thing every rehearsal, and does not put sixty 
 calls in front of a panel. Handled items stay visible — an inbox that empties tells you
 nothing about what was decided this morning.
 
+Re-running `build_queues` is not free and not idempotent: it calls the model again for all 116
+items and commits different wording, because the evidence sentence and the case note are the
+model's own words. The committed batch is the one the screenshots and the demo recording show,
+so rebuild it deliberately rather than as a way of checking the app still works — `python -m
+mvp.test_spine` does that with no network and no key.
+
 **The clock.** Triage carries an age, days-to-target and a deadline state, computed in
 `queue_store.clock()` against the batch's own newest item rather than today's date — the
 corpus is a fixed historical batch, and measuring against today would show every complaint
