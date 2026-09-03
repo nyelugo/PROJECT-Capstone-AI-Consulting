@@ -212,7 +212,10 @@ scrolling — the same window size the slide screenshots were taken at.
 
 ## What is measured, and what is not
 
-**Triage.** 60.5% team-level agreement with CFPB labels; 88.0% self-agreement on repeat runs (exact queue). This is
+**Triage.** 56.8% team-level agreement with CFPB labels on `gpt-4o-mini`, the pinned model
+(`gpt-4o` reaches 60.5% for 16.7× the cost). Asked the same complaint twice, `gpt-4o` agreed
+with itself 88.0% of the time (exact queue; 89.0% at team level), so the disagreement is
+systematic rather than noise. This is
 **agreement, not accuracy** — the CFPB label was chosen by the complainant from a dropdown,
 not assigned by an expert. No accuracy figure exists for this system, and Phase 0 (two
 handlers labelling 300 complaints) is what would create one. See `classifier/FINDINGS.md`.
@@ -226,7 +229,7 @@ emphasise the wrong thing. That is why a compliance officer accepts or rejects e
 precision (56 candidates, 103 transactions flagged, 100 planted). **Do not report this as a
 detection rate.** The detector's thresholds and the data generator were written by the same
 author, so it measures whether the code agrees with itself — structurally the same trap as
-the 60.5%. The caveat is bound to the figure in `score()`'s return value so it cannot be
+the agreement figure. The caveat is bound to the figure in `score()`'s return value so it cannot be
 lifted onto a slide alone. What it does establish: the detector is deterministic, covers all
 four patterns rather than only the easy one, and its false-positive rate is measurable.
 

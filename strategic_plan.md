@@ -196,7 +196,7 @@ answer. This system demonstrates *a wrong answer being caught* — four fabricat
 in a sample of sixty, each one stopped and named. For a buyer whose stated objection is that
 AI cannot be seen, a system that shows its own failures by name is a different category of
 thing from one that shows accuracy. Two supporting differentiators: an honest number
-(60.5% presented as agreement, not accuracy) buys more trust from a sceptical buyer than a
+(56.8% presented as agreement, not accuracy) buys more trust from a sceptical buyer than a
 polished one; and the compliance packs come with the build rather than being commissioned
 separately afterwards.
 

@@ -67,7 +67,7 @@ They sit in different places in the UI for a reason.
 |---|---|---|
 | Found under | Datasets & Experiments | Tracing → charted in Monitoring |
 | Has reference answers | Yes — that is the point | No |
-| Output | Scores: 60.5% agreement, 93% verbatim | A record: decision, reason code, quote, latency |
+| Output | Scores: 63.3% team agreement, 93.1% verbatim (n=60) | A record: decision, reason code, quote, latency |
 | Rhythm | Batch, repeatable, offline | Continuous, one per execution |
 | Answers | *Is version B better than version A?* | *Why was THIS complaint routed here?* |
 
@@ -116,7 +116,7 @@ still routed correctly.
 
 * The data is a **proxy**. Shape transfers — issue mix, language, the cost ratio. Volume
   does not. Phase 0 measures the real thing.
-* 60.5% is **agreement, not accuracy**. The labels were chosen by complainants, not
+* 56.8% is **agreement, not accuracy**. The labels were chosen by complainants, not
   experts. No accuracy figure exists for this system yet.
 * The trace records **the decision, not the delivery**. Today the handler step is a Set
   node so nothing can fail; once it writes to a case system, a successful trace will no

@@ -110,8 +110,11 @@ greenlight full deployment.
 | 4 | **Grounding integrity** | **Zero** ungrounded outputs reach a person | Every guard rejection is counted; a fabricated quote, an uncomputed figure or a mismatched value never renders | Measured: 4 fabrications caught in 60 Round 1 cases; guards verified in test |
 | 5 | **Reporting time** | ≥50% reduction in hours to first draft of the quarterly complaints report | Timed before/after in the pilot | Not measured — an assumption in the ROI model, explicitly flagged there |
 
-**Criterion 1 is deliberately not claimed today.** The system currently reaches **60.5%
-agreement** with the CFPB's labels, and 88.0% self-agreement on repeat runs (exact queue). That is
+**Criterion 1 is deliberately not claimed today.** The system currently reaches **56.8%
+team-level agreement** with the CFPB's labels — that is `gpt-4o-mini`, the pinned model;
+`gpt-4o` reaches 60.5% for 16.7× the cost, a gap inside the ±6pp interval at this sample
+size. Asked the same complaint twice, `gpt-4o` agreed with itself 88.0% of the time (exact
+queue), so the disagreement is systematic rather than noise. That is
 *agreement, not accuracy*: the CFPB label was chosen by the complainant from a dropdown, not
 assigned by an expert. The model is consistent; it disagrees with an untrained label. Phase 0
 exists to create the ground truth that turns criterion 1 into a real measurement, and it is
@@ -146,7 +149,8 @@ should not own a training pipeline.
 
 **Industry and use case are unchanged.** Round 1 pitched complaint triage for a mid-size EU
 financial services firm; nothing in the staff feedback challenged the sector, the client
-profile, triage as the lead, or the position that 60.5% is agreement rather than accuracy.
+profile, triage as the lead, or the position that the measured figure is agreement rather
+than accuracy.
 The Round 1 decision is recorded as **KEEP** in [`feedback/round1_decision.md`](feedback/round1_decision.md).
 
 **What changed is scope.** The one substantive recommendation from the staff presentation was

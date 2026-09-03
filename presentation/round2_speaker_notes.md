@@ -182,8 +182,12 @@ It works, it's lawful, and it does not yet pay for itself at this size.
 # Slide 12 — Backup
 [Divider. Don't present.]
 
-# Slide 13 — Backup: why 60.5% is not accuracy
+# Slide 13 — Backup: why 56.8% is not accuracy
 [If challenged on accuracy.]
+
+Fifty-seven per cent is the model we actually run, gpt-4o-mini. The bigger model gets sixty
+and a half for nearly seventeen times the cost per complaint — three and a half points, and
+the interval at this sample size is wider than that. So the bottleneck is not the model.
 
 Ask it the same complaint twice and it answers the same way nine times in ten. So it's
 consistent — it just disagrees with the official label. And that label was picked by the
@@ -197,7 +201,7 @@ The fix isn't a cleverer model. It's better labels. That's exactly what Phase 0 
 Don't let me get away with that number. I wrote the detector's thresholds and I wrote the
 generator that planted the anomalies. So it measures whether my code agrees with itself.
 
-It's the same trap as the sixty per cent, and I've bound the caveat to the figure in the
+It's the same trap as the agreement figure, and I've bound the caveat to the figure in the
 code so it can't be lifted onto a slide on its own. Only a pilot on real traffic settles it.
 
 # Slide 15 — Backup: AI Act classification, step by step

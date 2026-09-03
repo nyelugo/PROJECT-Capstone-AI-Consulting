@@ -92,7 +92,7 @@ categorise-and-route step, not the reading.
 | **Net annual position** | **−€2,822** |
 
 Claiming the full €9,156 would require the model to route unsupervised at an accuracy it
-has not demonstrated. What has been measured is 60.5% *agreement* with consumer-selected
+has not demonstrated. What has been measured is 56.8% *agreement* with consumer-selected
 labels (`classifier/FINDINGS.md`), and agreement with those labels is not deployment
 accuracy. The half-saving is the honest version.
 

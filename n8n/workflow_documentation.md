@@ -24,8 +24,8 @@ in production.
 ## Why it is assist-only, and not automatic
 
 This is the design consequence of the measurement in `classifier/FINDINGS.md`, not a
-hedge. Against the only labels available, team-level **agreement** is **60.5%**
-(gpt-4o, n=240) — agreement, not accuracy. Auto-routing on a number that weak would send
+hedge. Against the only labels available, team-level **agreement** is **56.8%**
+(gpt-4o-mini, the pinned model, n=240; 60.5% on gpt-4o) — agreement, not accuracy. Auto-routing on a number that weak would send
 roughly four in ten complaints to the wrong team, silently.
 
 So the workflow proposes and a person confirms. Every branch ends at a human. The value

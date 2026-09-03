@@ -68,7 +68,7 @@ Three things are on show, and the second and third matter more than the first:
 1. **It classifies.** Product-conditioned — the CFPB issue taxonomy is product-scoped, so a
    model asked to choose from all 64 issues without the product is not being given a hard
    problem, it is being given an ill-posed one. Conditioning on product took agreement from
-   40% to 60.5%.
+   40% to 56.8% on the pinned model (60.5% on `gpt-4o`).
 2. **It says why, and the reason is checked.** The model must quote the sentence that drove
    its decision, verbatim. A guard confirms that sentence is really in the complaint. In the
    sample of 60, **four quotations were fabricated** — confidently — and all four were
@@ -87,7 +87,7 @@ Three things are on show, and the second and third matter more than the first:
 - Cost is negligible — €0.000121 per complaint, €0.29 a year at this volume
 
 **Does not prove:**
-- **Accuracy.** 60.5% is *agreement* with labels a complainant picked from a dropdown, not
+- **Accuracy.** 56.8% is *agreement* with labels a complainant picked from a dropdown, not
   accuracy against expert labels. No accuracy figure for this system exists. Phase 0 creates
   one
 - **That it helps.** Handler acceptance in live use is unmeasured. The MVP instruments it;
@@ -171,7 +171,7 @@ Close on LangSmith: project `capstone-triage-live`, one row per run, reason code
 1. **Tools, and why** — n8n, because a client's team can read it as boxes and arrows; a
    Python script would have been faster to write and impossible to show a CEO.
 2. **What it does and does not prove** — it proves the decision is inspectable and that a
-   fabricated quotation gets caught. It does **not** prove accuracy: 60.5% is agreement with
+   fabricated quotation gets caught. It does **not** prove accuracy: 56.8% is agreement with
    labels a complainant chose from a dropdown.
 3. **What production changes** — the trigger becomes a case-system event rather than a
    button, rejected inputs get traced too, and delivery is confirmed back rather than
