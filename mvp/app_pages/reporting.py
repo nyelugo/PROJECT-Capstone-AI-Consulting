@@ -17,8 +17,9 @@ import datetime as _dt
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.capabilities.reporting import (Reporting, SECTIONS, fact_sheet, periods,
-                                        period_for)
+from mvp.capabilities.reporting import (AUDIENCES, MAX_AUDIENCE_CHARS, OTHER_AUDIENCE,
+                                        Reporting, SECTIONS, audience_problem,
+                                        fact_sheet, period_for, periods)
 from mvp.runtime import call_model
 from mvp.spine import run, PROPOSE
 from mvp.ui import conf_txt, ladder_html, model_ready, status_chip
@@ -41,8 +42,16 @@ store = st.session_state.report
 p1, p2 = st.columns(2)
 period = p1.selectbox("Which period is this return for?", [p[0] for p in periods()],
                       help="Bounded by the batch. A quarter the data cannot fill is not offered.")
-audience = p2.text_input("Who is this return for?", "the board risk committee",
-                         help="The same figures read differently to a board and a regulator.")
+# A closed list, like every other input this system accepts. Free text here was the only
+# unbounded value that reached a model; "Other…" keeps the flexibility without reopening it.
+choice = p2.selectbox("Who is this return for?", AUDIENCES + [OTHER_AUDIENCE],
+                      help="The same figures read differently to a board and a regulator.")
+audience = choice
+if choice == OTHER_AUDIENCE:
+    audience = p2.text_input("Name the audience", "", max_chars=MAX_AUDIENCE_CHARS,
+                             placeholder="e.g. the audit committee",
+                             label_visibility="collapsed").strip()
+aud_problem = audience_problem(audience)
 
 lo, hi = period_for(period)
 sheet = fact_sheet(lo, hi)
@@ -60,7 +69,10 @@ if (store["audience"] is not None
     store["period"] = None
 
 c1, c2 = st.columns([1, 3])
-if c1.button("Draft the return", type="primary", disabled=not model_ready(),
+if aud_problem and choice == OTHER_AUDIENCE:
+    st.caption(f":orange[{aud_problem}]")
+if c1.button("Draft the return", type="primary",
+             disabled=not model_ready() or bool(aud_problem),
              icon=":material/edit_note:"):
     prog = st.progress(0.0, "Drafting…")
     drafted = {}
