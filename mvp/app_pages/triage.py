@@ -10,6 +10,7 @@ import streamlit as st
 
 from mvp import queue_store as Q
 from mvp.ui import (queue_filters, status_chip, sla_chip, ladder_html, SLA_LABEL,
+                    team_label, NO_TEAM,
                     STATUS_LABEL, REASON_LABEL,
                     action_bar, bulk_bar, conf_txt, reason_chip)
 
@@ -34,6 +35,7 @@ df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for 
 df["sla_label"] = df["sla"].map(SLA_LABEL).fillna("")
 df["status_label"] = df["status"].map(STATUS_LABEL).fillna(df["status"])
 df["why_held"] = df["reason_code"].map(REASON_LABEL).fillna(df["reason_code"])
+df["team"] = df["proposed_team"].map(team_label)
 breached = int((df["sla"] == Q.BREACHED).sum())
 due = int((df["sla"] == Q.DUE_SOON).sum())
 c1, c2, c3 = st.columns(3)
@@ -50,13 +52,13 @@ st.caption(f"Target is **{Q.SLA_DAYS} days** to first response — an assumption
            f"the corpus with your own complaints.")
 
 view = queue_filters(df, extra_facets=[("product", "Product"),
-                                       ("proposed_team", "Proposed team"),
+                                       ("team", "Proposed team"),
                                        ("sla", "Against target")])
 if view.empty:
     st.info("Nothing matches those filters.")
     st.stop()
 
-table = view[["received", "age_days", "sla_label", "product", "proposed_team",
+table = view[["received", "age_days", "sla_label", "product", "team",
               "status_label", "why_held"]]
 sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
@@ -67,7 +69,7 @@ sel = st.dataframe(
             "Against target", width=118,
             help=f"Measured against the {Q.SLA_DAYS}-day first-response target"),
         "product": st.column_config.TextColumn("Product", width="medium"),
-        "proposed_team": st.column_config.TextColumn("Proposed team", width="medium"),
+        "team": st.column_config.TextColumn("Proposed team", width="medium"),
         "status_label": st.column_config.TextColumn("Status", width="medium"),
         "why_held": st.column_config.TextColumn("Why held", width="medium"),
     })
@@ -87,9 +89,9 @@ left, right = st.columns([3, 2])
 with left:
     st.markdown(f"{status_chip(it['status'])} {sla_chip(it['sla'], it['days_left'])} "
                 f"{reason_chip(it['reason_code'])}")
-    st.subheader(f"Route to {it['proposed_team']}"
-                 if it["proposed_queue"] else "No team proposed")
-    if it["proposed_queue"]:
+    _team = team_label(it["proposed_team"])
+    st.subheader(NO_TEAM if _team == NO_TEAM else f"Route to {_team}")
+    if _team != NO_TEAM and it["proposed_queue"]:
         st.caption(f"Queue: {it['proposed_queue']}")
     st.caption(it["reason"])
     if it["evidence"]:
@@ -106,4 +108,5 @@ with right:
                    f"{it['model']} · ref {it['ref']}")
 
 action_bar(it, capability="triage", actions=Q.TRIAGE_ACTIONS,
-           proposed=f"{it['proposed_team']} — {it['proposed_queue']}")
+           proposed=(NO_TEAM if _team == NO_TEAM
+                     else f"{_team} — {it['proposed_queue']}"))

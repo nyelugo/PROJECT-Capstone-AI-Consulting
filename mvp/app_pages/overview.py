@@ -33,7 +33,7 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.ui import REASON_LABEL
+from mvp.ui import REASON_LABEL, team_label
 
 
 
@@ -173,6 +173,7 @@ out = Q.outstanding_by_team(dated)
 
 if out:
     wl = pd.DataFrame(out)
+    wl["team"] = wl["team"].map(team_label)
     wl["Within target"] = wl["waiting"] - wl["past_target"]
     wl = wl.rename(columns={"past_target": "Past target"})
     order = list(wl.sort_values(["Past target", "waiting"], ascending=False)["team"])
@@ -197,13 +198,13 @@ if out:
 # worked them" without that reads as an operational failure and is the same defect this page
 # was rebuilt to remove.
 aged = sum(1 for d in dated if d["sla"] == Q.BREACHED)
-st.caption(f"**{len(breached_open)} complaints are past the {Q.SLA_DAYS}-day first-response "
-           f"target and untouched**, oldest "
-           f"{max((d['age_days'] for d in breached_open), default=0)} days. Read that as a "
-           f"demonstration of age-ranking, not as a backlog: {aged} of {len(dated)} arrived "
-           "already past target, because this is a historical corpus rather than a live "
-           "feed. Phase 2 makes the clock real. Triage only — anomaly candidates carry no "
-           "team or target.")
+st.caption(f"**{aged} of the {len(dated)} complaints arrived already past the "
+           f"{Q.SLA_DAYS}-day first-response target.** This is a historical corpus rather "
+           "than a live feed, so read the clock as a demonstration of age-ranking rather "
+           f"than as a backlog — Phase 2 makes it real. {len(breached_open)} of them are "
+           f"still untouched, the oldest by "
+           f"{max((d['age_days'] for d in breached_open), default=0)} days. Triage only — "
+           "anomaly candidates carry no team or target.")
 
 if breached_open:
     # Telling someone where to click is not the same as taking them there. This presets the
@@ -260,6 +261,7 @@ st.subheader("Where the model is wrong")
 teams = [r for r in Q.by_proposed_team(dated) if r["decided"]]
 if teams:
     tm = pd.DataFrame(teams)
+    tm["team"] = tm["team"].map(team_label)
     order = list(tm.sort_values(["overridden", "decided"], ascending=False)["team"])
     tm = tm.rename(columns={"agreed": "Accepted", "overridden": "Overridden"})
     _chart(alt.Chart(tm.melt("team", value_vars=["Accepted", "Overridden"],

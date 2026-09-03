@@ -228,6 +228,14 @@ SLA_LABEL = {"breached": "Past target", "due soon": "Due soon", "on track": "On 
 CAPABILITY_LABEL = {"triage": "Complaint triage", "anomaly": "Anomaly review",
                     "reporting": "Reporting assistance"}
 
+NO_TEAM = "No team proposed"
+
+
+def team_label(team: str) -> str:
+    """A team name for the eye. HUMAN_REVIEW is the classifier's sentinel for "no queue in the
+    taxonomy fits", not a department, and must never appear on an axis beside real ones."""
+    return NO_TEAM if team in ("HUMAN_REVIEW", "—", "", None) else team
+
 
 def action_label(a: str) -> str:
     """What a person did, in their words. Falls back to the constant made readable."""
@@ -360,7 +368,8 @@ def bulk_bar(rows: "pd.DataFrame", *, capability: str, actions: dict) -> None:
                 for _, r in rows.iterrows():
                     Q.record(r["item_id"], action, capability=capability,
                              by=current_operator(),
-                             proposed=str(r.get("proposed_team") or r.get("rule", "")),
+                             proposed=(team_label(r["proposed_team"])
+                                       if r.get("proposed_team") else str(r.get("rule", ""))),
                              reason_code=r.get("reason_code", ""),
                              note=f"bulk action over {len(rows)} items")
                 st.rerun()
