@@ -45,7 +45,7 @@ names. **No key value is ever printed**: the sidebar shows presence as a length 
 ### Test it without a key or a network
 
 ```bash
-python -m mvp.test_spine        # 27 guard cases, all three capabilities
+python -m mvp.test_spine        # 32 cases: 27 capability guards + 5 rendering checks
 ```
 
 Exercises every rejection path against a stubbed model. Each case asserts the reason code
@@ -119,7 +119,7 @@ mvp/
 ├── app_pages/               overview · triage · anomaly · reporting · decision_log
 ├── queues/                  triage_queue.json · anomaly_queue.json (committed)
 │                            decision_events.json (NOT committed — operator state)
-├── test_spine.py            27 guard cases, no network, no keys
+├── test_spine.py            32 guard cases, no network, no keys
 ├── capabilities/
 │   ├── triage.py            UC-1 · reads classifier/prompt.py, unchanged
 │   ├── reporting.py         UC-3 · reads dashboard/metrics.py, unchanged

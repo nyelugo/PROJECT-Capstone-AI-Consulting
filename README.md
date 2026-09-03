@@ -33,8 +33,8 @@ you size the opportunity.
 | [`compliance/eu_ai_act_compliance.md`](compliance/eu_ai_act_compliance.md) | **20** | **Done** — step-by-step classification, conformity summary, Annex IV outline |
 | [`compliance/gdpr_documentation.md`](compliance/gdpr_documentation.md) | 10 | **Done** — data flow, Art. 30 register, DPIA, rights, transfers |
 | [`strategic_plan.md`](strategic_plan.md) | 10 | **Done** — POC → pilot → deployment, KPIs, GTM, commercialisation |
-| [`mvp/`](mvp/) + [`mvp_documentation.md`](mvp/mvp_documentation.md) | **15** | **Done** — three capabilities, one spine, 27 guard tests, verified end to end |
-| [`presentation.pdf`](presentation.pdf) | 10 | **Done** — 11 slides + 6 backups, speaker notes on all 18, ~10 min |
+| [`mvp/`](mvp/) + [`mvp_documentation.md`](mvp/mvp_documentation.md) | **15** | **Done** — three capabilities, one spine, 32 guard cases, verified end to end |
+| [`presentation.pdf`](presentation.pdf) | 10 | **Done** — 1 title + 11 slides + 6 backups, speaker notes on all 18, ~10 min |
 
 \* shared weighting across use case definition and POC.
 

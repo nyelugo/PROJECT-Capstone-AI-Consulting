@@ -137,7 +137,7 @@ only have appeared on re-import, as an auth error, on a demo day.*
 **Verify the guard logic without n8n at all:**
 
 ```bash
-python -m mvp.test_spine     # 27 guard cases, no network, no keys
+python -m mvp.test_spine     # 32 guard cases, no network, no keys
 ```
 
 The POC's guards are generated from the same `classifier/decide.py` those tests exercise.

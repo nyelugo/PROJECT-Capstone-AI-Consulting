@@ -105,7 +105,7 @@ greenlight full deployment.
 | # | Criterion | Target | Measured how | Status today |
 |---|---|---|---|---|
 | 1 | **Expert-label accuracy on triage** | ≥80% team-level agreement with two trained handlers | Phase 0: 300 complaints labelled independently by two handlers, then scored | **Not yet measurable — no expert labels exist** |
-| 2 | **Correct abstention** | ≥95% of items the system is unsure about go to a person rather than being guessed | Reason-code distribution in monitoring; `REJECT_LOW_CONFIDENCE` and `REJECT_OUT_OF_TAXONOMY` rates | Measured: guards fire as specified across 27 test cases |
+| 2 | **Correct abstention** | ≥95% of items the system is unsure about go to a person rather than being guessed | Reason-code distribution in monitoring; `REJECT_LOW_CONFIDENCE` and `REJECT_OUT_OF_TAXONOMY` rates | Measured: guards fire as specified across 32 test cases |
 | 3 | **Handler agreement in live use** | ≥75% of proposals accepted unchanged by the handler | The MVP decision log — proposal vs. the human action beside it | Instrumented, not yet populated with real handlers |
 | 4 | **Grounding integrity** | **Zero** ungrounded outputs reach a person | Every guard rejection is counted; a fabricated quote, an uncomputed figure or a mismatched value never renders | Measured: 4 fabrications caught in 60 Round 1 cases; guards verified in test |
 | 5 | **Reporting time** | ≥50% reduction in hours to first draft of the quarterly complaints report | Timed before/after in the pilot | Not measured — an assumption in the ROI model, explicitly flagged there |
