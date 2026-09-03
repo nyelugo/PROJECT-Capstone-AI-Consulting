@@ -12,7 +12,7 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.ui import STATUS_LABEL, current_operator
+from mvp.ui import CAPABILITY_LABEL, STATUS_LABEL, action_label, current_operator
 
 st.title("Decision log")
 st.caption("Every proposal beside the human action taken on it. This pairing is the audit "
@@ -32,7 +32,8 @@ df[["note", "destination", "reason_code", "proposed"]] = (
 df["_day"] = pd.to_datetime(df["at"]).dt.date
 # "2026-08-31T17:49:04" is a machine's idea of a timestamp.
 df["when"] = pd.to_datetime(df["at"]).dt.strftime("%d %b %Y, %H:%M")
-df["did"] = df["action"].map(lambda a: STATUS_LABEL.get(a, a.replace("_", " ").capitalize()))
+df["did"] = df["action"].map(action_label)
+df["cap"] = df["capability"].map(CAPABILITY_LABEL).fillna(df["capability"])
 
 with st.container(border=True):
     c = st.columns([1.4, 1, 1, 1, 1.5])
@@ -42,8 +43,10 @@ with st.container(border=True):
     rng = c[0].date_input("Date range", (lo_all, hi_all),
                           min_value=lo_all, max_value=hi_all,
                           help="Actions recorded in this window.")
-    caps = c[1].multiselect("Capability", sorted(df["capability"].unique()))
-    acts = c[2].multiselect("Action", sorted(df["action"].unique()))
+    caps = c[1].multiselect("Capability", sorted(df["capability"].unique()),
+                            format_func=lambda v: CAPABILITY_LABEL.get(v, v))
+    acts = c[2].multiselect("Action", sorted(df["action"].unique()),
+                            format_func=action_label)
     who = c[3].multiselect("By", sorted(df["by"].unique()))
     term = c[4].text_input("Search", "", placeholder="text in any field")
 
@@ -70,12 +73,12 @@ m[2].metric("Items revisited", revisited,
 # What a person did, what they said about it, and where they sent it. The reason code is the
 # system's own vocabulary and lives under Technical details.
 sel = st.dataframe(
-    view[["when", "capability", "item_id", "proposed", "did", "by", "note", "destination"]],
+    view[["when", "cap", "item_id", "proposed", "did", "by", "note", "destination"]],
     width="stretch", hide_index=True, on_select="rerun", selection_mode="single-row",
     column_config={
-        "when": st.column_config.TextColumn("When", width="small"),
-        "capability": st.column_config.TextColumn("Capability", width="small"),
-        "item_id": st.column_config.TextColumn("Item", width="small"),
+        "when": st.column_config.TextColumn("When", width=142),
+        "cap": st.column_config.TextColumn("Capability", width="medium"),
+        "item_id": st.column_config.TextColumn("Item", width=150),
         "proposed": st.column_config.TextColumn("What it proposed", width="large"),
         "did": st.column_config.TextColumn("Human action", width="small"),
         "by": st.column_config.TextColumn("By", width="small"),

@@ -60,9 +60,9 @@ sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
     column_config={
         "received": st.column_config.DateColumn("Received", width="small"),
-        "age_days": st.column_config.NumberColumn("Age", format="%d d", width="small"),
+        "age_days": st.column_config.NumberColumn("Age", format="%d d", width=64),
         "sla_label": st.column_config.TextColumn(
-            "Against target", width="medium",
+            "Against target", width=118,
             help=f"Measured against the {Q.SLA_DAYS}-day first-response target"),
         "product": st.column_config.TextColumn("Product", width="medium"),
         "proposed_team": st.column_config.TextColumn("Proposed team", width="medium"),

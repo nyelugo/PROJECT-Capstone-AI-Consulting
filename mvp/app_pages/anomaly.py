@@ -47,7 +47,7 @@ sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
     column_config={
         "raised": st.column_config.DateColumn("Raised", width="small"),
-        "age_days": st.column_config.NumberColumn("Age", format="%d d", width="small"),
+        "age_days": st.column_config.NumberColumn("Age", format="%d d", width=64),
         "rule": st.column_config.TextColumn("Pattern", width="medium"),
         "times_normal": st.column_config.NumberColumn("× normal", format="%.1f×",
                                                       width="small"),

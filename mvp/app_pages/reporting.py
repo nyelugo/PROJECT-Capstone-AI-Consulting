@@ -23,7 +23,18 @@ from mvp.capabilities.reporting import (AUDIENCES, MAX_AUDIENCE_CHARS, OTHER_AUD
                                         recheck_narrative)
 from mvp.runtime import call_model
 from mvp.spine import run, HUMAN, PROPOSE
-from mvp.ui import conf_txt, ladder_html, model_ready, status_chip, current_operator, reason_chip
+from mvp.ui import (conf_txt, ladder_html, model_ready, status_chip, current_operator,
+                    reason_chip, action_label)
+
+def _shown(value: str, unit: str | None) -> str:
+    """A count on the fact sheet, written the way the draft writes it."""
+    if unit != "count":
+        return value
+    try:
+        return f"{int(float(value)):,}"
+    except (TypeError, ValueError):
+        return value
+
 
 st.title("Reporting assistance")
 
@@ -123,7 +134,8 @@ if signed_secs:
     lines = [f"# Complaints return — {store['period']}",
              f"", f"Prepared for: {store['audience']}",
              f"Period: {lo} to {hi}",
-             f"Source: dashboard/metrics.py over the public CFPB corpus (shadow-demo data)",
+             f"Source: figures computed by this system over the public CFPB corpus "
+             f"(shadow-demo data)",
              f"Exported: {_dt.datetime.now().strftime('%Y-%m-%d %H:%M')}", ""]
     for n, sec in signed_secs:
         pr = latest.get(f"report-{n}") or {}
@@ -173,13 +185,16 @@ for name, sec in store["sections"].items():
                         key = cite.split(" = ")[0].strip()
                         e = sheet.get(key, {})
                         rows.append({
-                            "Figure": key,
-                            "Value": cite.split(" = ", 1)[1] if " = " in cite else "",
-                            "What it is": e.get("label", "—"),
+                            # the stored key is this system's vocabulary; whoever signs the
+                            # return reads the label
+                            "Figure": e.get("label", key),
+                            "Value": _shown(
+                                cite.split(" = ", 1)[1] if " = " in cite else "",
+                                e.get("unit")),
                             "Unit": e.get("unit", "—"),
                         })
                     st.dataframe(rows, width="stretch", hide_index=True)
-                    st.caption(f"All computed by `dashboard/metrics.py` over "
+                    st.caption(f"All computed by this system over "
                                f"**{lo} to {hi}** of the public CFPB corpus. A figure that is "
                                f"not on this sheet cannot appear in the draft.")
             if ok:
@@ -212,7 +227,7 @@ for name, sec in store["sections"].items():
         if sec.get("edited"):
             st.caption(":gray-badge[edited by a person] — the check above ran on the edited text.")
         if prior:
-            st.success(f"**{prior['action'].title()}** by {prior['by']} at "
+            st.success(f"**{action_label(prior['action'])}** by {prior['by']} at "
                        f"{prior['at'].replace('T', ' ')}")
         with st.container(horizontal=True):
             if st.button("Sign off this section", key=f"acc_{item_id}",

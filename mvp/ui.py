@@ -225,6 +225,14 @@ def ladder_html(reason_code: str) -> str:
 
 SLA_LABEL = {"breached": "Past target", "due soon": "Due soon", "on track": "On track"}
 
+CAPABILITY_LABEL = {"triage": "Complaint triage", "anomaly": "Anomaly review",
+                    "reporting": "Reporting assistance"}
+
+
+def action_label(a: str) -> str:
+    """What a person did, in their words. Falls back to the constant made readable."""
+    return STATUS_LABEL.get(a, str(a).replace("_", " ").capitalize())
+
 # Facets filter on the stored value but must not show it. "breached" is the system's word;
 # the queue above it says "Past target" and so does the badge on the case.
 FACET_LABEL = {"sla": SLA_LABEL}
