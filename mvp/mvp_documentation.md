@@ -63,7 +63,7 @@ for the wrong reason, and the entire claim of this system is that a refusal says
 
 | Page | Who it is for | What it shows | The action |
 |---|---|---|---|
-| **Overview** | Chleo weekly, ops lead daily | Eight charts: weekly intake, what it did with what it read, why it held back, what is waiting and past target, agreement, where the model is wrong, rubber-stamping, and cost | Switch a capability off · open the past-target queue |
+| **Overview** | Chleo weekly, ops lead daily | Eight charts: weekly intake, what it did with what it read, why it held back, what is waiting and past target, agreement, where the model is wrong, rubber-stamping, and cost | Open the past-target queue, filtered |
 | **Complaint triage** | Handler | A standing queue, already classified. Proposed team, confidence, the sentence that decided it | Accept · reroute · escalate. Tick several for a bulk action |
 | **Anomaly review** | Fraud analyst | A standing queue, ranked by departure from each account's own normal. Case note already written | Escalate · dismiss · needs more |
 | **Reporting assistance** | Compliance officer | The **whole return for a chosen period**, all sections drafted, every figure checked against what this system computed for that period | Sign off · reject, **per section** |

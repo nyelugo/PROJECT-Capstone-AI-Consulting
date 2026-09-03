@@ -19,11 +19,6 @@ st.caption("Ranked by how far a pattern departs from that account's own normal â
 
 # An off switch is only real if the page honours it. Chleo can disable this from Overview
 # and it takes effect for everyone immediately, without a restart or a developer.
-if not Q.is_on("anomaly"):
-    st.warning("**Anomaly review is switched off.** Turn it back on from Overview.",
-               icon=":material/toggle_off:")
-    st.stop()
-
 items = Q.load_anomaly()
 if not items:
     st.warning("The queue has not been built yet. Run `python -m mvp.build_queues`.")

@@ -29,7 +29,7 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.ui import REASON_LABEL, current_operator
+from mvp.ui import REASON_LABEL
 
 ROI = Path(__file__).resolve().parents[2] / "cost_estimation" / "roi_model.json"
 
@@ -37,8 +37,8 @@ ROI = Path(__file__).resolve().parents[2] / "cost_estimation" / "roi_model.json"
 # behaving well, so the accent is confident rather than cautionary; red is reserved for the
 # one series that must always read zero.
 SLATE, ACCENT, ALERT, FAINT = "#64748B", "#14B8A6", "#EF4444", "#94A3B8"
-MIN_SAMPLE = 20        # decisions before an agreement rate is quoted at all
-MIN_PER_GROUP = 10     # decisions before a per-team or per-handler RATE is quoted
+MIN_SAMPLE = 20                        # decisions before an agreement rate is quoted at all
+MIN_PER_GROUP = Q.FLAG_MIN_DECISIONS   # ...and before any per-team or per-handler rate is
 
 st.title("Overview")
 
@@ -102,10 +102,11 @@ st.subheader("What it did with what it read")
 did = pd.DataFrame([
     {"capability": "Complaint triage", "outcome": "Proposed", "n": tri["proposed"]},
     {"capability": "Complaint triage", "outcome": "Held for a person", "n": tri["held"]},
-    {"capability": "Complaint triage", "outcome": "Reached a customer", "n": 0},
+    {"capability": "Complaint triage", "outcome": "Reached a customer",
+     "n": Q.reached_customer()},
     {"capability": "Anomaly review", "outcome": "Proposed", "n": ano["proposed"]},
     {"capability": "Anomaly review", "outcome": "Held for a person", "n": ano["held"]},
-    {"capability": "Anomaly review", "outcome": "Reached a customer", "n": 0},
+    {"capability": "Anomaly review", "outcome": "Reached a customer", "n": 0},  # same count
 ])
 # "Reached a customer" is carried at zero on purpose. It renders no bar, so the legend swatch
 # beside an empty row is the claim: not "we saw none this week" but "this cannot happen".
@@ -122,7 +123,8 @@ _chart(alt.Chart(did).mark_bar(size=30).encode(
 
 tot = tri["total"] + ano["total"]
 st.caption(f"**{tot} items read · {tri['proposed'] + ano['proposed']} proposed · "
-           f"{tri['held'] + ano['held']} held for a person · 0 reached a customer.** "
+           f"{tri['held'] + ano['held']} held for a person · {Q.reached_customer()} "
+           "reached a customer.** "
            "The red series is empty by design, not by luck — nothing leaves this system "
            "without a person. Reporting has no queue; it is measured by sections signed "
            "off, in the decision log.")
@@ -165,7 +167,7 @@ if out:
     order = list(wl.sort_values(["Past target", "waiting"], ascending=False)["team"])
     _chart(alt.Chart(wl.melt("team", value_vars=["Within target", "Past target"],
                              var_name="state", value_name="n")).mark_bar(size=18).encode(
-        x=alt.X("n:Q", stack="zero", title="Complaints waiting",
+        x=alt.X("n:Q", stack="zero", title="Complaints",
                 axis=alt.Axis(tickMinStep=1, format="d", tickCount=6)),
         y=alt.Y("team:N", title=None, sort=order,
                 axis=alt.Axis(labelLimit=320, labelOverlap=False)),
@@ -207,15 +209,17 @@ agreed = tri["agreed"] + ano["agreed"]
 overridden = tri["disagreed"] + ano["disagreed"]
 decided = agreed + overridden
 
-ev = pd.DataFrame([{"k": "Agreed", "n": agreed}, {"k": "Overridden", "n": overridden}])
+ev = pd.DataFrame([{"k": "Accepted", "n": agreed},
+                   {"k": "Overridden", "n": overridden}])
 # Scaled to the threshold, not to the data. The empty space to the right of the bar IS the
 # message; a rate quoted off nine decisions would look like evidence and would not be any.
 _chart((alt.Chart(ev).mark_bar(size=34).encode(
-            x=alt.X("n:Q", stack="zero", title="Decisions recorded",
+            x=alt.X("n:Q", stack="zero", title="Decisions",
                     scale=alt.Scale(domain=[0, MIN_SAMPLE + 2], nice=False),
                     axis=alt.Axis(values=[0, 5, 10, 15, MIN_SAMPLE])),
             color=alt.Color("k:N", title=None,
-                            scale=alt.Scale(domain=["Agreed", "Overridden"], range=[ACCENT, SLATE]),
+                            scale=alt.Scale(domain=["Accepted", "Overridden"],
+                                            range=[ACCENT, ALERT]),
                             legend=alt.Legend(orient="top", offset=4)),
             order=alt.Order("k:N"), tooltip=["k", "n"])
         + alt.Chart(pd.DataFrame({"x": [MIN_SAMPLE]})).mark_rule(
@@ -230,7 +234,8 @@ if decided >= MIN_SAMPLE:
                "so this rate now means something.")
 else:
     st.caption(f"**{decided} of the {MIN_SAMPLE} decisions needed before an agreement rate "
-               f"means anything.** {agreed} agreed, {overridden} overridden so far — too few "
+               f"means anything.** {agreed} accepted, {overridden} overridden so far — too "
+               "few "
                "to quote a rate, so none is shown. The dashed line is the threshold.")
 
 # ------------------------------------------------------- 6. where the model is wrong
@@ -240,18 +245,17 @@ teams = [r for r in Q.by_proposed_team(dated) if r["decided"]]
 if teams:
     tm = pd.DataFrame(teams)
     order = list(tm.sort_values(["overridden", "decided"], ascending=False)["team"])
-    _chart(alt.Chart(tm.melt("team", value_vars=["agreed", "overridden"],
+    tm = tm.rename(columns={"agreed": "Accepted", "overridden": "Overridden"})
+    _chart(alt.Chart(tm.melt("team", value_vars=["Accepted", "Overridden"],
                              var_name="k", value_name="n")).mark_bar(size=18).encode(
         x=alt.X("n:Q", stack="zero", title="Decisions",
                 axis=alt.Axis(tickMinStep=1, format="d")),
         y=alt.Y("team:N", title=None, sort=order,
                 axis=alt.Axis(labelLimit=320, labelOverlap=False)),
         color=alt.Color("k:N", title=None,
-                        scale=alt.Scale(domain=["agreed", "overridden"],
+                        scale=alt.Scale(domain=["Accepted", "Overridden"],
                                         range=[ACCENT, ALERT]),
-                        legend=alt.Legend(orient="top", offset=4,
-                                          labelExpr="datum.label == 'agreed' "
-                                                    "? 'Accepted' : 'Overridden'")),
+                        legend=alt.Legend(orient="top", offset=4)),
         order=alt.Order("k:N"), tooltip=["team", "k", "n"]), max(230, 44 * len(tm)))
 
     # Counts, never rates. One team has a single decision on it, and a 100% override rate off
@@ -284,28 +288,31 @@ if handlers:
     hd = pd.DataFrame(handlers)
     hd["enough"] = hd["decisions"] >= MIN_PER_GROUP
     _chart((alt.Chart(hd).mark_bar(size=22).encode(
-                x=alt.X("acceptance_pct:Q", title="Proposals accepted as offered",
+                x=alt.X("acceptance_pct:Q", title="% accepted as offered",
                         scale=alt.Scale(domain=[0, 100], nice=False),
-                        axis=alt.Axis(format="d", values=[0, 25, 50, 75, 97])),
+                        axis=alt.Axis(format="d",
+                                      values=[0, 25, 50, 75, Q.FLAG_ACCEPTANCE])),
                 y=alt.Y("handler:N", title=None, sort="-x",
                         axis=alt.Axis(labelLimit=320, labelOverlap=False)),
-                color=alt.condition("datum.acceptance_pct > 97 && datum.enough",
-                                    alt.value(ALERT), alt.value(SLATE)),
+                color=alt.condition(
+                    f"datum.acceptance_pct > {Q.FLAG_ACCEPTANCE} && datum.enough",
+                    alt.value(ALERT), alt.value(SLATE)),
                 opacity=alt.condition("datum.enough", alt.value(1.0), alt.value(0.5)),
                 tooltip=["handler", "decisions", "agreed", "overridden",
                          alt.Tooltip("acceptance_pct:Q", format=".1f")])
-            + alt.Chart(pd.DataFrame({"x": [97]})).mark_rule(
+            + alt.Chart(pd.DataFrame({"x": [Q.FLAG_ACCEPTANCE]})).mark_rule(
                 strokeDash=[4, 4], color=FAINT).encode(x="x:Q")), max(130, 34 * len(hd)))
 
     flagged = [h["handler"] for h in handlers if h["flag"]]
     thin = [h["handler"] for h in handlers if h["decisions"] < MIN_PER_GROUP]
     if flagged:
-        st.caption(f"**{', '.join(flagged)} accepted more than 97% of proposals over at least "
+        st.caption(f"**{', '.join(flagged)} accepted more than {Q.FLAG_ACCEPTANCE}% of "
+                   f"proposals over at least "
                    f"{MIN_PER_GROUP} decisions.** That is the automation-bias warning, not a "
                    "performance one — it usually means the queue stopped being read, and the "
                    "response is to look at the work, not at the person.")
     else:
-        st.caption(f"**Nobody is above the 97% line** (the dashed rule) over "
+        st.caption(f"**Nobody is above the {Q.FLAG_ACCEPTANCE}% line** (the dashed rule) over "
                    f"{MIN_PER_GROUP} or more decisions. This is the measured mitigation for "
                    "risk **R2** in the register."
                    + (f" Faded bars — {', '.join(thin)} — are below the {MIN_PER_GROUP}-"
@@ -319,7 +326,7 @@ st.caption("Acceptance is measured only over items someone actually decided. Thi
            "system into Annex III(4) of the AI Act at the same time.")
 
 # ------------------------------------------------------- 8. what a year costs
-st.subheader("What a year costs")
+st.subheader("What a year of running it costs")
 
 try:
     comp = json.loads(ROI.read_text())["annual_running_cost_eur"]
@@ -341,25 +348,15 @@ if comp:
         order=alt.Order("eur:Q", sort="descending"),
         tooltip=[alt.Tooltip("band:N"), alt.Tooltip("eur:Q", format=",.2f")]), 110)
     total = sum(comp.values())
-    st.caption(f"**€{total:,.0f} a year at the modelled volume.** The model itself is "
+    st.caption(f"**€{total:,.0f} a year to keep running, at the modelled volume.** This is "
+               "the recurring cost — what stops if you stop. The one-off build is not in it. "
+               "The model itself is "
                f"€{ai:,.2f} of it — {ai / total:.4%}, too small to draw. What this costs is "
                "platform and people, which is also what you would be deciding to stop paying "
                "for. Volumes are modelled; the per-item token cost behind the AI band is "
                "measured from this batch.")
 
-# ------------------------------------------------------- the one control on the page
 st.divider()
-st.markdown("**Switch a capability off**")
-st.caption("Takes effect immediately, for everyone, and is written to the decision log. "
-           "You do not need anyone's help to do this.")
-settings = Q.settings()
-cols = st.columns(len(Q.CAPABILITIES))
-for col, (key, label) in zip(cols, Q.CAPABILITIES.items()):
-    on = col.toggle(label, value=settings[key], key=f"cap_{key}")
-    if on != settings[key]:
-        Q.set_capability(key, on, by=current_operator())
-        st.rerun()
-
 st.caption(
     "**Two honest limits.** Sign-in is a name typed into a box — it records who *said* they "
     "decided, not who did; real identity arrives with the case-system integration in Phase "

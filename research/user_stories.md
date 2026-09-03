@@ -55,9 +55,12 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > **C4.** As Chleo, I want to **turn a capability off myself**, so that I am not dependent on
 > a consultant when something looks wrong on a Monday morning.
 > *Accept: a per-capability switch, effective without a restart.*
-> **MET** — a toggle per capability on Overview, written to `queues/settings.json` and
-> honoured by each page immediately. Switching one is itself recorded in the decision log,
-> because turning a capability off is a decision about the system.
+> **NOT MET** — descoped by the owner on 2026-09-03: the MVP does not switch capabilities
+> off. The three capabilities stay independent *by construction*, so one can be withdrawn at
+> deployment without touching the other two — but that is a deployment decision, not
+> something Chleo can do herself on a Monday morning, which is what this story asked for.
+> The switch events already in the decision log are kept: the log is append-only, and
+> removing a control is not licence to rewrite the record of it having existed.
 
 > **C5.** As Chleo, I want to know **what it cost me**, so that I can hold it against the
 > value it claims.
@@ -256,18 +259,19 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 
 | | Chleo | Ops lead | Handler | Analyst | Compliance | Audit | **Total** |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| MET | 6 | 4 | 6 | 3 | 6 | 4 | **29** |
+| MET | 5 | 4 | 6 | 3 | 6 | 4 | **28** |
 | PARTIAL | 0 | 0 | 1 | 0 | 0 | 0 | **1** |
-| NOT MET | 0 | 0 | 0 | 1 | 0 | 1 | **2** |
+| NOT MET | 1 | 0 | 0 | 1 | 0 | 1 | **3** |
 
-**29 of 32 fully met.** After Chleo's review,  Chleo and the ops lead are at **100%** — that was the scope
-decision and it is done. The handler is one story short, and that one waits on the case
-system. What is left belongs to the analyst, the compliance officer and the auditor.
+**28 of 32 fully met.** The ops lead is at **100%**. Chleo is one short, and deliberately so:
+C4 was descoped on 2026-09-03 rather than left unbuilt. The handler is also one short, and
+that one waits on the case system. What is left belongs to the analyst, the compliance
+officer and the auditor.
 
 ## What is left
 
-**Chleo and the ops lead are fully served — every story in both sets is met.** That was the
-scope decision, and it is done. The remaining shortfalls belong to the three roles outside
+**The ops lead is fully served; Chleo is served except for the switch she asked for, which
+was withdrawn rather than built.** The remaining shortfalls belong to the three roles outside
 it.
 
 **1 · The analyst cannot see the transactions (A3).** Only aggregates are shown; `txn_ids`

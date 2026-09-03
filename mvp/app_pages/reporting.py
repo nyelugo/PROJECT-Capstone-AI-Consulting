@@ -29,11 +29,6 @@ st.title("Reporting assistance")
 
 # An off switch is only real if the page honours it. Chleo can disable this from Overview
 # and it takes effect for everyone immediately, without a restart or a developer.
-if not Q.is_on("reporting"):
-    st.warning("**Reporting assistance is switched off.** Turn it back on from Overview.",
-               icon=":material/toggle_off:")
-    st.stop()
-
 if "report" not in st.session_state:
     st.session_state.report = {"audience": None, "period": None, "sections": {}}
 store = st.session_state.report

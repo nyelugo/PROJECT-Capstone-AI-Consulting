@@ -229,8 +229,10 @@ why it is the first thing the engagement buys.
 
 **Residual risk accepted:** UC-2's classification rests on the fraud-detection reasoning at
 **[verify-3]**. If that fails, UC-2 alone becomes high-risk, and the gaps at Arts. 10 and 15
-become mandatory rather than voluntary. UC-2 can be disabled independently without affecting
-UC-1 or UC-3 — a deployment control, not just a technical one.
+become mandatory rather than voluntary. UC-2 can be withdrawn independently without affecting
+UC-1 or UC-3, because the three share a decision spine but no state. That is a deployment
+decision — the MVP carries no in-app switch, so disabling a capability means not deploying
+it, not toggling it.
 
 ---
 

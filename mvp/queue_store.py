@@ -31,7 +31,6 @@ QUEUES = HERE / "queues"
 TRIAGE_FILE = QUEUES / "triage_queue.json"
 ANOMALY_FILE = QUEUES / "anomaly_queue.json"
 EVENTS_FILE = QUEUES / "decision_events.json"
-SETTINGS_FILE = QUEUES / "settings.json"
 
 _lock = threading.Lock()
 
@@ -315,36 +314,6 @@ def by_week(items: list[dict], date_key: str) -> list[dict]:
 # Chleo asked for this directly: she wants to disable a capability on a Monday morning
 # without phoning a consultant. It lives in a file rather than in code precisely so that
 # turning something off is an operational act, not a deployment.
-CAPABILITIES = {
-    "triage": "Complaint triage",
-    "anomaly": "Anomaly review",
-    "reporting": "Reporting assistance",
-}
-
-
-def settings() -> dict:
-    s = _read(SETTINGS_FILE, {})
-    return {k: bool(s.get(k, True)) for k in CAPABILITIES}     # on unless switched off
-
-
-def is_on(capability: str) -> bool:
-    return settings().get(capability, True)
-
-
-def set_capability(capability: str, on: bool, *, by: str) -> None:
-    """Switch one capability on or off, and record it — turning a capability off is a
-    decision about the system and belongs in the same log as decisions about cases."""
-    with _lock:
-        s = _read(SETTINGS_FILE, {})
-        s[capability] = bool(on)
-        SETTINGS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        SETTINGS_FILE.write_text(json.dumps(s, indent=2, sort_keys=True))
-    record(f"capability:{capability}", "switched_on" if on else "switched_off",
-           capability=capability, by=by,
-           proposed=f"{CAPABILITIES.get(capability, capability)} "
-                    f"{'enabled' if on else 'disabled'}")
-
-
 # ------------------------------------------------------------- supervision breakdowns
 def by_proposed_team(items: list[dict]) -> list[dict]:
     """Where the model is overridden, grouped by the team it proposed (O2).
@@ -380,6 +349,25 @@ def by_proposed_team(items: list[dict]) -> list[dict]:
     return sorted(out, key=lambda r: -r["items"])
 
 
+# The automation-bias threshold lives HERE and nowhere else. It was previously a literal 97
+# in the flag logic and again in the chart's rule, colour condition, axis ticks and caption —
+# five sites that had to agree, with nothing checking that they did.
+FLAG_ACCEPTANCE = 97      # accepting more than this share is the warning
+FLAG_MIN_DECISIONS = 10   # ...but only once someone has decided this many
+
+# Every action the log can hold. None of them sends anything to a customer, which is the
+# claim Overview makes. Counting what falls OUTSIDE this set — rather than writing a literal
+# zero — means a new outbound action shows up on the chart instead of silently contradicting
+# it.
+KNOWN_INTERNAL_ACTIONS = (set(TRIAGE_ACTIONS) | set(ANOMALY_ACTIONS)
+                          | {"erased", "switched_on", "switched_off"})
+
+
+def reached_customer() -> int:
+    """Recorded actions whose effect leaves the building. Zero by construction."""
+    return sum(1 for e in events() if e["action"] not in KNOWN_INTERNAL_ACTIONS)
+
+
 def by_handler() -> list[dict]:
     """Acceptance per person (O3).
 
@@ -403,7 +391,8 @@ def by_handler() -> list[dict]:
         d = r["agreed"] + r["overridden"]
         r["acceptance_pct"] = (100 * r["agreed"] / d) if d else None
         r["flag"] = ("rubber-stamping?" if r["acceptance_pct"] is not None
-                     and d >= 10 and r["acceptance_pct"] > 97 else "")
+                     and d >= FLAG_MIN_DECISIONS
+                     and r["acceptance_pct"] > FLAG_ACCEPTANCE else "")
         out.append(r)
     return sorted(out, key=lambda r: -r["decisions"])
 
