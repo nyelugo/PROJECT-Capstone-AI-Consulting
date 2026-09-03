@@ -425,7 +425,7 @@ are complete.
 | 1 — Configuration and 60-day shadow run | Evidence on the client's process with no action on suggestions | €12,600 | Go/no-go on deployment |
 | 2 — Deployment | Integration, training and handover | €14,000 | Only if the pilot and commercial case pass |
 
-**€18,200 reaches the deployment decision.**
+**€18,200 reaches the deployment decision. Nobody acts on a suggestion in shadow.**
 
 Deployment requires:
 
