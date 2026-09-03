@@ -192,8 +192,12 @@ def in_main(page, text: str):
     thing while the narrator described the right one. Scoping to stMain removes a whole
     class of that: the sidebar repeats a lot of the vocabulary the narration uses.
     """
-    return (page.locator('[data-testid="stMain"]')
-            .get_by_text(text, exact=False).locator("visible=true").first)
+    # Scope to Streamlit's content area WHERE THERE IS ONE. The POC target is n8n, which
+    # has no stMain, and scoping to a container that does not exist finds nothing at all —
+    # so fall back to the whole page rather than silently skipping every cue.
+    main = page.locator('[data-testid="stMain"]')
+    root = main if main.count() else page.locator("body")
+    return root.get_by_text(text, exact=False).locator("visible=true").first
 
 
 def centre_of(page, locator) -> tuple[float, float]:

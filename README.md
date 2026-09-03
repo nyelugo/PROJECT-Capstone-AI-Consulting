@@ -26,7 +26,7 @@ Round 1 deliverable. It is reused by the Round 2 app, never copied.
 | Deliverable | Weight | State |
 |---|---:|---|
 | [`use_case_definition.md`](use_case_definition.md) | 15* | **Done** — problem, profile, solution, stakeholders, success criteria, scope, Round 1 → 2 evolution |
-| [`poc/`](poc/) — `poc_workflow.json` + [`poc_documentation.md`](poc/poc_documentation.md) | 15* | **Done** — workflow generated from source; **demo recording outstanding** |
+| [`poc/`](poc/) — `poc_workflow.json` + [`poc_documentation.md`](poc/poc_documentation.md) | 15* | **Done** — workflow generated from source; [demo recording](demo/recordings/poc_demo.mp4) 2:13 |
 | [`roi_risk_assessment.md`](roi_risk_assessment.md) | **20** | **Done** — 12/36-month ROI, break-even, sensitivity, 12 risks |
 | [`compliance/eu_ai_act_compliance.md`](compliance/eu_ai_act_compliance.md) | **20** | **Done** — step-by-step classification, conformity summary, Annex IV outline |
 | [`compliance/gdpr_documentation.md`](compliance/gdpr_documentation.md) | 10 | **Done** — data flow, Art. 30 register, DPIA, rights, transfers |
@@ -36,8 +36,12 @@ Round 1 deliverable. It is reused by the Round 2 app, never copied.
 
 \* shared weighting across use case definition and POC.
 
-**Outstanding, and mine to do:** the 2–5 minute POC demo recording, and the MVP demo backup
-recording for slide 9. Shot lists are in [`poc/poc_documentation.md`](poc/poc_documentation.md).
+**Both demo recordings are done** and generated from a script — see [`demo/`](demo/):
+[`poc_demo.mp4`](demo/recordings/poc_demo.mp4) (2:13, the deliverable) and
+[`mvp_demo.mp4`](demo/recordings/mvp_demo.mp4) (1:55, slide 9's backup). Re-recording after a
+UI change costs a command, not an afternoon.
+
+**Outstanding:** submitting the repo URL to Campus under `final-project`.
 
 **Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
 30 user stories across the six people who would actually touch this, each checked

@@ -82,25 +82,41 @@ POC = [
     {"do": ("goto", POC_URL),
      "say": "This is the proof of concept — nine steps, left to right. That is the whole "
             "system, and you can read it without me."},
-    {"do": ("wait", 0),
+    {"do": ("point", "Complaint received"),
      "say": "The trigger is a complaint arriving on a known product. Here it is a button; "
-            "in production it is an event from the case system."},
-    {"do": ("click", "Run demo"),
+            "in production it is an event from your case system."},
+    {"do": ("point", "Normalise complaint"),
+     "say": "First it checks the request is even worth spending on — a product it handles, "
+            "text long enough to read. A bad request is rejected here, before a token."},
+    {"do": ("click", "Execute workflow"),
+     "say": "Now watch it run."},
+    {"do": ("point", "Classify complaint"),
      "say": "Here the AI reads the complaint and proposes a queue. It has to quote the "
-            "sentence that drove the decision, and a guard checks that sentence is really "
-            "in the text."},
-    {"do": ("wait", 6),
+            "sentence that drove the decision, and the next step checks that sentence is "
+            "really in the text."},
+    {"do": ("point", "Validate and route"),
+     "say": "Five guards, in a fixed order. A malformed answer, a queue that does not exist, "
+            "confidence below the line, a quote that was never in the complaint — each one "
+            "has its own code, so a refusal says which."},
+    {"do": ("point", "Propose to handler"),
      "say": "Green ticks mean each step executed. And this is the output the handler "
             "receives: a team, a confidence, and the customer's own words as the reason."},
-    {"do": ("wait", 0),
-     "say": "Three things before we move on. The tool is n8n, because a client's team can "
-            "read it as boxes and arrows — a Python script would have been faster to write "
-            "and impossible to show a chief executive."},
-    {"do": ("wait", 0),
-     "say": "What it proves is that the decision is inspectable and that a fabricated "
+    {"do": ("point", "Send to human review"),
+     "say": "When any guard fires, the complaint comes down here instead — to a person, "
+            "with the reason written down. Nothing is silently dropped and nothing is "
+            "silently guessed."},
+    {"do": ("point", "Trace to LangSmith"),
+     "say": "And every run leaves a monitoring record on this branch. It hangs off to the "
+            "side deliberately: observing the decision must never be able to change it."},
+    {"do": ("point", "Run demo"),
+     "say": "Three things before we move on. The tool is n8n, because your team can read it "
+            "as boxes and arrows — a Python script would have been faster to write and "
+            "impossible to show you."},
+    {"do": ("point", "Classify complaint"),
+     "say": "What it proves is that the decision is inspectable, and that a fabricated "
             "quotation gets caught. What it does not prove is accuracy: sixty per cent is "
-            "agreement with labels a complainant chose from a dropdown, not accuracy."},
-    {"do": ("wait", 0),
+            "agreement with labels a complainant chose from a dropdown."},
+    {"do": ("point", "Complaint received"),
      "say": "And in production the trigger becomes a case-system event, rejected inputs get "
             "traced too, and delivery is confirmed back rather than assumed."},
 ]
