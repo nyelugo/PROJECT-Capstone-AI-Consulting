@@ -12,8 +12,8 @@ proposed use cases rather than triage alone, and all three now run. See
 [`feedback/round1_decision.md`](feedback/round1_decision.md).
 
 **Run it:** `streamlit run mvp/app.py`, or build a Desktop shortcut once with
-`./make_desktop_app.sh` and double-click **`Assist.app`**. One application, six pages,
-left-hand navigation: Overview and Operations for the two supervisors, then triage, anomaly
+`./make_desktop_app.sh` and double-click **`Assist.app`**. One application, five pages,
+left-hand navigation: Overview for both supervisors, then triage, anomaly
 review, reporting and the decision log.
 Stop it with `pkill -f "streamlit run mvp/app.py"`.
 

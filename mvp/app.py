@@ -65,8 +65,6 @@ nav = st.navigation(
         # of how st.navigation routes the default. Link to "/" for Overview.
         st.Page("app_pages/overview.py", title="Overview",
                 icon=":material/insights:", default=True),
-        st.Page("app_pages/operations.py", title="Operations",
-                icon=":material/monitoring:"),
         st.Page("app_pages/triage.py", title="Complaint triage",
                 icon=":material/alt_route:"),
         st.Page("app_pages/anomaly.py", title="Anomaly review",

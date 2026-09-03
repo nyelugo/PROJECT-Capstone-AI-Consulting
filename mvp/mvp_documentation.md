@@ -19,9 +19,14 @@ Opens on <http://localhost:8502>. Editing a module under `mvp/` — as opposed t
 page script — needs a server restart, not just a browser refresh. On macOS, double-click **`Assist.app`** on the Desktop
 (build it once with `./make_desktop_app.sh`); on Windows, **`run_mvp.bat`**.
 
-**One app, six pages, left-hand navigation.** Two of them are for the people who supervise
-rather than operate — Overview for the chief executive, weekly; Operations for the ops lead,
-daily — and one screen serving both was this MVP's original design error.
+**One app, five pages, left-hand navigation.** Overview is the supervisors' page: the chief
+executive reads it weekly to decide whether to keep paying for the system, the ops lead reads
+it daily to decide where to point her team. These were two pages until 2026-09-03. Splitting
+them had been a deliberate correction to an earlier single screen, and the split cost more
+than it bought: the same figure was computed in two places and had already drifted apart, and
+the ops page's headline — complaints past target — was an artefact of loading a pre-aged
+corpus rather than a backlog anyone could work. One page, eight charts, one definition of
+each number.
 
 **The Round 1 dashboard is not in here.** It sized an opportunity from public data for a
 pitch: a different job, a different audience, and data that is not the client's. It stays at
@@ -58,8 +63,7 @@ for the wrong reason, and the entire claim of this system is that a refusal says
 
 | Page | Who it is for | What it shows | The action |
 |---|---|---|---|
-| **Overview** | Chleo, **weekly** | Was this a normal week — this week against last, nine weeks of receipts, what was held and why, agreement, cost, and a switch per capability | Switch a capability off |
-| **Operations** | Ops lead, **daily** | What is past target and untouched, outstanding by team, where the model is overridden and **where handlers sent it instead**, acceptance per handler | None — a directing page |
+| **Overview** | Chleo weekly, ops lead daily | Eight charts: weekly intake, what it did with what it read, why it held back, what is waiting and past target, agreement, where the model is wrong, rubber-stamping, and cost | Switch a capability off · open the past-target queue |
 | **Complaint triage** | Handler | A standing queue, already classified. Proposed team, confidence, the sentence that decided it | Accept · reroute · escalate. Tick several for a bulk action |
 | **Anomaly review** | Fraud analyst | A standing queue, ranked by departure from each account's own normal. Case note already written | Escalate · dismiss · needs more |
 | **Reporting assistance** | Compliance officer | The **whole return for a chosen period**, all sections drafted, every figure checked against what this system computed for that period | Sign off · reject, **per section** |

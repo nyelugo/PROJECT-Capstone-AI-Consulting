@@ -16,7 +16,10 @@ rules hold everywhere below:
     CEO-relevant picture in the project and it is deliberately absent: every chart here is
     measured from this batch, and mixing a 69-month projection in would undo that.
 
-Per-team workload is Operations' chart (operations.py), not repeated here.
+The ops lead's page was folded in here (2026-09-03). Its own docstring called one screen
+serving both personas the MVP's original design error; the counter-argument that won is that
+Chleo and the ops lead were reading the same system, and two pages meant two places for the
+same figure to drift. Stories O1-O4 are served by the workload and agreement sections below.
 """
 import json
 from pathlib import Path
@@ -34,7 +37,8 @@ ROI = Path(__file__).resolve().parents[2] / "cost_estimation" / "roi_model.json"
 # behaving well, so the accent is confident rather than cautionary; red is reserved for the
 # one series that must always read zero.
 SLATE, ACCENT, ALERT, FAINT = "#64748B", "#14B8A6", "#EF4444", "#94A3B8"
-MIN_SAMPLE = 20
+MIN_SAMPLE = 20        # decisions before an agreement rate is quoted at all
+MIN_PER_GROUP = 10     # decisions before a per-team or per-handler RATE is quoted
 
 st.title("Overview")
 
@@ -44,6 +48,8 @@ if not tri_items and not ano_items:
     st.stop()
 
 tri, ano = Q.summary(tri_items), Q.summary(ano_items)
+dated, as_at = Q.with_clock(tri_items, "received")
+latest_action = Q.latest_by_item()
 
 
 def _chart(c, height):
@@ -145,7 +151,56 @@ if merged:
 else:
     st.caption("Nothing has been held back in this batch.")
 
-# ------------------------------------------------------- 4. do your people agree with it
+# ------------------------------------------------------- 4. where the work is sitting
+st.subheader("What is waiting, and what is past target")
+
+breached_open = [d for d in dated if d["sla"] == Q.BREACHED
+                 and Q.status_of(d["item_id"], d, latest_action) in Q.PENDING_STATUSES]
+out = Q.outstanding_by_team(dated)
+
+if out:
+    wl = pd.DataFrame(out)
+    wl["Within target"] = wl["waiting"] - wl["past_target"]
+    wl = wl.rename(columns={"past_target": "Past target"})
+    order = list(wl.sort_values(["Past target", "waiting"], ascending=False)["team"])
+    _chart(alt.Chart(wl.melt("team", value_vars=["Within target", "Past target"],
+                             var_name="state", value_name="n")).mark_bar(size=18).encode(
+        x=alt.X("n:Q", stack="zero", title="Complaints waiting",
+                axis=alt.Axis(tickMinStep=1, format="d", tickCount=6)),
+        y=alt.Y("team:N", title=None, sort=order,
+                axis=alt.Axis(labelLimit=320, labelOverlap=False)),
+        color=alt.Color("state:N", title=None,
+                        scale=alt.Scale(domain=["Within target", "Past target"],
+                                        range=[SLATE, ALERT]),
+                        legend=alt.Legend(orient="top", offset=4)),
+        order=alt.Order("state:N"),
+        tooltip=["team", "state", "n"]), max(190, 34 * len(wl)))
+
+# The corpus arrives pre-aged: these complaints were filed before this batch was ever loaded,
+# so the clock measures the age of the DATA, not how long anyone sat on it. Saying "nobody has
+# worked them" without that reads as an operational failure and is the same defect this page
+# was rebuilt to remove.
+aged = sum(1 for d in dated if d["sla"] == Q.BREACHED)
+st.caption(f"**{len(breached_open)} complaints are past the {Q.SLA_DAYS}-day first-response "
+           f"target and untouched**, oldest "
+           f"{max((d['age_days'] for d in breached_open), default=0)} days. Read that as a "
+           f"demonstration of age-ranking, not as a backlog: {aged} of {len(dated)} arrived "
+           "already past target, because this is a historical corpus rather than a live "
+           "feed. Phase 2 makes the clock real. Triage only — anomaly candidates carry no "
+           "team or target.")
+
+if breached_open:
+    # Telling someone where to click is not the same as taking them there. This presets the
+    # triage filters and opens the queue already narrowed to exactly these rows.
+    if st.button(f"Work the {len(breached_open)} past-target complaints",
+                 type="primary", icon=":material/arrow_forward:"):
+        st.session_state["show_received"] = "Needs you"
+        st.session_state["f_sla_received"] = [Q.BREACHED]
+        st.session_state["st_received"] = []
+        st.session_state["q_received"] = ""
+        st.switch_page("app_pages/triage.py")
+
+# ------------------------------------------------------- 5. do your people agree with it
 st.subheader("Do your people agree with it")
 
 agreed = tri["agreed"] + ano["agreed"]
@@ -178,7 +233,92 @@ else:
                f"means anything.** {agreed} agreed, {overridden} overridden so far — too few "
                "to quote a rate, so none is shown. The dashed line is the threshold.")
 
-# ------------------------------------------------------- 5. what a year costs
+# ------------------------------------------------------- 6. where the model is wrong
+st.subheader("Where the model is wrong")
+
+teams = [r for r in Q.by_proposed_team(dated) if r["decided"]]
+if teams:
+    tm = pd.DataFrame(teams)
+    order = list(tm.sort_values(["overridden", "decided"], ascending=False)["team"])
+    _chart(alt.Chart(tm.melt("team", value_vars=["agreed", "overridden"],
+                             var_name="k", value_name="n")).mark_bar(size=18).encode(
+        x=alt.X("n:Q", stack="zero", title="Decisions",
+                axis=alt.Axis(tickMinStep=1, format="d")),
+        y=alt.Y("team:N", title=None, sort=order,
+                axis=alt.Axis(labelLimit=320, labelOverlap=False)),
+        color=alt.Color("k:N", title=None,
+                        scale=alt.Scale(domain=["agreed", "overridden"],
+                                        range=[ACCENT, ALERT]),
+                        legend=alt.Legend(orient="top", offset=4,
+                                          labelExpr="datum.label == 'agreed' "
+                                                    "? 'Accepted' : 'Overridden'")),
+        order=alt.Order("k:N"), tooltip=["team", "k", "n"]), max(230, 44 * len(tm)))
+
+    # Counts, never rates. One team has a single decision on it, and a 100% override rate off
+    # one decision is the same base-rate artefact the weekly charts avoid.
+    rated = [r for r in teams if r["decided"] >= MIN_PER_GROUP]
+    reroutes = [f"{r['team']} → {r['sent_instead']}" for r in teams if r["sent_instead"]]
+    st.caption(
+        f"**{sum(r['decided'] for r in teams)} decisions across {len(teams)} teams — too few "
+        f"to rate any of them.** No team has reached {MIN_PER_GROUP} decisions, so counts are "
+        "shown and no override rate is quoted; a rate off one or two decisions would say more "
+        "about the sample than the model. "
+        + (f"Where handlers sent complaints instead: {'; '.join(reroutes)}. That is the "
+           "column that matters — a high override rate says the model is wrong about a team, "
+           "where it was rerouted says *how*, and that is the difference between fixing a "
+           "prompt and fixing a taxonomy."
+           if reroutes else "No complaint has been rerouted yet, so there is no error "
+                            "pattern to read.")
+        if not rated else
+        "Rates are quoted only for teams past the "
+        f"{MIN_PER_GROUP}-decision floor.")
+else:
+    st.caption("Nothing decided yet, so there is no error pattern to show. Work items in "
+               "Complaint triage and this fills in.")
+
+# ------------------------------------------------------- 7. automation bias
+st.subheader("Is anyone rubber-stamping")
+
+handlers = Q.by_handler()
+if handlers:
+    hd = pd.DataFrame(handlers)
+    hd["enough"] = hd["decisions"] >= MIN_PER_GROUP
+    _chart((alt.Chart(hd).mark_bar(size=22).encode(
+                x=alt.X("acceptance_pct:Q", title="Proposals accepted as offered",
+                        scale=alt.Scale(domain=[0, 100], nice=False),
+                        axis=alt.Axis(format="d", values=[0, 25, 50, 75, 97])),
+                y=alt.Y("handler:N", title=None, sort="-x",
+                        axis=alt.Axis(labelLimit=320, labelOverlap=False)),
+                color=alt.condition("datum.acceptance_pct > 97 && datum.enough",
+                                    alt.value(ALERT), alt.value(SLATE)),
+                opacity=alt.condition("datum.enough", alt.value(1.0), alt.value(0.5)),
+                tooltip=["handler", "decisions", "agreed", "overridden",
+                         alt.Tooltip("acceptance_pct:Q", format=".1f")])
+            + alt.Chart(pd.DataFrame({"x": [97]})).mark_rule(
+                strokeDash=[4, 4], color=FAINT).encode(x="x:Q")), max(130, 34 * len(hd)))
+
+    flagged = [h["handler"] for h in handlers if h["flag"]]
+    thin = [h["handler"] for h in handlers if h["decisions"] < MIN_PER_GROUP]
+    if flagged:
+        st.caption(f"**{', '.join(flagged)} accepted more than 97% of proposals over at least "
+                   f"{MIN_PER_GROUP} decisions.** That is the automation-bias warning, not a "
+                   "performance one — it usually means the queue stopped being read, and the "
+                   "response is to look at the work, not at the person.")
+    else:
+        st.caption(f"**Nobody is above the 97% line** (the dashed rule) over "
+                   f"{MIN_PER_GROUP} or more decisions. This is the measured mitigation for "
+                   "risk **R2** in the register."
+                   + (f" Faded bars — {', '.join(thin)} — are below the {MIN_PER_GROUP}-"
+                      "decision floor and are not flagged either way." if thin else ""))
+else:
+    st.caption("No decisions recorded yet.")
+
+st.caption("Acceptance is measured only over items someone actually decided. This data is "
+           "for calibrating the system, never for evaluating a person — using it for "
+           "performance management would breach purpose limitation under GDPR and move the "
+           "system into Annex III(4) of the AI Act at the same time.")
+
+# ------------------------------------------------------- 8. what a year costs
 st.subheader("What a year costs")
 
 try:

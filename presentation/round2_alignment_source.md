@@ -501,7 +501,7 @@ the system proposed and what the responsible person did.
 
 - Demonstrate one queue item from proposal through human action to decision log.
 - Use the existing recording if the live app is unavailable.
-- Do not tour all six pages or all three capabilities during the main demo.
+- Do not tour all five pages or all three capabilities during the main demo.
 
 ---
 

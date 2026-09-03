@@ -76,20 +76,23 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > **O1.** As the ops lead, I want to see **what is past deadline and still untouched**, so
 > that I can direct my team at the right cases.
 > *Accept: a count, and one click to that list.*
-> **MET** — the red callout names it, and the queue filters to it.
+> **MET** — Overview names the count and the oldest, and the button opens the queue
+> already filtered to exactly those rows. It also discloses that this corpus arrives
+> pre-aged, so the figure reads as age-ranking rather than as a real backlog.
 
 > **O2.** As the ops lead, I want to see **which teams the model gets wrong**, so that I know
 > whether the problem is the model or one team's taxonomy.
 > *Accept: overrides broken down by proposed team.*
-> **MET** — Operations breaks overrides down by proposed team, with a **Sent instead**
-> column showing where handlers actually sent them. That column is the difference between
-> fixing a prompt and fixing a taxonomy.
+> **MET** — Overview breaks overrides down by proposed team as counts, naming where
+> handlers actually sent them. Where it was rerouted is the difference between fixing a
+> prompt and fixing a taxonomy. No team has reached ten decisions, so no override *rate*
+> is quoted — a rate off one decision would describe the sample, not the model.
 
 > **O3.** As the ops lead, I want to see **acceptance per handler**, so that I can spot
 > someone who has stopped reading.
 > *Accept: a per-handler rate, flagged above 97%.*
-> **MET** — acceptance per handler on Operations, flagged above 97% over ten or more
-> decisions. Risk **R2** named *measured per handler* as its mitigation; until this existed
+> **MET** — acceptance per handler on Overview against a 97% line, flagged above it over
+> ten or more decisions; handlers below that floor are drawn faded and not flagged. Risk **R2** named *measured per handler* as its mitigation; until this existed
 > the register promised a control that did not exist.
 
 > **O4.** As the ops lead, I want to know **how much work is outstanding per team**, so that
@@ -119,7 +122,7 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > *Accept: a reroute records the destination team.*
 > **MET** — rerouting asks which team it should have gone to, drawn from
 > `classifier/teams.py` so a correction cannot name a team the system does not have. The
-> destination is stored on the event and surfaced on Operations.
+> destination is stored on the event and surfaced on Overview and the decision log.
 
 > **H5.** As a handler, I want to **note why** I overrode it, so that a reviewer understands
 > a decision months later.

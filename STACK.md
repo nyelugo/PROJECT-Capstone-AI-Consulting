@@ -23,7 +23,7 @@ read by the newer parts rather than copied into them.
 | **LangSmith experiment** | 60 examples with reference answers | How good is it? | Cannot judge a live complaint — no answer key exists yet |
 | **LangSmith tracing** | One record per real execution | What did it just do, and why? | Cannot score anything. No ground truth at run time |
 | **Cost / ROI model** | Python, every figure derived | What would this cost, what does it return, and what must be true? | Not a quote. An order of magnitude with stated assumptions |
-| **MVP (`mvp/`)** | One Streamlit app, six pages: Overview and Operations for the two supervisors, three capabilities on one decision spine, and the decision log | Can a person actually use it, and is the human step real? | Not production. No case-system integration, and decisions persist to one machine rather than to a case system |
+| **MVP (`mvp/`)** | One Streamlit app, five pages: Overview for both supervisors, three capabilities on one decision spine, and the decision log | Can a person actually use it, and is the human step real? | Not production. No case-system integration, and decisions persist to one machine rather than to a case system |
 | **Demo recorder (`demo/`)** | A cue list, TTS and a driven browser | Can the demos be re-made after a UI change? | Not a product feature. Tooling, and the recordings are the deliverable |
 | **Synthetic transactions** | 2,069 records, anomalies planted with labels | Does the anomaly detector find what it should? | Not real data, and not proof against a pattern nobody planted |
 
