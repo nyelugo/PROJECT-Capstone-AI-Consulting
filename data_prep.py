@@ -73,5 +73,9 @@ dash_cols = ["Date received", "month", "week", "Product", "Sub-product", "Issue"
 cur[dash_cols].to_csv("data/complaints_dashboard.csv", index=False)
 cur[["Complaint ID", "Date received", "Product", "Sub-product", "Issue", "Sub-issue",
      "Consumer complaint narrative", "Company response to consumer",
-     "Timely response?"]].to_csv("data/complaints_triage.csv.gz", index=False, compression="gzip")
+     # mtime=0: gzip stamps the wall clock into its header by default, so the same input
+     # produced a byte-different file on every run and the curated data always showed as
+     # modified after anyone reproduced it. The contents never differed.
+     "Timely response?"]].to_csv("data/complaints_triage.csv.gz", index=False,
+                                 compression={"method": "gzip", "mtime": 0})
 print("\nwrote data/complaints_dashboard.csv + data/complaints_triage.csv.gz")
