@@ -39,14 +39,14 @@ MVP = [
             "is, and where it stands against the first-response target."},
     {"do": ("point", "Target is 15 days"),
      "say": "A large share are already past it — the spread of a historical sample, not a "
-            "failing team, and the page says so. You can sort on that column, and filter "
-            "down to just the ones that need a person."},
+            "failing team. You can sort on that column and filter to the ones that need a "
+            "person."},
     {"do": ("row", 0),
      "say": "Open one."},
     {"do": ("point", "Because the customer wrote"),
      "say": "It proposes a team, and it has to quote the sentence that decided it — the "
-            "customer's own words, not a summary. A guard checks that sentence is really "
-            "in the complaint."},
+            "customer's own words. A guard checks that sentence is really in the "
+            "complaint."},
     {"do": ("point", "Checks"),
      "say": "On the right, every check it ran, by name, and the one it failed. Not a "
             "confidence score. A list."},
@@ -64,9 +64,9 @@ MVP = [
      "say": "This is what the chief executive sees. What it proposed, what was held back "
             "and why."},
     {"do": ("point", "Do your people agree with it"),
-     "say": "And whether her people actually agree with it — which it refuses to score "
-            "until enough decisions exist for a rate to mean anything. Same six checks "
-            "behind all three capabilities. Only the evidence changes."},
+     "say": "And whether her people agree with it — which it refuses to score until "
+            "enough decisions exist to mean anything. Same six checks behind all three "
+            "capabilities. Only the evidence changes."},
 ]
 
 # --------------------------------------------------------------------------------- POC
