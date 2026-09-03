@@ -9,9 +9,11 @@ Charts, not tiles. A supervisor reads shape faster than she reads numbers, and a
 cannot quietly restate the same figure in two places the way fourteen metrics did. Two
 rules hold everywhere below:
 
-  * Weekly buckets are plotted as COUNTS, never rates. Weeks here hold 1-12 items, so a
-    weekly percentage is a base-rate artefact — one item is 0% or 100% and neither means
-    anything.
+  * Weekly buckets are plotted as COUNTS, never rates. A count carries volume and outcome
+    in one bar, where a rate hides how much work arrived; and the batch size is a build
+    parameter, so a week thin enough to make a percentage meaningless is always one
+    `--triage` away. (At 60 complaints the weeks held 1-12 and a single item read as 0%
+    or 100%. At 500 they hold 14-78. The rule does not depend on which.)
   * Nothing modelled appears next to something measured. The payback curve is the most
     CEO-relevant picture in the project and it is deliberately absent: every chart here is
     measured from this batch, and mixing a 69-month projection in would undo that. The
@@ -98,7 +100,8 @@ if rows:
     avg = prior[["Proposed", "Held for a person"]].sum(axis=1).mean() if len(prior) else float("nan")
     st.caption(f"**{latest}: {now} in, {held_now} held for a person.** "
                + (f"The {len(prior)} weeks before it averaged {avg:.1f} in. " if len(prior) else "")
-               + "Counts, not rates — a week this small cannot support a percentage. "
+               + "Counts rather than rates, so the bar carries how much arrived as well as "
+                 "what happened to it. "
                + f"{len(wk)} weeks of receipts are in this batch, so the comparison is "
                  "measured; no *new* work arrives until the Phase 2 feed.")
 
