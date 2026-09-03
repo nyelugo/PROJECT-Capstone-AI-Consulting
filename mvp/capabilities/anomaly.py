@@ -42,6 +42,26 @@ STRUCT_LO, STRUCT_HI = 900.0, 1000.0
 STRUCT_MIN = 3             # transactions just under the threshold within the window
 STRUCT_DAYS = 3
 
+# RULES describes each pattern; RULE_LABEL names it. The key itself is storage vocabulary and
+# must reach neither a column nor the model — a prompt that is handed "amount_spike" gets it
+# quoted back inside the case note an analyst reads.
+RULE_LABEL = {
+    "amount_spike": "Amount spike",
+    "rapid_burst": "Rapid burst",
+    "new_country_new_device": "New country, new device",
+    "threshold_structuring": "Threshold structuring",
+}
+CHANNEL_LABEL = {
+    "card_present": "Card present", "card_not_present": "Card not present",
+    "mobile_app": "Mobile app", "online_banking": "Online banking",
+}
+
+def channel_label(value) -> str:
+    """Channel names for the eye. A candidate spans several transactions, so this field can
+    hold a comma-separated set — the same shape `country` already takes."""
+    return ", ".join(CHANNEL_LABEL.get(p.strip(), p.strip()) for p in str(value).split(","))
+
+
 RULES = {
     "amount_spike": "a single amount far above this account's own normal",
     "rapid_burst": "many transactions from one account in one day",
@@ -252,14 +272,16 @@ class Anomaly:
             '"confidence": <number 0-1>}')
         user = (
             f"Candidate {c['candidate_id']}\n"
-            f"Rule triggered: {c['rule']} — {RULES[c['rule']]}\n"
+            f"Pattern: {RULE_LABEL[c['rule']]} — {RULES[c['rule']]}\n"
             f"Account: {c['account_ref']} (pseudonymous)\n"
             f"Date: {c['date']}\n"
             f"Transactions in this candidate: {c['txn_count']}\n"
             f"Total amount: EUR {c['amount_eur']}\n"
             f"This account's median transaction: EUR {c['account_median_eur']}\n"
             f"Times that median: {c['times_normal']}\n"
-            f"Category: {c['category']}   Channel: {c['channel']}   Country: {c['country']}")
+            f"Category: {c['category']}   "
+            f"Channel: {CHANNEL_LABEL.get(c['channel'], c['channel'])}   "
+            f"Country: {c['country']}")
         return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
     def parse(self, text: str) -> dict:
@@ -294,7 +316,7 @@ class Anomaly:
 
     def summarise(self, parsed: dict, request: dict) -> str:
         c = request["candidate"]
-        return (f"Raise {c['candidate_id']} — {c['rule'].replace('_', ' ')}, "
+        return (f"Raise {c['candidate_id']} — {RULE_LABEL.get(c['rule'], c['rule'])}, "
                 f"{c['times_normal']}x this account's normal")
 
     def citations(self, parsed: dict, request: dict | None = None) -> list[str]:

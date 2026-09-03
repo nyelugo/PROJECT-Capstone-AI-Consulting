@@ -8,7 +8,7 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.capabilities.anomaly import RULES, transactions_for
+from mvp.capabilities.anomaly import RULES, RULE_LABEL, channel_label, transactions_for
 from mvp.ui import (queue_filters, status_chip, ladder_html, action_bar, bulk_bar,
                     STATUS_LABEL, REASON_LABEL,
                     conf_txt, reason_chip)
@@ -30,6 +30,7 @@ dated, as_at = Q.with_clock(items, "raised")
 df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in dated])
 df["status_label"] = df["status"].map(STATUS_LABEL).fillna(df["status"])
 df["why_held"] = df["reason_code"].map(REASON_LABEL).fillna(df["reason_code"])
+df["pattern"] = df["rule"].map(RULE_LABEL).fillna(df["rule"])
 st.caption(f"Batch as at **{as_at}**. Age is shown because a stale flag is a worse flag — "
            f"but no first-response target applies here: a fraud pattern is not on a "
            f"complaints deadline. **These transactions are synthetic**: the accounts, "
@@ -37,20 +38,20 @@ st.caption(f"Batch as at **{as_at}**. Age is shown because a stale flag is a wor
            f"as a fixture the detector is being shown, not as customer behaviour — what is "
            f"real is how it ranks them. Phase 0 replaces the fixture with your own ledger.")
 
-view = queue_filters(df, extra_facets=[("rule", "Pattern"), ("country", "Country")],
+view = queue_filters(df, extra_facets=[("pattern", "Pattern"), ("country", "Country")],
                      date_col="raised")
 if view.empty:
     st.info("Nothing matches those filters.")
     st.stop()
 
-table = view[["raised", "age_days", "rule", "times_normal", "amount_eur", "txn_count",
+table = view[["raised", "age_days", "pattern", "times_normal", "amount_eur", "txn_count",
               "status_label", "why_held"]]
 sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
     column_config={
         "raised": st.column_config.DateColumn("Raised", width="small"),
         "age_days": st.column_config.NumberColumn("Age", format="%d d", width=64),
-        "rule": st.column_config.TextColumn("Pattern", width="medium"),
+        "pattern": st.column_config.TextColumn("Pattern", width="medium"),
         "times_normal": st.column_config.NumberColumn("× normal", format="%.1f×",
                                                       width="small"),
         "amount_eur": st.column_config.NumberColumn("Amount", format="€%.2f",
@@ -74,7 +75,7 @@ st.divider()
 left, right = st.columns([3, 2])
 with left:
     st.markdown(f"{status_chip(it['status'])}{reason_chip(it['reason_code'])}")
-    st.subheader(it["rule"].replace("_", " ").capitalize())
+    st.subheader(RULE_LABEL.get(it["rule"], it["rule"]))
     st.caption(RULES.get(it["rule"], ""))
     m = st.columns(4)
     m[0].metric("Transactions", int(it["txn_count"]))
@@ -90,6 +91,7 @@ with left:
             st.caption("No rows found for this candidate in the current batch.")
         else:
             show = txns.assign(date=txns["date"].dt.strftime("%Y-%m-%d %H:%M"))
+            show = show.assign(channel=show["channel"].map(channel_label))
             cols = [c for c in ["date", "amount_eur", "category", "channel", "country",
                                 "device_new", "txn_id"] if c in show.columns]
             st.dataframe(show[cols], width="stretch", hide_index=True,
@@ -97,7 +99,7 @@ with left:
                              "date": st.column_config.TextColumn("When", width="small"),
                              "amount_eur": st.column_config.NumberColumn("Amount", format="€%.2f"),
                              "category": st.column_config.TextColumn("Category"),
-                             "channel": st.column_config.TextColumn("Channel", width="small"),
+                             "channel": st.column_config.TextColumn("Channel", width="medium"),
                              "country": st.column_config.TextColumn("Country", width="small"),
                              "device_new": st.column_config.CheckboxColumn("New device", width="small"),
                              "txn_id": st.column_config.TextColumn("Transaction", width="small"),
@@ -117,7 +119,7 @@ with right:
         st.html(ladder_html(it["reason_code"]))
         st.caption(f"confidence {conf_txt(it['confidence'])} · {it['latency_ms']} ms · "
                    f"{it['model']} · ref {it['ref']} · code `{it['reason_code']}`")
-    st.caption(f"{it['category']} · {it['channel']} · {it['country']}")
+    st.caption(f"{it['category']} · {channel_label(it['channel'])} · {it['country']}")
 
 action_bar(it, capability="anomaly", actions=Q.ANOMALY_ACTIONS,
            proposed=f"{it['rule']} — {it['times_normal']:.1f}× normal")

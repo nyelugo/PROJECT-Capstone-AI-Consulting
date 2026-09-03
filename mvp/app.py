@@ -84,11 +84,10 @@ with st.sidebar:
     st.text_input("Demo operator", key="operator", max_chars=40, value=st.session_state.get(
         "operator", "U. Ahukannah"),
         help="Recorded against every decision you take. A typed name, not an authenticated identity — real sign-in arrives with the Phase 2 case-system integration.")
-    ok_model = R.env("OPENAI_API_KEY") is not None
-    st.caption(
-        f"{':green-badge[model]' if ok_model else ':red-badge[model]'} "
-        f"{':green-badge[monitoring]' if R.env('LANGSMITH_API_KEY') else ':orange-badge[monitoring]'}")
-    if not ok_model:
+    # Two permanently-green chips reading "model" and "monitoring" said nothing a client
+    # could act on and nothing an operator did not already learn the moment a page failed.
+    # The real condition still surfaces, but only when it is real.
+    if R.env("OPENAI_API_KEY") is None:
         st.error("OPENAI_API_KEY is not set. Add it to ~/.config/ironhack/.env.local, "
                  "then reload. The overview still works; the three Assist pages do not.")
     st.caption("It proposes. You decide. Triage, anomaly review and reporting "

@@ -231,6 +231,7 @@ CAPABILITY_LABEL = {"triage": "Complaint triage", "anomaly": "Anomaly review",
 NO_TEAM = "No team proposed"
 
 
+
 def team_label(team: str) -> str:
     """A team name for the eye. HUMAN_REVIEW is the classifier's sentinel for "no queue in the
     taxonomy fits", not a department, and must never appear on an axis beside real ones."""
