@@ -311,6 +311,7 @@ out = {
                  "months. This is the volume at which it would."),
     },
     "productised": productised,
+    "consultant_day_rate_eur": DAY_RATE,
     "oversight_inhouse_day_eur": round(inhouse_day, 2),
     "levers_36m_central_roi_pct": LEVERS,
     "assumptions": {k: {"value": v[0], "kind": v[1], "basis": v[2]} for k, v in A2.items()},

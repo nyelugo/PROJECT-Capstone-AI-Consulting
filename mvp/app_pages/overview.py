@@ -33,6 +33,7 @@ from mvp.ui import REASON_LABEL
 
 ROI = Path(__file__).resolve().parents[2] / "cost_estimation" / "roi_model.json"
 
+
 # Near-monochrome plus one accent, matching the deck. Holding an item back is the system
 # behaving well, so the accent is confident rather than cautionary; red is reserved for the
 # one series that must always read zero.
@@ -329,9 +330,10 @@ st.caption("Acceptance is measured only over items someone actually decided. Thi
 st.subheader("What a year of running it costs")
 
 try:
-    comp = json.loads(ROI.read_text())["annual_running_cost_eur"]
+    _roi = json.loads(ROI.read_text())
+    comp = _roi["annual_running_cost_eur"]
 except (OSError, ValueError, KeyError):
-    comp = {}
+    _roi, comp = {}, {}
 
 if comp:
     ai = sum(v for k, v in comp.items() if "Model calls" in k)
@@ -348,13 +350,25 @@ if comp:
         order=alt.Order("eur:Q", sort="descending"),
         tooltip=[alt.Tooltip("band:N"), alt.Tooltip("eur:Q", format=",.2f")]), 110)
     total = sum(comp.values())
-    st.caption(f"**€{total:,.0f} a year to keep running, at the modelled volume.** This is "
-               "the recurring cost — what stops if you stop. The one-off build is not in it. "
-               "The model itself is "
-               f"€{ai:,.2f} of it — {ai / total:.4%}, too small to draw. What this costs is "
-               "platform and people, which is also what you would be deciding to stop paying "
-               "for. Volumes are modelled; the per-item token cost behind the AI band is "
-               "measured from this batch.")
+    ass = _roi.get("assumptions", {})
+    days = ass.get("review_days_per_quarter", {}).get("value")
+    perm = ass.get("platform_eur_month", {}).get("value")
+    vol = _roi.get("break_even_volume", {}).get("this_client_complaints_per_year")
+    inh = _roi.get("oversight_inhouse_day_eur")
+    rate = _roi.get("consultant_day_rate_eur")
+    st.caption(
+        f"**€{total:,.0f} a year to keep running** — what stops if you stop. The one-off "
+        "build is not in it. "
+        f"**No complaint data feeds the two large bands.** Oversight is {days} review-days a "
+        f"quarter at a €{rate} consultant day rate and platform is €{perm} a month "
+        "for hosting, monitoring and logging; both are judgement estimates, and neither "
+        f"moves with volume — the bill is the same at {vol:,} complaints a year or ten times "
+        f"that, so cost per complaint falls as volume rises. Only the AI band is measured "
+        f"from this batch: €{ai:,.2f}, {ai / total:.4%}, too small to draw. Oversight run "
+        f"in-house rather than by a consultant is about €{days * 4 * inh:,.0f}, which is the "
+        "largest single lever here."
+        if days and perm and vol and inh and rate else
+        f"**€{total:,.0f} a year to keep running.** The model itself is €{ai:,.2f} of it.")
 
 st.divider()
 st.caption(

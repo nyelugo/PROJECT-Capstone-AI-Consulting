@@ -105,6 +105,7 @@
     "roi_36m_pct": 16.9,
     "note": "The build is bespoke today. Amortising it across five mid-size firms is what turns the same capability from a loss into a return for a client this size. It is a commercial decision, not a technical one."
   },
+  "consultant_day_rate_eur": 700,
   "oversight_inhouse_day_eur": 283.05,
   "levers_36m_central_roi_pct": {
     "as proposed \u2014 bespoke build, consultant-run oversight": -31.0,
