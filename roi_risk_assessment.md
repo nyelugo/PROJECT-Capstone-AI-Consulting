@@ -92,6 +92,7 @@ would have reached us anyway, not a promise to police every payment.
 | UC-1 triage — handler time displaced (6 min → 3 min per complaint, 2,426 complaints) | €4,578 | conservative |
 | UC-3 reporting — drafting time displaced (10 person-days a year) | €2,830 | conservative |
 | UC-2 anomaly — losses avoided by catching unauthorised transactions earlier | €6,876 | central |
+| ↳ *rests on 7.4% of complaints being unauthorised — a rate measured on the US proxy corpus, not on this client* | | |
 | UC-1 triage — ombudsman escalations avoided by routing correctly first time | €3,042 | central |
 | **Conservative total** | **€7,408** | |
 | **Central total** | **€17,326** | |
@@ -150,7 +151,7 @@ repeated here.
 |---|---:|---|---|
 | `report_days_per_quarter_now` | 5 | judgement | Person-days assembling the quarterly complaints report by hand |
 | `report_time_reduction_pct` | 50 | judgement | Share of drafting time displaced; the review still happens in full |
-| `fraud_unauth_share_pct` | 7.4 | measured | Share of the reference corpus that is fraud or unauthorised transactions (810 + 437 of 16,839) |
+| `fraud_unauth_share_pct` | 7.4 | measured, **on the proxy corpus** | 810 + 437 of 16,839 US CFPB complaints. Measured accurately, but on US regulatory-escalation data standing in for an EU retail book — the issue *mix* is what transfers, not the rate itself. Phase 0 replaces it with the client's own |
 | `earlier_detection_rate_pct` | 15 | judgement | **The softest number in this model.** Share of those cases caught before the customer complains |
 | `avg_redress_gbp` | 215 | sourced | FCA aggregate complaints data 2025 H2 |
 | `avoided_ombudsman_cases` | 4 | judgement | Escalations avoided per year. Explicitly **not** claimed today — the pilot exists to test it |

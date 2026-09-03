@@ -74,10 +74,16 @@ A2 = {
         "flag rate the full book would raise ~154,000 a month. UC-2 is costed as a reviewed "
         "batch on purpose; the unbounded version is R9, and it is arithmetic, not a worry"),
     # -- token costs for the two new capabilities
-    "report_tokens_in": (900, "measured", "fact sheet + instruction, mvp/capabilities/reporting.py"),
-    "report_tokens_out": (180, "measured", "3-5 sentences plus keys"),
-    "anomaly_tokens_in": (420, "measured", "candidate record + instruction, mvp/capabilities/anomaly.py"),
-    "anomaly_tokens_out": (120, "measured", "case note plus next check"),
+    "report_tokens_in": (900, "estimate",
+        "sized from the prompt in mvp/capabilities/reporting.py, not counted from an API "
+        "response. Measured across all four sections 2026-09-03: 408 in / 144 out mean. The "
+        "costed figure is deliberately left at the higher estimate"),
+    "report_tokens_out": (180, "estimate", "as above; measured mean 144"),
+    "anomaly_tokens_in": (420, "estimate",
+        "sized from the prompt in mvp/capabilities/anomaly.py, not counted from an API "
+        "response. Measured over six candidates 2026-09-03: 314 in / 94 out mean. The costed "
+        "figure is deliberately left at the higher estimate"),
+    "anomaly_tokens_out": (120, "estimate", "as above; measured mean 94"),
     "price_in_per_1m_usd": (0.15, "sourced", "OpenAI list price, gpt-4o-mini input"),
     "price_out_per_1m_usd": (0.60, "sourced", "OpenAI list price, gpt-4o-mini output"),
     "usd_eur": (0.92, "judgement", "rounded mid-market rate, stated rather than hidden"),

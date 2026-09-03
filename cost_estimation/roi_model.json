@@ -175,23 +175,23 @@
     },
     "report_tokens_in": {
       "value": 900,
-      "kind": "measured",
-      "basis": "fact sheet + instruction, mvp/capabilities/reporting.py"
+      "kind": "estimate",
+      "basis": "sized from the prompt in mvp/capabilities/reporting.py, not counted from an API response. Measured across all four sections 2026-09-03: 408 in / 144 out mean. The costed figure is deliberately left at the higher estimate"
     },
     "report_tokens_out": {
       "value": 180,
-      "kind": "measured",
-      "basis": "3-5 sentences plus keys"
+      "kind": "estimate",
+      "basis": "as above; measured mean 144"
     },
     "anomaly_tokens_in": {
       "value": 420,
-      "kind": "measured",
-      "basis": "candidate record + instruction, mvp/capabilities/anomaly.py"
+      "kind": "estimate",
+      "basis": "sized from the prompt in mvp/capabilities/anomaly.py, not counted from an API response. Measured over six candidates 2026-09-03: 314 in / 94 out mean. The costed figure is deliberately left at the higher estimate"
     },
     "anomaly_tokens_out": {
       "value": 120,
-      "kind": "measured",
-      "basis": "case note plus next check"
+      "kind": "estimate",
+      "basis": "as above; measured mean 94"
     },
     "price_in_per_1m_usd": {
       "value": 0.15,
