@@ -223,6 +223,13 @@ def ladder_html(reason_code: str) -> str:
             "line-height:1.7'>" + "<br>".join(out) + "</div>")
 
 
+SLA_LABEL = {"breached": "Past target", "due soon": "Due soon", "on track": "On track"}
+
+# Facets filter on the stored value but must not show it. "breached" is the system's word;
+# the queue above it says "Past target" and so does the badge on the case.
+FACET_LABEL = {"sla": SLA_LABEL}
+
+
 def queue_filters(df: pd.DataFrame, *, extra_facets=(), date_col: str = "received"):
     """Status, facets and free text. Returns the filtered frame.
 
@@ -238,12 +245,15 @@ def queue_filters(df: pd.DataFrame, *, extra_facets=(), date_col: str = "receive
             default="Needs you", key=f"show_{date_col}")
         statuses = c[1].multiselect("Status", present, default=[],
                                     key=f"st_{date_col}",
+                                    format_func=lambda v: STATUS_LABEL.get(v, v),
                                     help="Leave empty to use the Show setting")
         picked = {}
         for i, (col, label) in enumerate(extra_facets):
             opts = sorted(x for x in df[col].dropna().unique() if str(x).strip())
+            fmt = FACET_LABEL.get(col, {})
             picked[col] = c[2 + i].multiselect(label, opts, default=[],
-                                               key=f"f_{col}_{date_col}")
+                                               key=f"f_{col}_{date_col}",
+                                               format_func=lambda v: fmt.get(v, v))
         term = c[-1].text_input("Search", "", key=f"q_{date_col}",
                                 placeholder="text in this row")
 

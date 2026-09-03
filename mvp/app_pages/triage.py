@@ -9,7 +9,8 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.ui import (queue_filters, status_chip, sla_chip, ladder_html,
+from mvp.ui import (queue_filters, status_chip, sla_chip, ladder_html, SLA_LABEL,
+                    STATUS_LABEL, REASON_LABEL,
                     action_bar, bulk_bar, conf_txt, reason_chip)
 
 st.title("Complaint triage")
@@ -26,11 +27,16 @@ latest = Q.latest_by_item()
 dated, as_at = Q.with_clock(items, "received")
 df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in dated])
 
+# Display columns. The raw values stay on the frame because the filters, the deep link from
+# Overview and the action bar all key off them; only what the eye reads is mapped.
+df["sla_label"] = df["sla"].map(SLA_LABEL).fillna("")
+df["status_label"] = df["status"].map(STATUS_LABEL).fillna(df["status"])
+df["why_held"] = df["reason_code"].map(REASON_LABEL).fillna(df["reason_code"])
 breached = int((df["sla"] == Q.BREACHED).sum())
 due = int((df["sla"] == Q.DUE_SOON).sum())
 c1, c2, c3 = st.columns(3)
 c1.metric("Queue as at", as_at)
-c2.metric("Past the target", breached, help=f"Older than {Q.SLA_DAYS} days")
+c2.metric("Past target", breached, help=f"Older than {Q.SLA_DAYS} days")
 c3.metric(f"Due within {Q.DUE_SOON_DAYS} days", due)
 st.caption(f"Target is **{Q.SLA_DAYS} days** to first response — an assumption; your own "
            f"target is set in Phase 0. This batch is a historical sample spanning "
@@ -43,27 +49,25 @@ st.caption(f"Target is **{Q.SLA_DAYS} days** to first response — an assumption
 
 view = queue_filters(df, extra_facets=[("product", "Product"),
                                        ("proposed_team", "Proposed team"),
-                                       ("sla", "Deadline")])
+                                       ("sla", "Against target")])
 if view.empty:
     st.info("Nothing matches those filters.")
     st.stop()
 
-table = view[["received", "age_days", "days_left", "sla", "product", "proposed_team",
-              "confidence", "status", "reason_code"]]
+table = view[["received", "age_days", "sla_label", "product", "proposed_team",
+              "status_label", "why_held"]]
 sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
     column_config={
         "received": st.column_config.DateColumn("Received", width="small"),
         "age_days": st.column_config.NumberColumn("Age", format="%d d", width="small"),
-        "days_left": st.column_config.NumberColumn("Left", format="%d d", width="small",
-                                                   help="Days to the first-response target"),
-        "sla": st.column_config.TextColumn("Deadline", width="small"),
+        "sla_label": st.column_config.TextColumn(
+            "Against target", width="medium",
+            help=f"Measured against the {Q.SLA_DAYS}-day first-response target"),
         "product": st.column_config.TextColumn("Product", width="medium"),
         "proposed_team": st.column_config.TextColumn("Proposed team", width="medium"),
-        "confidence": st.column_config.ProgressColumn(
-            "Confidence", min_value=0, max_value=1, format="%.2f", width="small"),
-        "status": st.column_config.TextColumn("Status", width="small"),
-        "reason_code": st.column_config.TextColumn("Why held", width="medium"),
+        "status_label": st.column_config.TextColumn("Status", width="medium"),
+        "why_held": st.column_config.TextColumn("Why held", width="medium"),
     })
 
 picked = sel.selection.rows

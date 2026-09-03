@@ -10,6 +10,7 @@ import streamlit as st
 from mvp import queue_store as Q
 from mvp.capabilities.anomaly import RULES, transactions_for
 from mvp.ui import (queue_filters, status_chip, ladder_html, action_bar, bulk_bar,
+                    STATUS_LABEL, REASON_LABEL,
                     conf_txt, reason_chip)
 
 st.title("Anomaly review")
@@ -25,6 +26,8 @@ if not items:
 latest = Q.latest_by_item()
 dated, as_at = Q.with_clock(items, "raised")
 df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in dated])
+df["status_label"] = df["status"].map(STATUS_LABEL).fillna(df["status"])
+df["why_held"] = df["reason_code"].map(REASON_LABEL).fillna(df["reason_code"])
 st.caption(f"Batch as at **{as_at}**. Age is shown because a stale flag is a worse flag — "
            f"but no first-response target applies here: a fraud pattern is not on a "
            f"complaints deadline. **These transactions are synthetic**: the accounts, "
@@ -39,7 +42,7 @@ if view.empty:
     st.stop()
 
 table = view[["raised", "age_days", "rule", "times_normal", "amount_eur", "txn_count",
-              "status", "reason_code"]]
+              "status_label", "why_held"]]
 sel = st.dataframe(
     table, width="stretch", hide_index=True, on_select="rerun", selection_mode="multi-row",
     column_config={
@@ -51,8 +54,8 @@ sel = st.dataframe(
         "amount_eur": st.column_config.NumberColumn("Amount", format="€%.2f",
                                                     width="small"),
         "txn_count": st.column_config.NumberColumn("Txns", width="small"),
-        "status": st.column_config.TextColumn("Status", width="small"),
-        "reason_code": st.column_config.TextColumn("Why held", width="medium"),
+        "status_label": st.column_config.TextColumn("Status", width="medium"),
+        "why_held": st.column_config.TextColumn("Why held", width="medium"),
     })
 
 picked = sel.selection.rows
