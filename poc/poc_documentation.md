@@ -135,6 +135,15 @@ only have appeared on re-import, as an auth error, on a demo day.*
    the guard fires and the case goes to review with a reason code.
 5. Check LangSmith project **`capstone-triage-live`** for the trace.
 
+**Use `Run demo`, not the webhook, on the cohort instance.** The `Complaint received` webhook
+is the production entry point and is correct in the export, but its **test** URL does not work
+on the shared cohort n8n: clicking Execute returns `{"waitingForWebhook": true}` and the canvas
+says it is listening, while every POST to the URL n8n itself publishes answers
+`404 — webhook "complaint-triage" is not registered`. That was checked from two clients, in
+parallel, and with both URL forms. One process accepts the registration and another serves
+`/webhook-test/*` without knowing about it, so it is a property of that deployment rather than
+of this workflow — the same export runs green end to end from the manual trigger.
+
 **Verify the guard logic without n8n at all:**
 
 ```bash
