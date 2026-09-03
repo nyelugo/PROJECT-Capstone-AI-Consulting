@@ -14,15 +14,17 @@ rules hold everywhere below:
     anything.
   * Nothing modelled appears next to something measured. The payback curve is the most
     CEO-relevant picture in the project and it is deliberately absent: every chart here is
-    measured from this batch, and mixing a 69-month projection in would undo that.
+    measured from this batch, and mixing a 69-month projection in would undo that. The
+    cost chart went the same way on 2026-09-03 (story C5). It was that model's other
+    half, so keeping it while excluding payback showed cost with no value; and it could
+    not move with the data, because nothing in it was fed by complaints. This system
+    records latency and model name but never token usage, so it has no measured cost.
 
 The ops lead's page was folded in here (2026-09-03). Its own docstring called one screen
 serving both personas the MVP's original design error; the counter-argument that won is that
 Chleo and the ops lead were reading the same system, and two pages meant two places for the
 same figure to drift. Stories O1-O4 are served by the workload and agreement sections below.
 """
-import json
-from pathlib import Path
 
 import altair as alt
 import pandas as pd
@@ -31,7 +33,6 @@ import streamlit as st
 from mvp import queue_store as Q
 from mvp.ui import REASON_LABEL
 
-ROI = Path(__file__).resolve().parents[2] / "cost_estimation" / "roi_model.json"
 
 
 # Near-monochrome plus one accent, matching the deck. Holding an item back is the system
@@ -325,50 +326,6 @@ st.caption("Acceptance is measured only over items someone actually decided. Thi
            "for calibrating the system, never for evaluating a person — using it for "
            "performance management would breach purpose limitation under GDPR and move the "
            "system into Annex III(4) of the AI Act at the same time.")
-
-# ------------------------------------------------------- 8. what a year costs
-st.subheader("What a year of running it costs")
-
-try:
-    _roi = json.loads(ROI.read_text())
-    comp = _roi["annual_running_cost_eur"]
-except (OSError, ValueError, KeyError):
-    _roi, comp = {}, {}
-
-if comp:
-    ai = sum(v for k, v in comp.items() if "Model calls" in k)
-    cost = pd.DataFrame([
-        {"band": "Human oversight", "eur": sum(v for k, v in comp.items() if "oversight" in k)},
-        {"band": "Platform", "eur": sum(v for k, v in comp.items() if "Platform" in k)},
-        {"band": f"AI — model calls (€{ai:,.2f})", "eur": ai}])
-    _chart(alt.Chart(cost).mark_bar(size=34).encode(
-        x=alt.X("eur:Q", stack="zero", title=None,
-                axis=alt.Axis(format="~s", tickCount=4)),
-        color=alt.Color("band:N", title=None, sort=None,
-                        scale=alt.Scale(range=[SLATE, "#A8B3C2", ACCENT]),
-                        legend=alt.Legend(orient="top", offset=4, columns=3)),
-        order=alt.Order("eur:Q", sort="descending"),
-        tooltip=[alt.Tooltip("band:N"), alt.Tooltip("eur:Q", format=",.2f")]), 110)
-    total = sum(comp.values())
-    ass = _roi.get("assumptions", {})
-    days = ass.get("review_days_per_quarter", {}).get("value")
-    perm = ass.get("platform_eur_month", {}).get("value")
-    vol = _roi.get("break_even_volume", {}).get("this_client_complaints_per_year")
-    inh = _roi.get("oversight_inhouse_day_eur")
-    rate = _roi.get("consultant_day_rate_eur")
-    st.caption(
-        f"**€{total:,.0f} a year to keep running** — what stops if you stop. The one-off "
-        "build is not in it. "
-        f"**No complaint data feeds the two large bands.** Oversight is {days} review-days a "
-        f"quarter at a €{rate} consultant day rate and platform is €{perm} a month "
-        "for hosting, monitoring and logging; both are judgement estimates, and neither "
-        f"moves with volume — the bill is the same at {vol:,} complaints a year or ten times "
-        f"that, so cost per complaint falls as volume rises. Only the AI band is measured "
-        f"from this batch: €{ai:,.2f}, {ai / total:.4%}, too small to draw. Oversight run "
-        f"in-house rather than by a consultant is about €{days * 4 * inh:,.0f}, which is the "
-        "largest single lever here."
-        if days and perm and vol and inh and rate else
-        f"**€{total:,.0f} a year to keep running.** The model itself is €{ai:,.2f} of it.")
 
 st.divider()
 st.caption(

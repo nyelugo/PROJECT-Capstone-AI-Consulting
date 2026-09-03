@@ -25,7 +25,7 @@ it daily to decide where to point her team. These were two pages until 2026-09-0
 them had been a deliberate correction to an earlier single screen, and the split cost more
 than it bought: the same figure was computed in two places and had already drifted apart, and
 the ops page's headline — complaints past target — was an artefact of loading a pre-aged
-corpus rather than a backlog anyone could work. One page, eight charts, one definition of
+corpus rather than a backlog anyone could work. One page, seven charts, one definition of
 each number.
 
 **The Round 1 dashboard is not in here.** It sized an opportunity from public data for a
@@ -63,7 +63,7 @@ for the wrong reason, and the entire claim of this system is that a refusal says
 
 | Page | Who it is for | What it shows | The action |
 |---|---|---|---|
-| **Overview** | Chleo weekly, ops lead daily | Eight charts: weekly intake, what it did with what it read, why it held back, what is waiting and past target, agreement, where the model is wrong, rubber-stamping, and cost | Open the past-target queue, filtered |
+| **Overview** | Chleo weekly, ops lead daily | Seven charts: weekly intake, what it did with what it read, why it held back, what is waiting and past target, agreement, where the model is wrong, and rubber-stamping. No cost: nothing in the cost model is fed by complaint data | Open the past-target queue, filtered |
 | **Complaint triage** | Handler | A standing queue, already classified. Proposed team, confidence, the sentence that decided it | Accept · reroute · escalate. Tick several for a bulk action |
 | **Anomaly review** | Fraud analyst | A standing queue, ranked by departure from each account's own normal. Case note already written | Escalate · dismiss · needs more |
 | **Reporting assistance** | Compliance officer | The **whole return for a chosen period**, all sections drafted, every figure checked against what this system computed for that period | Sign off · reject, **per section** |

@@ -65,8 +65,15 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > **C5.** As Chleo, I want to know **what it cost me**, so that I can hold it against the
 > value it claims.
 > *Accept: spend for the period, and the split between AI and oversight.*
-> **MET** — batch cost and annual, read from `roi_model.json` so it cannot disagree with the
-> business case. Weakened by C3: a cost with no period is hard to act on.
+> **NOT MET** — removed from the MVP on 2026-09-03. Every figure it showed came from
+> `roi_model.json`, not from complaints: platform and oversight are *judgement* estimates
+> that no complaint data feeds and that do not move with volume, and even the per-batch
+> figure was token **estimates** priced at list — this system records latency and model
+> name, never token usage, so it has no measured cost to report. A modelled figure sitting
+> beside seven measured charts borrowed authority it had not earned, and showed the system's
+> cost with none of its value while the payback curve was excluded for being modelled. The
+> business case answers this properly and whole, with its scenarios, sensitivity and
+> break-even, in `roi_risk_assessment.md`.
 
 > **C6.** As Chleo, I want reassurance that **nothing reached a customer**, so that I can
 > answer my board's first question.
@@ -259,19 +266,21 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 
 | | Chleo | Ops lead | Handler | Analyst | Compliance | Audit | **Total** |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| MET | 5 | 4 | 6 | 3 | 6 | 4 | **28** |
+| MET | 4 | 4 | 6 | 3 | 6 | 4 | **27** |
 | PARTIAL | 0 | 0 | 1 | 0 | 0 | 0 | **1** |
-| NOT MET | 1 | 0 | 0 | 1 | 0 | 1 | **3** |
+| NOT MET | 2 | 0 | 0 | 1 | 0 | 1 | **4** |
 
-**28 of 32 fully met.** The ops lead is at **100%**. Chleo is one short, and deliberately so:
-C4 was descoped on 2026-09-03 rather than left unbuilt. The handler is also one short, and
-that one waits on the case system. What is left belongs to the analyst, the compliance
-officer and the auditor.
+**27 of 32 fully met.** The ops lead is at **100%**. Chleo is two short, both by decision on
+2026-09-03 rather than by omission: C4's switch was withdrawn, and C5's cost display was
+removed because nothing in it was fed by complaint data. The handler is one short, and that
+one waits on the case system. What is left belongs to the analyst, the compliance officer and
+the auditor.
 
 ## What is left
 
-**The ops lead is fully served; Chleo is served except for the switch she asked for, which
-was withdrawn rather than built.** The remaining shortfalls belong to the three roles outside
+**The ops lead is fully served. Chleo's two shortfalls are both deliberate withdrawals** —
+the capability switch, and a cost display the MVP had no measured data to support. The
+remaining shortfalls belong to the three roles outside
 it.
 
 **1 · The analyst cannot see the transactions (A3).** Only aggregates are shown; `txn_ids`
