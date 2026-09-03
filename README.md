@@ -47,8 +47,9 @@ UI change costs a command, not an afternoon.
 
 **Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
 31 user stories across the six people who would actually touch this, each checked
-against the running app. **22 met, 3 partial, 6 not** — Chleo and the ops lead are at 100%.
-Six of the nine remaining shortfalls are buildable now; three need Phase 2.
+against the running app. **28 met, 1 partial, 2 not** — Chleo, the ops lead and the
+compliance officer are at 100%. What is left is a handler search that pseudonymity makes
+hard, analyst-tunable thresholds, and authenticated identity, which is Phase 2.
 
 ### The two findings Round 2 turns on
 

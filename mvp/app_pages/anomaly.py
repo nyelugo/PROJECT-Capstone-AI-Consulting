@@ -8,7 +8,7 @@ import pandas as pd
 import streamlit as st
 
 from mvp import queue_store as Q
-from mvp.capabilities.anomaly import RULES
+from mvp.capabilities.anomaly import RULES, transactions_for
 from mvp.ui import (queue_filters, status_chip, ladder_html, action_bar, bulk_bar,
                     conf_txt)
 
@@ -80,6 +80,30 @@ with left:
     m[1].metric("Total", f"€{it['amount_eur']:,.0f}")
     m[2].metric("Account median", f"€{it['account_median_eur']:,.0f}")
     m[3].metric("Times normal", f"{it['times_normal']:.1f}×")
+    # The aggregate is the claim; these are the rows it was made from. An analyst who cannot
+    # see the transactions is being asked to take the case note on trust.
+    txns = transactions_for(it["item_id"])
+    noun = "transaction" if len(txns) == 1 else "transactions"
+    with st.expander(f"The {len(txns)} {noun} behind this", expanded=True):
+        if txns.empty:
+            st.caption("No rows found for this candidate in the current batch.")
+        else:
+            show = txns.assign(date=txns["date"].dt.strftime("%Y-%m-%d %H:%M"))
+            cols = [c for c in ["date", "amount_eur", "category", "channel", "country",
+                                "device_new", "txn_id"] if c in show.columns]
+            st.dataframe(show[cols], width="stretch", hide_index=True,
+                         column_config={
+                             "date": st.column_config.TextColumn("When", width="small"),
+                             "amount_eur": st.column_config.NumberColumn("Amount", format="€%.2f"),
+                             "category": st.column_config.TextColumn("Category"),
+                             "channel": st.column_config.TextColumn("Channel", width="small"),
+                             "country": st.column_config.TextColumn("Country", width="small"),
+                             "device_new": st.column_config.CheckboxColumn("New device", width="small"),
+                             "txn_id": st.column_config.TextColumn("Transaction", width="small"),
+                         })
+            st.caption(f"Account median €{it['account_median_eur']:,.2f} — these total "
+                       f"€{txns['amount_eur'].sum():,.2f}, {it['times_normal']:.1f}× that median.")
+
     if it["explanation"]:
         st.markdown("**Case note:**")
         st.info(it["explanation"])

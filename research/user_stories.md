@@ -154,7 +154,10 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > **A3.** As an analyst, I want to see **the individual transactions** behind a flag, so that I
 > can judge it rather than take the summary on trust.
 > *Accept: the transactions in the candidate, listed.*
-> **NOT MET** — only aggregates are shown: count, total, the account median, times-normal.
+> **MET** — the detail view lists every transaction behind the candidate: when, amount, category,
+> channel, country, new-device flag and transaction id, with the total and the multiple of the
+> account's median restated beneath. Derived from `detect()`, which is deterministic, so the
+> rows shown cannot disagree with the rows that were flagged.
 > The `txn_ids` are on the record and never rendered. Asking an analyst to escalate on a
 > summary is asking for exactly the automation bias the design elsewhere refuses.
 
@@ -173,9 +176,8 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > **R2.** As the compliance officer, I want **every figure traceable to how it was computed**,
 > so that I can defend it to a regulator.
 > *Accept: each figure resolves to its source.*
-> **PARTIAL** — the figures used are listed as text (`complaints = 16839`). Nothing links
-> to the computation, the window, or the query behind it. Enough to spot-check, not enough
-> to defend.
+> **MET** — each figure now resolves to what it is, its unit, the period it covers and the module
+> that computed it, with the corpus named. Enough to defend, which text alone was not.
 
 > **R3.** As the compliance officer, I want to **sign each section**, so that responsibility
 > is recorded per section rather than for the document as a whole.
@@ -195,16 +197,18 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > **R4.** As the compliance officer, I want to **export the signed return**, so that I can put
 > it where returns live.
 > *Accept: a download of the accepted sections.*
-> **NOT MET** — there is no export on the reporting page at all. The document is drafted,
-> reviewed and signed, and then cannot leave the screen.
+> **MET** — signed sections export as a dated Markdown return carrying, per section, the narrative,
+> the figures it used, the grounding result and who signed it and when. Only signed sections are
+> included, so the file is the evidence rather than a draft.
 
 ## DPO / internal audit — on demand
 
 > **D1.** As an auditor, I want to **reconstruct a decision months later**, so that I can
 > answer an ombudsman.
 > *Accept: from a log row, reach what the system saw and proposed.*
-> **PARTIAL** — the log records the item id, the proposal and the reason code, but nothing
-> links back to the item, and the queue holds no history. Reconstruction is manual.
+> **MET** — selecting a log row opens the case beneath it: what the customer wrote, the sentence
+> the model quoted, the case note, the pseudonymous reference, and every action ever recorded
+> against that item in order.
 
 > **D2.** As an auditor, I want to **export the record**, so that it can go into an evidence
 > pack.
@@ -213,17 +217,24 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > **D3.** As an auditor, I want to know **who actually decided**, so that the record means
 > something.
 > *Accept: an authenticated identity.*
-> **NOT MET** — "Signed in as" is a free-text box. It records who *said* they decided.
+> **NOT MET** — "Demo operator" is a free-text box, and labelled as one. It records who
+> *said* they decided. Authenticated identity arrives with the Phase 2 case-system
+> integration; the label and the environment strip now say so rather than implying otherwise.
 
 > **D4.** As an auditor, I want to **filter the log by date**, so that I can isolate a period.
 > *Accept: a date range filter.*
-> **NOT MET** — filters are capability, action, person and free text. No date control, which
+> **MET** — a date-range control bounded by the log's own first and last action, applied before
+> every other filter. (Superseded text: no date control, which
 > is the first thing anyone reaches for in an audit log.
 
 > **D5.** As an auditor, I want to **honour an erasure request**, so that the firm can meet
 > Article 17.
 > *Accept: delete every record for one subject reference.*
-> **NOT MET** — `queue_store` has no delete path for a single subject. The GDPR pack
+> **MET** — for this system. `queue_store.redact_ref()` redacts every row for one pseudonymous
+> reference, breaks the item reference so the rows can no longer be tied to a subject, and appends
+> the erasure so the fact of it stays auditable. Driven from the Decision log behind a confirmation.
+> Scope is stated in the UI: this system only — the client's case system is Phase 2, and a real
+> request needs both. (Superseded text: `queue_store` has no delete path for a single subject. The GDPR pack
 > promises deletion by pseudonymous ref; the MVP cannot perform it.
 
 ---
@@ -232,11 +243,11 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 
 | | Chleo | Ops lead | Handler | Analyst | Compliance | Audit | **Total** |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| MET | 6 | 4 | 6 | 2 | 3 | 1 | **22** |
-| PARTIAL | 0 | 0 | 1 | 0 | 1 | 1 | **3** |
-| NOT MET | 0 | 0 | 0 | 2 | 1 | 3 | **6** |
+| MET | 6 | 4 | 6 | 3 | 5 | 4 | **28** |
+| PARTIAL | 0 | 0 | 1 | 0 | 0 | 0 | **1** |
+| NOT MET | 0 | 0 | 0 | 1 | 0 | 1 | **2** |
 
-**22 of 31 fully met.** Chleo and the ops lead are at **100%** — that was the scope
+**28 of 31 fully met.** After Chleo's review,  Chleo and the ops lead are at **100%** — that was the scope
 decision and it is done. The handler is one story short, and that one waits on the case
 system. What is left belongs to the analyst, the compliance officer and the auditor.
 

@@ -111,6 +111,55 @@ def record(item_id: str, action: str, *, capability: str, by: str,
         EVENTS_FILE.write_text(json.dumps(log, indent=2))
 
 
+ERASED = "[erased]"
+
+
+def refs_index() -> dict[str, str]:
+    """item_id -> the pseudonymous reference it belongs to, across both queues."""
+    out = {}
+    for item in load_triage() + load_anomaly():
+        if item.get("ref"):
+            out[item["item_id"]] = item["ref"]
+    return out
+
+
+def redact_ref(ref: str, *, by: str) -> int:
+    """Erasure by pseudonymous reference. Returns how many rows were redacted.
+
+    The log is append-only, so nothing is deleted. What changes is the content: the free-text
+    fields that could carry personal data are replaced, and the item reference is broken so a
+    row can no longer be tied back to a subject. An erasure event is then appended, because
+    the fact that an erasure happened is itself something an auditor has to be able to see.
+
+    Scope, stated plainly: this erases from THIS system's record. Erasing from the client's
+    case system is Phase 2 and is not simulated here, and a real request would need both.
+    """
+    idx = refs_index()
+    targets = {iid for iid, r in idx.items() if r == ref}
+    if not targets:
+        return 0
+    with _lock:
+        log = events()
+        n = 0
+        for e in log:
+            if e.get("item_id") in targets and not e.get("erased"):
+                e["proposed"] = ERASED
+                e["note"] = ERASED
+                e["destination"] = ERASED
+                e["item_id"] = ERASED
+                e["erased"] = True
+                n += 1
+        log.append({
+            "at": datetime.now().isoformat(timespec="seconds"),
+            "item_id": f"erasure:{ref}", "capability": "governance", "action": "erased",
+            "proposed": f"{n} row(s) redacted for one data subject", "reason_code": "",
+            "by": by, "note": "GDPR Art. 17 request, this system only", "destination": "",
+        })
+        EVENTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        EVENTS_FILE.write_text(json.dumps(log, indent=2))
+    return n
+
+
 def latest_by_item() -> dict[str, dict]:
     """The projection the queues read: item_id -> its most recent event."""
     out: dict[str, dict] = {}

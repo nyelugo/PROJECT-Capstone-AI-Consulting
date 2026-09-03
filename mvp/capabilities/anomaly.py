@@ -194,6 +194,25 @@ def _allowed(c: dict) -> set[float]:
     return a
 
 
+@lru_cache(maxsize=1)
+def _txns_by_candidate() -> dict:
+    """candidate_id -> the transaction ids behind it."""
+    return {c["candidate_id"]: list(c["txn_ids"]) for c in detect()}
+
+
+def transactions_for(candidate_id: str):
+    """The individual rows behind a candidate, oldest first.
+
+    Derived from detect() rather than read off the queue. detect() is deterministic — same
+    batch, same candidates, same ids — so this cannot disagree with what was flagged, and it
+    needs no queue rebuild, which would re-call the model for every item and replace the
+    batch the screenshots and the demo recording show.
+    """
+    ids = _txns_by_candidate().get(candidate_id, [])
+    df = load()
+    return df[df["txn_id"].isin(ids)].sort_values("date")
+
+
 class Anomaly:
     name = "anomaly"
     title = "Anomaly flagging"

@@ -12,6 +12,8 @@ kept the last result and showed it under whatever the form said now — so the p
 display a draft of one section while the selector read another, with nothing to say they
 disagreed. A page that silently shows the wrong thing is worse than one that shows nothing.
 """
+import datetime as _dt
+
 import streamlit as st
 
 from mvp import queue_store as Q
@@ -87,6 +89,30 @@ signed = sum(1 for name in store["sections"]
              if latest.get(f"report-{name}", {}).get("action") == "accepted")
 c2.metric("Sections signed off", f"{signed} of {len(store['sections'])}")
 st.caption(f"Drafted for **{store['audience']}** · period **{store['period']}**.")
+
+# R4: a return that cannot leave the screen is not a return. Only signed sections are
+# exported, each with the figures it used and who signed it, so the file is the evidence.
+signed_secs = [(n, sec) for n, sec in store["sections"].items()
+               if (latest.get(f"report-{n}") or {}).get("action") == "accepted"]
+if signed_secs:
+    lines = [f"# Complaints return — {store['period']}",
+             f"", f"Prepared for: {store['audience']}",
+             f"Period: {lo} to {hi}",
+             f"Source: dashboard/metrics.py over the public CFPB corpus (shadow-demo data)",
+             f"Exported: {_dt.datetime.now().strftime('%Y-%m-%d %H:%M')}", ""]
+    for n, sec in signed_secs:
+        pr = latest.get(f"report-{n}") or {}
+        lines += [f"## {n}", "", sec["narrative"], "",
+                  f"*Figures used: {', '.join(sec['citations']) or 'none'}*",
+                  f"*Grounding: {sec['grounding']}*",
+                  f"*Signed off by {pr.get('by','?')} at {str(pr.get('at','')).replace('T',' ')}*",
+                  ""]
+    st.download_button(f"Export the {len(signed_secs)} signed section(s)",
+                       "\n".join(lines).encode("utf-8"),
+                       file_name=f"complaints-return-{lo}-to-{hi}.md",
+                       mime="text/markdown", icon=":material/download:")
+else:
+    st.caption("Sign a section to enable export.")
 st.divider()
 
 for name, sec in store["sections"].items():
@@ -114,8 +140,23 @@ for name, sec in store["sections"].items():
         with a:
             if sec["citations"]:
                 with st.expander(f"The {len(sec['citations'])} figures it used"):
+                    # "complaints = 16839" is enough to spot-check and not enough to defend.
+                    # Each figure now says what it is, its unit, and the period and source it
+                    # was computed over.
+                    rows = []
                     for cite in sec["citations"]:
-                        st.markdown(f"- `{cite}`")
+                        key = cite.split(" = ")[0].strip()
+                        e = sheet.get(key, {})
+                        rows.append({
+                            "Figure": key,
+                            "Value": cite.split(" = ", 1)[1] if " = " in cite else "",
+                            "What it is": e.get("label", "—"),
+                            "Unit": e.get("unit", "—"),
+                        })
+                    st.dataframe(rows, width="stretch", hide_index=True)
+                    st.caption(f"All computed by `dashboard/metrics.py` over "
+                               f"**{lo} to {hi}** of the public CFPB corpus. A figure that is "
+                               f"not on this sheet cannot appear in the draft.")
             if ok:
                 st.caption(f"Grounding check — {sec['grounding']}")
         with b:
