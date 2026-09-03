@@ -67,7 +67,7 @@ Three things are on show, and the second and third matter more than the first:
 
 1. **It classifies.** Product-conditioned — the CFPB issue taxonomy is product-scoped, so a
    model asked to choose from all 64 issues without the product is not being given a hard
-   problem, it is being given an ill-posed one. Conditioning on product took accuracy from
+   problem, it is being given an ill-posed one. Conditioning on product took agreement from
    40% to 60.5%.
 2. **It says why, and the reason is checked.** The model must quote the sentence that drove
    its decision, verbatim. A guard confirms that sentence is really in the complaint. In the

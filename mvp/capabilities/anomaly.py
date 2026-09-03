@@ -245,6 +245,8 @@ class Anomaly:
 
     def parse(self, text: str) -> dict:
         o = parse_json_object(text)
+        if not str(o.get("explanation", "")).strip():
+            raise ValueError("model returned an empty explanation")
         return {"explanation": str(o.get("explanation", "")).strip(),
                 "next_check": str(o.get("next_check", "")).strip(),
                 "confidence": o.get("confidence")}
@@ -253,8 +255,6 @@ class Anomaly:
         c = request["candidate"]
         known = set(load()["txn_id"])
         if not c["txn_ids"] or any(t not in known for t in c["txn_ids"]):
-            return "REJECT_ACCOUNT_NOT_IN_LEDGER"
-        if not parsed["explanation"]:
             return "REJECT_ACCOUNT_NOT_IN_LEDGER"
         return None
 

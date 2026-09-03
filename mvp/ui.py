@@ -12,6 +12,8 @@ the point of this application; it cannot be the fragile part.
 """
 from __future__ import annotations
 
+import copy
+
 from datetime import datetime
 
 import streamlit as st
@@ -25,9 +27,10 @@ STATE_DEFAULTS = {"log": [], "last": {}, "traced": {}, "recorded": set()}
 
 
 def init_state() -> None:
+    # copy, or every session shares the one module-level list/dict/set by reference
     for k, v in STATE_DEFAULTS.items():
         if k not in st.session_state:
-            st.session_state[k] = v
+            st.session_state[k] = copy.deepcopy(v)
 
 
 def _ladder(d) -> str:
@@ -294,6 +297,9 @@ def bulk_bar(rows: "pd.DataFrame", *, capability: str, actions: dict) -> None:
     st.markdown(" ".join(f"{status_chip(s)} ×{n}" for s, n in counts.items()))
 
     st.markdown("**Nothing has happened yet. A person decides.**")
+    # A reroute has to say WHERE, and one bulk button cannot. Offering it here recorded a
+    # blank destination — the omission queue_store calls the most expensive in this system.
+    actions = {a: l for a, l in actions.items() if a not in Q.NEEDS_DESTINATION}
     with st.container(horizontal=True):
         for action, label in actions.items():
             if st.button(f"{label} — all {len(rows)}", key=f"bulk_{capability}_{action}"):

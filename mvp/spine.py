@@ -200,7 +200,9 @@ def run(cap: Capability, request: dict, *, call) -> Decision:
         return rej(code, "scope")
 
     # -- stage 5: does the model think it knows?
-    if not isinstance(confidence, (int, float)):
+    # bool is a subclass of int, so `"confidence": true` would pass an isinstance number
+    # check and then compare as 1 — silently skipping the confidence guard entirely.
+    if isinstance(confidence, bool) or not isinstance(confidence, (int, float)):
         return rej("REJECT_MALFORMED_OUTPUT", "parse", "confidence was not a number")
     if confidence < cap.threshold:
         return rej("REJECT_LOW_CONFIDENCE", "confidence",

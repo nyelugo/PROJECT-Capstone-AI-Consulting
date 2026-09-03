@@ -50,7 +50,9 @@ class Triage:
                 "evidence": str(o.get("evidence", "")).strip()}
 
     def scope_check(self, parsed: dict, request: dict) -> str | None:
-        valid = P.PRODUCT_QUEUES.get(request["product"], [])
+        # validate() compares the STRIPPED product, so strip here too — otherwise
+        # "Credit card " passes validation and then matches no queue at all.
+        valid = P.PRODUCT_QUEUES.get((request.get("product") or "").strip(), [])
         if parsed["queue"] not in valid:
             return "REJECT_QUEUE_NOT_IN_PRODUCT"
         if parsed["queue"] == "OTHER":

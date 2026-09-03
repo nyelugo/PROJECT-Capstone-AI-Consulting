@@ -49,17 +49,18 @@ else:
     st.info("Not enough weeks in the batch to compare.", icon=":material/hourglass_empty:")
 
 wf = pd.DataFrame(weeks)
-st.dataframe(wf[["week", "items", "held", "held_pct", "decided"]], width="stretch",
-             hide_index=True,
-             column_config={
-                 "week": st.column_config.TextColumn("Week", width="small"),
-                 "items": st.column_config.BarChartColumn("Complaints in", y_min=0,
-                                                          y_max=int(wf["items"].max())),
-                 "held": st.column_config.NumberColumn("Held", width="small"),
-                 "held_pct": st.column_config.ProgressColumn("Held %", min_value=0,
-                                                             max_value=100, format="%.0f%%"),
-                 "decided": st.column_config.NumberColumn("Decided by a person",
-                                                          width="small")})
+if weeks:
+    st.dataframe(wf[["week", "items", "held", "held_pct", "decided"]], width="stretch",
+                 hide_index=True,
+                 column_config={
+                     "week": st.column_config.TextColumn("Week", width="small"),
+                     "items": st.column_config.BarChartColumn("Complaints in", y_min=0,
+                                                              y_max=int(wf["items"].max())),
+                     "held": st.column_config.NumberColumn("Held", width="small"),
+                     "held_pct": st.column_config.ProgressColumn("Held %", min_value=0,
+                                                                 max_value=100, format="%.0f%%"),
+                     "decided": st.column_config.NumberColumn("Decided by a person",
+                                                              width="small")})
 
 # ------------------------------------------------------------------------- did it work
 st.subheader("Did it work")

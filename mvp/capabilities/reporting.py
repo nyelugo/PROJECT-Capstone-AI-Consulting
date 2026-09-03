@@ -196,6 +196,8 @@ class Reporting:
 
     def parse(self, text: str) -> dict:
         o = parse_json_object(text)
+        if not str(o.get("narrative", "")).strip():
+            raise ValueError("model returned an empty narrative")
         used = o.get("figures_used") or []
         return {"narrative": str(o.get("narrative", "")).strip(),
                 "figures_used": [str(k) for k in used] if isinstance(used, list) else [],
@@ -204,8 +206,6 @@ class Reporting:
     def scope_check(self, parsed: dict, request: dict) -> str | None:
         allowed = set(SECTIONS[request["section"]]["keys"])
         if any(k not in allowed for k in parsed["figures_used"]):
-            return "REJECT_METRIC_NOT_PUBLISHED"
-        if not parsed["narrative"]:
             return "REJECT_METRIC_NOT_PUBLISHED"
         return None
 
