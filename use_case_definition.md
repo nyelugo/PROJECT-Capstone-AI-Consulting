@@ -110,8 +110,8 @@ greenlight full deployment.
 | 4 | **Grounding integrity** | **Zero** ungrounded outputs reach a person | Every guard rejection is counted; a fabricated quote, an uncomputed figure or a mismatched value never renders | Measured: 4 fabrications caught in 60 Round 1 cases; guards verified in test |
 | 5 | **Reporting time** | ≥50% reduction in hours to first draft of the quarterly complaints report | Timed before/after in the pilot | Not measured — an assumption in the ROI model, explicitly flagged there |
 
-**Criterion 1 is deliberately not claimed today.** The system currently reaches **56.8%
-team-level agreement** with the CFPB's labels — that is `gpt-4o-mini`, the pinned model;
+**Criterion 1 is deliberately not claimed today.** Measured on 2026-08-28 the system reached
+**56.8% team-level agreement** with the CFPB's labels — that is `gpt-4o-mini`, the pinned model;
 `gpt-4o` reaches 60.5% for 16.7× the cost, a gap inside the ±6pp interval at this sample
 size. Asked the same complaint twice, `gpt-4o` agreed with itself 88.0% of the time (exact
 queue), so the disagreement is systematic rather than noise. That is

@@ -218,7 +218,8 @@ scrolling — the same window size the slide screenshots were taken at.
 
 ## What is measured, and what is not
 
-**Triage.** 56.8% team-level agreement with CFPB labels on `gpt-4o-mini`, the pinned model
+**Triage.** 56.8% team-level agreement with CFPB labels on `gpt-4o-mini`, the pinned model,
+measured 2026-08-28
 (`gpt-4o` reaches 60.5% for 16.7× the cost). Asked the same complaint twice, `gpt-4o` agreed
 with itself 88.0% of the time (exact queue; 89.0% at team level), so the disagreement is
 systematic rather than noise. This is

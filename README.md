@@ -112,15 +112,19 @@ before publication). Public data only, per the brief.
 - Median narrative **1,201 characters** (90th pct 3,013) — the actual human workload.
 - Timely response **98.0%**, any relief **19.7%**, monetary relief **12.7%**.
 
-**And the finding the whole pitch rests on:** the classifier reaches **56.8% team-level
-agreement** with the CFPB team labels — **agreement, not accuracy**. That is `gpt-4o-mini`,
+**And the finding the whole pitch rests on:** the classifier reached **56.8% team-level
+agreement** with the CFPB team labels, measured 2026-08-28 — **agreement, not accuracy**. That is `gpt-4o-mini`,
 the model this system actually runs; `gpt-4o` reaches 60.5% for 16.7× the cost per complaint,
 a 3.7-point gap inside the ±6pp interval at this sample size, so the bottleneck is not the
 model. Asked the same complaint twice, `gpt-4o` answers the same way ~9 times in 10, so the
 disagreement is systematic rather than noise; it simply disagrees with a label
 the *complainant* chose from a dropdown. That label is not expert routing ground truth, so
-no accuracy figure exists for this system yet. Creating one is what Phase 0 buys. See
-`classifier/FINDINGS.md`.
+no accuracy figure exists for this system yet. Creating one is what Phase 0 buys.
+
+Re-running the same evaluation on 2026-09-03 returned **61.6%** for the same model on the
+same 240 complaints, while `gpt-4o` reproduced within a third of a point — the hosted model
+moved, not the harness. Both runs are in `classifier/FINDINGS.md`, which is also the sharpest
+argument in the repo for why Phase 0 buys expert labels.
 
 ## Running the dashboard
 

@@ -109,6 +109,45 @@ what a member of the public picked. It is not a record of which team should hand
    quotes its reason, a human confirms. Auto-routing is a decision for after the pilot,
    on real labels.
 
+## The model moved under us — re-measured 2026-09-03
+
+Everything above was measured on **2026-08-28**, and that run remains the baseline the deck,
+the demo and the Round 2 documents were built on. Re-running the same commands six days later
+does not reproduce one of its numbers.
+
+Same seed, same 240 complaints — the sampled `Complaint ID` set was checked and overlaps
+240/240 — same prompt, same temperature 0.
+
+| Measure | 2026-08-28 | 2026-09-03 | |
+|---|---:|---:|---|
+| `gpt-4o` team agreement (volume-weighted) | 60.5% | **60.8%** | reproduces |
+| `gpt-4o-mini` team agreement (volume-weighted) | 56.8% | **61.6%** | **+4.8pp** |
+| `gpt-4o-mini` accuracy on auto-routed items | 61.4% | 65.1% | +3.7pp |
+| Self-agreement, exact queue (temp 1.0) | 88.0% | 82.0% | −6.0pp |
+| Self-agreement, team (temp 1.0) | 89.0% | 88.0% | −1.0pp |
+
+Evidence: `eval_results_gpt-4o-mini_2026-09-03.json`, `eval_results_gpt-4o_2026-09-03.json`,
+`ambiguity_results_2026-09-03.json`, beside the originals.
+
+**What changed is the model, not the harness.** `gpt-4o` came back within a third of a point
+on an identical sample, so the sampling, prompt and scoring are all doing the same thing they
+did. Only `gpt-4o-mini` moved, and 12 of its 240 predictions flipped for a net gain of eight.
+The most likely explanation is that the `gpt-4o-mini` alias now resolves to a newer snapshot;
+nothing in this repo changed. The self-agreement figures are expected to vary — that test runs
+at temperature 1.0 on purpose — and the team-level number, the one the argument uses, held.
+
+**The conclusion survives and gets stronger.** The premium this section charged `gpt-4o` with
+earning — 3.7 points for 16.7× the price — does not reproduce. On the re-run `gpt-4o-mini` is
+*ahead* by 0.8 points at a sixteenth of the cost. "The bottleneck is not the model" was the
+right read; it is now the obvious one.
+
+**And it is the argument for Phase 0, made by accident.** A number the whole pitch rests on
+moved by nearly five points in six days, with no change on our side, because a hosted model
+was updated underneath us. That is exactly why agreement with a public label is not a
+substitute for expert ground truth, and why the AI Act post-market monitoring obligation is a
+real operating cost rather than paperwork. A system whose accuracy claim rests on a vendor
+alias needs to re-measure on a schedule, and needs its own labels to re-measure against.
+
 ## Honest limitations
 
 - 240 complaints per model is enough to rank the options, not enough for a precise figure.
