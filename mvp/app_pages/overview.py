@@ -29,6 +29,10 @@ weeks = Q.by_week(tri_items, "received")
 wow = Q.week_on_week(weeks)
 latest = Q.latest_by_item()
 
+# A percentage over a handful of decisions is not a measurement. One threshold,
+# used by both the weekly figure and the headline rate.
+MIN_SAMPLE = 20
+
 # ------------------------------------------------------------------- was it a normal week
 st.subheader("Was this a normal week")
 if wow:
@@ -38,9 +42,13 @@ if wow:
     c[1].metric("Complaints in", cur["items"], f"{wow['items_delta']:+d} on last week")
     c[2].metric("Held for a person", f"{cur['held_pct']:.0f}%",
                 f"{wow['held_pct_delta']:+.0f} pts", delta_color="inverse")
-    c[3].metric("Agreement", f"{cur['agreement_pct']:.0f}%"
-                if cur["agreement_pct"] is not None else "—",
-                help="Only over items a person decided this week.")
+    wk_decided = cur.get("agreed", 0) + cur.get("disagreed", 0)
+    c[3].metric("Agreement",
+                f"{cur['agreement_pct']:.0f}%" if wk_decided >= MIN_SAMPLE else "Not yet",
+                f"{wk_decided} of {MIN_SAMPLE} decisions" if wk_decided < MIN_SAMPLE else None,
+                delta_color="off",
+                help="Only over items a person decided this week, and only once there are "
+                     f"{MIN_SAMPLE} of them. A rate over three decisions is not a rate.")
     st.caption(f"Against **{prev['week']}**: {prev['items']} complaints, "
                f"{prev['held_pct']:.0f}% held. Nine weeks of receipts are in this batch, so "
                f"the comparison is measured, not modelled — but no NEW work arrives, which "
@@ -96,25 +104,29 @@ agreed, disagreed = tri["agreed"] + ano["agreed"], tri["disagreed"] + ano["disag
 decided = agreed + disagreed
 rate = 100 * agreed / decided if decided else None
 c = st.columns(3)
-c[0].metric("Agreement rate", f"{rate:.0f}%" if rate is not None else "—",
-            help="Measured only over items a person actually decided on. Counting untouched "
-                 "rows as agreement would make an unattended queue look like a triumph.")
+enough = rate is not None and decided >= MIN_SAMPLE
+c[0].metric("Agreement rate",
+            f"{rate:.0f}%" if enough else "Insufficient sample",
+            None if enough else f"{decided} of {MIN_SAMPLE} decisions",
+            delta_color="off",
+            help="Measured only over items a person actually decided on, and only once "
+                 f"there are {MIN_SAMPLE} of them. Counting untouched rows as agreement "
+                 "would make an unattended queue look like a triumph.")
 c[1].metric("Agreed", agreed)
 c[2].metric("Overridden", disagreed,
             help="The most valuable rows in the system — where it was wrong and a person "
                  "caught it. Broken down by team on the Operations page.")
 
-MIN_SAMPLE = 20
 if rate is None:
     st.info("No decisions recorded yet.", icon=":material/hourglass_empty:")
 elif decided < MIN_SAMPLE:
     st.info(f"{decided} of {MIN_SAMPLE} decisions needed before this rate means anything.",
             icon=":material/hourglass_empty:")
-elif rate > 97:
+elif rate > 97 and decided >= MIN_SAMPLE:
     st.warning("Above 97%. A warning, not a success — it usually means people have stopped "
                "reading. See acceptance per handler on the Operations page.",
                icon=":material/warning:")
-elif rate < 75:
+elif rate < 75 and decided >= MIN_SAMPLE:
     st.warning("Below 75%. It is being overridden more than it is trusted.",
                icon=":material/warning:")
 
@@ -138,10 +150,22 @@ c[0].metric("This batch cost", f"€{batch:.4f}" if batch is not None else "—"
             f"{total} items", delta_color="off")
 c[1].metric("Running cost a year", f"€{annual:,}" if annual else "—",
             "at the modelled volume", delta_color="off")
-share = ("—" if ai_share is None else
-         f"{ai_share:.3f}%" if ai_share < 0.1 else f"{ai_share:.1f}%")
-c[2].metric("Of which is the AI", share, "the rest is platform and oversight",
-            delta_color="off")
+ai_year = None
+try:
+    ai_year = sum(v for k, v in roi["annual_running_cost_eur"].items() if "Model calls" in k)
+except (TypeError, KeyError):
+    pass
+if ai_share is None:
+    share, sub = "—", "the rest is platform and oversight"
+elif ai_share < 0.01:
+    share = "<0.01%"
+    sub = (f"€{ai_year:.2f} a year — the rest is platform and oversight"
+           if ai_year is not None else "the rest is platform and oversight")
+else:
+    share, sub = f"{ai_share:.1f}%", "the rest is platform and oversight"
+c[2].metric("Of which is the AI", share, sub, delta_color="off",
+            help="Model calls only. Rounding it to 0.000% next to a real batch cost read as "
+                 "a contradiction; it is small, not absent.")
 
 st.markdown("**Switch a capability off**")
 st.caption("Takes effect immediately, for everyone, and is written to the decision log. "

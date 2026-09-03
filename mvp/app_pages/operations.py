@@ -37,8 +37,16 @@ c[2].metric("Due within 5 days", len(due_open), delta_color="off")
 
 if breached_open:
     st.error(f"**{len(breached_open)} complaints are past the first-response target and "
-             f"nobody has worked them.** Start there — Complaint triage, filter Deadline "
-             f"to “breached”.", icon=":material/priority_high:")
+             f"nobody has worked them.**", icon=":material/priority_high:")
+    # Telling someone where to click is not the same as taking them there. This presets the
+    # triage filters and opens the queue already narrowed to exactly these rows.
+    if st.button(f"Work the {len(breached_open)} breached complaints",
+                 type="primary", icon=":material/arrow_forward:"):
+        st.session_state["show_received"] = "Needs you"
+        st.session_state["f_sla_received"] = [Q.BREACHED]
+        st.session_state["st_received"] = []
+        st.session_state["q_received"] = ""
+        st.switch_page("app_pages/triage.py")
 
 # ------------------------------------------------------------- where the work is sitting
 st.subheader("What is outstanding, by team")
