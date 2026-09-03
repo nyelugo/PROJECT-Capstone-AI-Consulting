@@ -111,7 +111,7 @@ greenlight full deployment.
 | 5 | **Reporting time** | ≥50% reduction in hours to first draft of the quarterly complaints report | Timed before/after in the pilot | Not measured — an assumption in the ROI model, explicitly flagged there |
 
 **Criterion 1 is deliberately not claimed today.** The system currently reaches **60.5%
-agreement** with the CFPB's labels, and 88.0% self-agreement on repeat runs. That is
+agreement** with the CFPB's labels, and 88.0% self-agreement on repeat runs (exact queue). That is
 *agreement, not accuracy*: the CFPB label was chosen by the complainant from a dropdown, not
 assigned by an expert. The model is consistent; it disagrees with an untrained label. Phase 0
 exists to create the ground truth that turns criterion 1 into a real measurement, and it is

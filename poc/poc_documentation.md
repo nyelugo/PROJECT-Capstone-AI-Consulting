@@ -30,23 +30,24 @@ noticing. Change the Python, rebuild, re-import.
 ## What the workflow does, node by node
 
 ```
-  Run demo ──┐                                    ┌─► Safe to propose? ─┬─► Propose to handler
-             ├─► Normalise ─► Classify ─► Validate┤                     └─► Send to human review
-  Webhook ───┘   complaint   complaint   and route│
-                                                  └─► Trace to LangSmith   (leaf)
+  Run demo ─► Sample complaint ─┐                      ┌─► Safe to propose? ─┬─► Propose to handler
+                                ├─► Normalise ─► Classify ─► Validate ┤      └─► Send to human review
+  Complaint received ───────────┘   complaint   complaint   and route  │
+                                                                       └─► Trace to LangSmith   (leaf)
 ```
 
 | # | Node | In | Out |
 |---|---|---|---|
-| 1 | **Run demo** (manual trigger) | A click | The pinned sample complaint |
-| 2 | **Webhook** (POST) | `{product, narrative}` | The same shape as (1), so both entry points converge |
-| 3 | **Normalise complaint** (Code) | Raw request | Validated request + `t0` timestamp. **Rejects** an unknown product, text under 20 characters; caps at 6,000. Throws `REJECT_INVALID_INPUT: <reason>` |
-| 4 | **Classify complaint** (OpenAI) | Product + that product's queues + narrative | `{queue, confidence, evidence}` as JSON |
-| 5 | **Validate and route** (Code) | The model's answer | A `decision` with a **reason code**, applying the five guards in declared order |
-| 6 | **Safe to propose?** (If) | The decision | Branches on `decision`, not on confidence — the guard already decided |
-| 7 | **Propose to handler** | A clean proposal | Queue, team, confidence and the customer's own quoted sentence |
-| 8 | **Send to human review** | Anything rejected | The reason code, in words a handler can act on |
-| 9 | **Trace to LangSmith** (HTTP) | The decision | One monitoring record. **A leaf** |
+| 1 | **Run demo** (Manual Trigger) | A click | Fires the pinned sample, for demoing without a POST |
+| 2 | **Sample complaint** (Set) | The trigger | One pinned complaint, in the same shape the webhook sends |
+| 3 | **Complaint received** (Webhook, POST) | `{product, narrative}` | The same shape as (2), so both entry points converge on (4) |
+| 4 | **Normalise complaint** (Code) | Raw request | Validated request + `t0` timestamp. **Rejects** an unknown product, text under 20 characters; caps at 6,000. Throws `REJECT_INVALID_INPUT: <reason>` |
+| 5 | **Classify complaint** (HTTP → OpenAI) | Product + that product's queues + narrative | `{queue, confidence, evidence}` as JSON |
+| 6 | **Validate and route** (Code) | The model's answer | A `decision` with a **reason code**, applying the five guards in declared order |
+| 7 | **Safe to propose?** (If) | The decision | Branches on `decision`, not on confidence — the guard already decided |
+| 8 | **Propose to handler** (Set) | A clean proposal | Queue, team, confidence and the customer's own quoted sentence |
+| 9 | **Send to human review** (Set) | Anything rejected | The reason code, in words a handler can act on |
+| 10 | **Trace to LangSmith** (HTTP) | The decision | One monitoring record. **A leaf** |
 
 ### Why the trace node is a leaf, and not in line
 

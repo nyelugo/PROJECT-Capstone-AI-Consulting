@@ -212,7 +212,7 @@ scrolling — the same window size the slide screenshots were taken at.
 
 ## What is measured, and what is not
 
-**Triage.** 60.5% agreement with CFPB labels; 88.0% self-agreement on repeat runs. This is
+**Triage.** 60.5% team-level agreement with CFPB labels; 88.0% self-agreement on repeat runs (exact queue). This is
 **agreement, not accuracy** — the CFPB label was chosen by the complainant from a dropdown,
 not assigned by an expert. No accuracy figure exists for this system, and Phase 0 (two
 handlers labelling 300 complaints) is what would create one. See `classifier/FINDINGS.md`.

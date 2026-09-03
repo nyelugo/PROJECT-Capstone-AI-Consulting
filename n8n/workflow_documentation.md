@@ -167,7 +167,7 @@ it. Change the prompt, re-run the build, re-import.
 
 ## What this POC does not prove
 
-- **It does not prove the accuracy is good enough.** It is not. See `FINDINGS.md`: the
+- **It does not prove the accuracy is good enough.** It is not. See `classifier/FINDINGS.md`: the
   public labels are consumer-selected, so the honest position is that accuracy is
   unestablished until the client provides expert-labelled complaints.
 - **It does not handle volume.** One complaint per execution, no batching, no retries, no
