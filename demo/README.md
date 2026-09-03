@@ -5,9 +5,13 @@ hand — so re-recording after a UI change costs a command, not an afternoon.
 
 ```bash
 python -m demo.generate_demo mvp          # the MVP demo — slide 9's backup
-python -m demo.generate_demo poc --login  # sign in to n8n once
 python -m demo.generate_demo poc          # the POC demo — a required deliverable
 ```
+
+**The one human step.** The POC target is the gated cohort n8n instance, and signing in has
+to be done by a person: the assistant's sandbox SIGKILLs any headed browser it launches, so
+it cannot put a visible window on screen at all. Double-click **`demo/n8n_login.command`**,
+sign in, and it detects the session and closes itself. Everything after that is automated.
 
 Output lands in `demo/recordings/`. Needs `ffmpeg`, `playwright`, and `OPENAI_API_KEY`.
 

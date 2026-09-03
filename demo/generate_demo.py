@@ -306,22 +306,43 @@ def looks_like_login(page) -> bool:
     return page.locator('input[type="password"]').count() > 0
 
 
-def open_login(url: str) -> int:
-    """Log in once, by hand, into the profile the recorder reuses."""
+def open_login(url: str, profile: Path = None, wait_s: int = 470) -> int:
+    """Open the target headed and wait until the session is actually established.
+
+    Polls for the sign-in wall to disappear rather than waiting for the window to be closed.
+    Two reasons: nobody should have to remember a closing ritual, and "did it work?" is
+    answered by the thing we actually care about — whether the recorder can now reach the
+    page — instead of by a proxy for it.
+    """
     from playwright.sync_api import sync_playwright
-    print(f"opening {url} — sign in, then close the window.")
+    profile = profile or PROFILE
+    print(f"opening {url}\n  sign in in the window that appears (it is titled "
+          f"'Chrome for Testing'); this exits by itself once you are through.")
     with sync_playwright() as pw:
-        ctx = pw.chromium.launch_persistent_context(str(PROFILE), headless=False,
+        ctx = pw.chromium.launch_persistent_context(str(profile), headless=False,
                                                     viewport=VIEWPORT)
         page = ctx.pages[0] if ctx.pages else ctx.new_page()
         page.goto(url, wait_until="domcontentloaded")
+        ok = False
+        for i in range(wait_s // 3):
+            page.wait_for_timeout(3000)
+            try:
+                if not looks_like_login(page):
+                    ok = True
+                    break
+            except Exception:          # the window was closed by hand
+                break
+            if i and i % 20 == 0:
+                print(f"  still waiting… ({i * 3}s)")
         try:
-            page.wait_for_event("close", timeout=600000)
+            ctx.close()
         except Exception:
             pass
-        ctx.close()
-    print("session saved to the recorder's profile.")
-    return 0
+    if ok:
+        print(f"signed in — the session is saved in {profile}")
+        return 0
+    print("no session established. Re-run --login, or the window was closed early.")
+    return 1
 
 
 def capture(script: list[dict], segs: list[Path], headed: bool,
@@ -434,7 +455,10 @@ def main() -> int:
 
     if a.login:
         from demo.cues import MVP_URL, POC_URL
-        return open_login(POC_URL if a.script == "poc" else MVP_URL)
+        target = POC_URL if a.script == "poc" else MVP_URL
+        prof = SHARED_PROFILE if a.profile == "shared" else (
+            Path(a.profile).expanduser() if a.profile else PROFILE)
+        return open_login(target, prof)
 
     for tool in ("ffmpeg", "ffprobe"):
         if not shutil.which(tool):
