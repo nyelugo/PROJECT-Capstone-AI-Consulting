@@ -3,19 +3,17 @@
 [Whole deck: you are in the room with Chleo's team. Speak to them as "you". Step out only at
 the very end if the staff want the assessor view.]
 
-Last time we met, I pitched you one thing. You told me to build all three. So that's what
-you're going to see — three capabilities, all running, and one number I'd rather tell you
-myself than let you find later.
+Three capabilities, all running. One decision you can watch end to end. And the business
+case as it actually came out.
 
 # Slide 2 — What changed after Round 1
 [30 seconds. Don't linger.]
 
-Nothing changed direction. Same sector, same firm, same lead use case — because nothing you
-said challenged them.
+Direction is unchanged: same sector, same firm, same lead use case.
 
-What changed is scope. You asked for all three, and all three are built. And two things got
-harder rather than easier: I now have a real ROI number instead of a cost estimate, and I've
-done the AI Act work I deliberately refused to guess at last time.
+Scope widened. Round 1 proposed three use cases and built one; all three are built now. And
+two things got harder rather than easier — a real ROI number in place of a cost estimate,
+and the AI Act work Round 1 deliberately refused to guess at.
 
 # Slide 3 — Three jobs, one shape
 Three jobs your people do, and they're the same job wearing three coats.
@@ -33,8 +31,8 @@ hear about it, the money has gone.
 [Land this:] High volume, low complexity, unstructured text. The shape a firm your size can
 neither automate with rules nor afford to staff properly.
 
-But the reason you haven't solved it isn't technical. It's that you told me you don't trust
-AI, because you can't see what it does.
+What stops this being solved isn't technical. It is that nobody can see what such a system
+does — and a decision you cannot see is one you cannot sign off.
 
 # Slide 4 — One decision spine, three capabilities
 So here's the answer to that.
@@ -59,13 +57,12 @@ transaction, one figure we never computed.
 
 Nine steps, left to right. That's the entire system — you can read it without me.
 
-[Run it.] Green ticks mean each step executed. It's proposed Disputes and fraud. And look
-at why — it quoted your customer's own sentence back at you. Not a summary. Her words.
+[Run it.] Green ticks mean each step executed. It proposed Disputes and fraud, and quoted
+the customer's own sentence as the reason. Not a summary — her words. Then it stopped and
+waited for a person.
 
-Then it stopped and waited for a person.
-
-[If time, edit the complaint and re-run.] Watch what happens when it isn't sure. It doesn't
-fail. It says which check stopped it, in words your handler can act on.
+[If time, edit the complaint and re-run.] When it isn't sure it doesn't fail. It says which
+check stopped it, in words a handler can act on.
 
 [Three things to say before you move on.]
 
@@ -73,25 +70,24 @@ Tools: n8n, because your team can read it as boxes and arrows — a Python scrip
 been quicker to write and impossible to show you.
 
 What it does not prove is accuracy. It agrees with the public dataset's labels sixty per
-cent of the time, and those labels were picked by the customer filing the complaint, from a
-dropdown. That's agreement, not accuracy — and I'll come back to what it costs to fix.
+cent of the time, and those labels were picked by the complainant from a dropdown. That is
+agreement, not accuracy.
 
 In production the trigger is your case system rather than a button, rejected inputs get
 traced too, and delivery is confirmed back — today it records the decision, not the receipt.
 
-# Slide 6 — The number I'd rather you heard from me
+# Slide 6 — What it returns
 [Slow down. Do not apologise for this slide.]
 
-If I build this for you as a one-off, it does not pay back. Minus thirty-one per cent over
-three years. Break-even lands in month sixty-nine.
+Built as a one-off for a firm this size, it does not pay back. Minus thirty-one per cent
+over three years, break-even in month sixty-nine.
 
-I could have made that number positive. I'd have had to start the benefits on day one, or
-quietly cut the oversight cost. Both would have been lies, and you'd have found them.
+That number could have been positive — start the benefits on day one, or trim the oversight
+line. Both would have been wrong, and both would have surfaced in the pilot.
 
-Here's what's actually going on. The capability is fine. The commercial shape is wrong. You
-need about three thousand eight hundred complaints a year for a bespoke build to pay for
-itself, and you have two and a half thousand. You are a third too small — which is a fact
-about your size, not about the technology.
+The capability is fine; the commercial shape is wrong. A bespoke build needs about three
+thousand eight hundred complaints a year to pay for itself, and this firm has two and a
+half thousand — a third too small. That is a fact about size, not about the technology.
 
 [Point at the bottom two rows.] Move the oversight in-house after handover and it's minus
 nine. Share the build across five firms your size and it turns positive. Do both and it's
@@ -123,18 +119,17 @@ pilot rather than in year two.
 
 Not high-risk under the AI Act. But the reason matters more than the label, so here it is.
 
-It's not Annex Three, because it never evaluates anyone's creditworthiness — that's the trap
-everyone expects to catch a bank, and it's why credit scoring is something I refuse to
-build. And Article Four, AI literacy, applies to you today whatever the tier, which is why
-training is funded rather than assumed.
+Not Annex Three, because it never evaluates creditworthiness — the trap everyone expects to
+catch a bank, and why credit scoring is excluded by design. Article Four, AI literacy,
+applies today whatever the tier, which is why training is funded rather than assumed.
 
-I've left two questions for your counsel, both about anomaly flagging, and both worth
-answering before it's built rather than after.
+Two questions are left for counsel, both on anomaly flagging, both cheaper to answer before
+it is built.
 
-On the right, the thing I'd rather you heard from me. We pseudonymise the reference — but
-the complaint narrative goes to the model in full. Anyone who tells you "it's fine, the data
-is pseudonymised" hasn't read the system. So the transfer work is a gate before any pilot on
-real customer data, not something we discover later.
+On the right, the part worth stating plainly. We pseudonymise the reference — but the
+complaint narrative goes to the model in full. Anyone who says "it's fine, the data is
+pseudonymised" has not read the system. So the transfer work is a gate before any pilot on
+real customer data.
 
 [Land this:] What keeps this out of the high-risk tier isn't a clever argument. It's a design
 property: it proposes, a person decides. Take that away and the classification changes.
@@ -180,9 +175,9 @@ isn't a decision, it's a suggestion nobody owns.
 A sixty-day shadow pilot on your own complaints. Eighteen thousand two hundred. Nobody acts
 on a single suggestion.
 
-It works, it's lawful, and it doesn't yet pay for itself at your size.
+It works, it's lawful, and it does not yet pay for itself at this size.
 
-[Beat.] I'd rather you heard that third one from me now than found it in month three.
+[Beat.] The pilot is what settles the third one.
 
 # Slide 12 — Backup
 [Divider. Don't present.]
