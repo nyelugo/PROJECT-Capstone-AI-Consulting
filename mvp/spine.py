@@ -187,7 +187,7 @@ def run(cap: Capability, request: dict, *, call) -> Decision:
 
     confidence = parsed.get("confidence")
     summary = cap.summarise(parsed, request)
-    cites = cap.citations(parsed)
+    cites = cap.citations(parsed, request)
 
     def rej(code: str, stage: str, detail: str = "") -> Decision:
         d = _reject(cap, code, stage, t0=t0, summary=summary, confidence=confidence,

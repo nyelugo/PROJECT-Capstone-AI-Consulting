@@ -278,5 +278,5 @@ class Anomaly:
         return (f"Raise {c['candidate_id']} — {c['rule'].replace('_', ' ')}, "
                 f"{c['times_normal']}x this account's normal")
 
-    def citations(self, parsed: dict) -> list[str]:
+    def citations(self, parsed: dict, request: dict | None = None) -> list[str]:
         return [parsed["next_check"]] if parsed.get("next_check") else []

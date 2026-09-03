@@ -19,6 +19,8 @@ Two distinct rejections, at two different stages, because they are different fau
 from __future__ import annotations
 
 import re
+
+import pandas as pd
 from functools import lru_cache
 
 from . import _shared  # noqa: F401  (path setup)
@@ -59,14 +61,50 @@ SECTIONS: dict[str, dict] = {
 }
 
 
-@lru_cache(maxsize=1)
-def fact_sheet() -> dict[str, dict]:
-    """Every figure this system is willing to publish, computed from the real data.
+def _dates(df) -> "pd.Series":
+    """Calendar dates as strings. `Date received` is tz-aware with a time of day, so a plain
+    `<= "2026-06-27"` compares against midnight and drops complaints filed later that day."""
+    return df["Date received"].dt.tz_localize(None).dt.strftime("%Y-%m-%d")
 
-    Cached because a Streamlit rerun must not re-read a 3.7MB CSV, and because the whole
-    point is that the numbers are stable — two calls in one session cannot disagree.
+
+@lru_cache(maxsize=1)
+def periods() -> list[tuple[str, str, str]]:
+    """The reporting periods this batch can actually support, as (label, start, end).
+
+    A return is written *for* a period, so the period has to be chosen rather than assumed.
+    What is offerable is bounded by the data: whole calendar months that the batch covers,
+    plus the batch itself. Offering a quarter the data cannot fill would be a worse lie than
+    offering none.
+    """
+    d = _dates(M.load())
+    out = [(f"Full window · {M.WINDOW_START} to {M.WINDOW_END}", M.WINDOW_START, M.WINDOW_END)]
+    for per in sorted(pd.PeriodIndex(pd.to_datetime(d), freq="M").unique()):
+        lo = max(str(per.start_time.date()), M.WINDOW_START)
+        hi = min(str(per.end_time.date()), M.WINDOW_END)
+        n = int(((d >= lo) & (d <= hi)).sum())
+        partial = " (partial)" if hi != str(per.end_time.date()) or lo != str(per.start_time.date()) else ""
+        out.append((f"{per.strftime('%B %Y')}{partial} · {n:,} complaints", lo, hi))
+    return out
+
+
+def period_for(label: str | None) -> tuple[str, str]:
+    """Resolve a period label to its range, falling back to the whole batch."""
+    for lab, lo, hi in periods():
+        if lab == label:
+            return lo, hi
+    return M.WINDOW_START, M.WINDOW_END
+
+
+@lru_cache(maxsize=8)
+def fact_sheet(start: str = M.WINDOW_START, end: str = M.WINDOW_END) -> dict[str, dict]:
+    """Every figure this system is willing to publish for one period, computed from the data.
+
+    Cached per period because a Streamlit rerun must not re-read a 3.7MB CSV, and because the
+    whole point is that the numbers are stable — two calls for the same period cannot disagree.
     """
     df = M.load()
+    d = _dates(df)
+    df = df[(d >= start) & (d <= end)]
     h = M.headline(df)
     issues = M.top_issues(df, n=5)
     prods = M.by_product(df).sort_values("monetary_pct", ascending=False)
@@ -95,8 +133,8 @@ def fact_sheet() -> dict[str, dict]:
                                        "label": "product least likely to end in money paid back"},
         "lowest_relief_product_pct": {"v": prods.iloc[-1]["monetary_pct"], "unit": "%",
                                       "label": "its monetary-relief rate"},
-        "window_start": {"v": M.WINDOW_START, "unit": "date", "label": "reporting window opens"},
-        "window_end": {"v": M.WINDOW_END, "unit": "date", "label": "reporting window closes"},
+        "window_start": {"v": start, "unit": "date", "label": "reporting window opens"},
+        "window_end": {"v": end, "unit": "date", "label": "reporting window closes"},
     }
     for i, row in enumerate(issues.itertuples(), start=1):
         f[f"top_issue_{i}_name"] = {"v": row.Issue, "unit": "text", "label": f"#{i} issue category"}
@@ -151,8 +189,14 @@ class Reporting:
     threshold = THRESHOLD
     model = MODEL
 
+    @staticmethod
+    def _range(request: dict) -> tuple[str, str]:
+        """The period this draft is for. Absent means the whole batch."""
+        return period_for(request.get("period"))
+
     def ref(self, request: dict) -> str:
-        return pseudonymise(f"report:{request.get('section','?')}")
+        lo, hi = self._range(request)
+        return pseudonymise(f"report:{request.get('section','?')}:{lo}:{hi}")
 
     def validate(self, request: dict) -> str | None:
         if request.get("section") not in SECTIONS:
@@ -160,10 +204,12 @@ class Reporting:
         audience = (request.get("audience") or "").strip()
         if len(audience) < 3:
             return "an audience is required — the same figures read differently to a board and a regulator"
+        if request.get("period") is not None and request["period"] not in [p[0] for p in periods()]:
+            return f"'{request['period']}' is not a period this batch covers"
         return None
 
     def messages(self, request: dict) -> list[dict]:
-        sheet = fact_sheet()
+        sheet = fact_sheet(*self._range(request))
         keys = SECTIONS[request["section"]]["keys"]
         lines = []
         for k in keys:
@@ -210,7 +256,7 @@ class Reporting:
         return None
 
     def grounding_check(self, parsed: dict, request: dict) -> tuple[str | None, str]:
-        sheet = fact_sheet()
+        sheet = fact_sheet(*self._range(request))
         allowed = _allowed_numbers(SECTIONS[request["section"]]["keys"], sheet)
         bad = [n for n in _numbers_in(parsed["narrative"]) if _unmatched(n, allowed)]
         if bad:
@@ -221,10 +267,12 @@ class Reporting:
         return None, f"all {n} figure(s) in the draft trace to the fact sheet"
 
     def summarise(self, parsed: dict, request: dict) -> str:
-        return f"Draft '{request.get('section')}' for {request.get('audience')}"
+        lo, hi = self._range(request)
+        return (f"Draft '{request.get('section')}' for {request.get('audience')}"
+                f" — {lo} to {hi}")
 
-    def citations(self, parsed: dict) -> list[str]:
-        sheet = fact_sheet()
+    def citations(self, parsed: dict, request: dict | None = None) -> list[str]:
+        sheet = fact_sheet(*self._range(request or {}))
         out = []
         for k in parsed.get("figures_used", []):
             e = sheet.get(k)

@@ -82,7 +82,7 @@ class Triage:
         team = T.team_for(parsed["queue"]) if parsed["queue"] else "—"
         return f"Route to {team} — {parsed['queue'] or 'no queue proposed'}"
 
-    def citations(self, parsed: dict) -> list[str]:
+    def citations(self, parsed: dict, request: dict | None = None) -> list[str]:
         ev = parsed.get("evidence")
         return [ev] if ev else []
 

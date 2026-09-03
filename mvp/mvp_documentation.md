@@ -62,7 +62,7 @@ for the wrong reason, and the entire claim of this system is that a refusal says
 | **Operations** | Ops lead, **daily** | What is past target and untouched, outstanding by team, where the model is overridden and **where handlers sent it instead**, acceptance per handler | None — a directing page |
 | **Complaint triage** | Handler | A standing queue, already classified. Proposed team, confidence, the sentence that decided it | Accept · reroute · escalate. Tick several for a bulk action |
 | **Anomaly review** | Fraud analyst | A standing queue, ranked by departure from each account's own normal. Case note already written | Escalate · dismiss · needs more |
-| **Reporting assistance** | Compliance officer | The **whole return**, all sections drafted, every figure checked against what this system computed | Sign off · reject, **per section** |
+| **Reporting assistance** | Compliance officer | The **whole return for a chosen period**, all sections drafted, every figure checked against what this system computed for that period | Sign off · reject, **per section** |
 | **Decision log** | Compliance, audit | One row per human action, in order. Filterable, exportable | None — export it |
 
 **The Round 1 dashboard is deliberately not in here.** It sized an opportunity from public
@@ -81,6 +81,17 @@ items and commits different wording, because the evidence sentence and the case 
 model's own words. The committed batch is the one the screenshots and the demo recording show,
 so rebuild it deliberately rather than as a way of checking the app still works — `python -m
 mvp.test_spine` does that with no network and no key.
+
+**A return is for a period.** The compliance officer picks one before drafting, and every
+figure, citation and grounding check is recomputed for it — the whole batch, or any calendar
+month inside it. What is offerable is bounded by the data: this batch covers 2026-05-01 to
+2026-06-27, so it can support two months and cannot support a quarter, and a quarter it cannot
+fill is not offered. Changing the period discards the drafts rather than showing them under a
+heading they were not written for, which is the same staleness rule the audience field uses.
+
+Worth stating plainly, because the language elsewhere says *quarterly*: the ROI model costs
+four quarterly returns a year, and the batch in front of you is eight weeks. The cadence is the
+real one; the window is what the demo data can show.
 
 **The clock.** Triage carries an age, days-to-target and a deadline state, computed in
 `queue_store.clock()` against the batch's own newest item rather than today's date — the

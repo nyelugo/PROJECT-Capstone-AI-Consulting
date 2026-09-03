@@ -182,6 +182,16 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 > *Accept: per-section sign-off, with a name and time.*
 > **MET.**
 
+> **R5.** As the compliance officer, I want to **choose the period the return covers**, so
+> that I produce a return for a quarter rather than for whatever the system was pointed at.
+> *Accept: a period control, and figures that change with it.*
+> **MET** — a period selector offers the whole batch and each calendar month it covers, and
+> every figure, citation and grounding check is recomputed for the chosen range. Periods the
+> batch cannot fill are not offered, and switching period discards the drafts rather than
+> showing them under the wrong heading. This story was missing from the first version of this
+> document — the audit was run against the running app and still did not notice the control
+> was absent, which is its own lesson about auditing what is there rather than what should be.
+
 > **R4.** As the compliance officer, I want to **export the signed return**, so that I can put
 > it where returns live.
 > *Accept: a download of the accepted sections.*
@@ -222,11 +232,11 @@ Status key: **MET** · **PARTIAL** — works, but not enough to rely on · **NOT
 
 | | Chleo | Ops lead | Handler | Analyst | Compliance | Audit | **Total** |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| MET | 6 | 4 | 6 | 2 | 2 | 1 | **21** |
+| MET | 6 | 4 | 6 | 2 | 3 | 1 | **22** |
 | PARTIAL | 0 | 0 | 1 | 0 | 1 | 1 | **3** |
 | NOT MET | 0 | 0 | 0 | 2 | 1 | 3 | **6** |
 
-**21 of 30 fully met.** Chleo and the ops lead are at **100%** — that was the scope
+**22 of 31 fully met.** Chleo and the ops lead are at **100%** — that was the scope
 decision and it is done. The handler is one story short, and that one waits on the case
 system. What is left belongs to the analyst, the compliance officer and the auditor.
 

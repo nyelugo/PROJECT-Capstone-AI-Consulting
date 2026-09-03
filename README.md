@@ -46,8 +46,8 @@ UI change costs a command, not an afternoon.
 **Outstanding:** submitting the repo URL to Campus under `final-project`.
 
 **Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
-30 user stories across the six people who would actually touch this, each checked
-against the running app. **21 met, 3 partial, 6 not** — Chleo and the ops lead are at 100%.
+31 user stories across the six people who would actually touch this, each checked
+against the running app. **22 met, 3 partial, 6 not** — Chleo and the ops lead are at 100%.
 Six of the nine remaining shortfalls are buildable now; three need Phase 2.
 
 ### The two findings Round 2 turns on
