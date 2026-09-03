@@ -310,10 +310,6 @@ def by_week(items: list[dict], date_key: str) -> list[dict]:
     return rows
 
 
-# ------------------------------------------------------------------------ on/off switches
-# Chleo asked for this directly: she wants to disable a capability on a Monday morning
-# without phoning a consultant. It lives in a file rather than in code precisely so that
-# turning something off is an operational act, not a deployment.
 # ------------------------------------------------------------- supervision breakdowns
 def by_proposed_team(items: list[dict]) -> list[dict]:
     """Where the model is overridden, grouped by the team it proposed (O2).

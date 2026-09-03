@@ -17,8 +17,6 @@ st.caption("Every complaint in today's batch, already read. It proposes a team a
            "quote the sentence that decided it — a guard checks that sentence is really "
            "in the complaint.")
 
-# An off switch is only real if the page honours it. Chleo can disable this from Overview
-# and it takes effect for everyone immediately, without a restart or a developer.
 items = Q.load_triage()
 if not items:
     st.warning("The queue has not been built yet. Run `python -m mvp.build_queues`.")
@@ -33,11 +31,15 @@ due = int((df["sla"] == Q.DUE_SOON).sum())
 c1, c2, c3 = st.columns(3)
 c1.metric("Queue as at", as_at)
 c2.metric("Past the target", breached, help=f"Older than {Q.SLA_DAYS} days")
-c3.metric("Due within 5 days", due)
+c3.metric(f"Due within {Q.DUE_SOON_DAYS} days", due)
 st.caption(f"Target is **{Q.SLA_DAYS} days** to first response — an assumption; your own "
            f"target is set in Phase 0. This batch is a historical sample spanning "
            f"{int(df['age_days'].max())} days of intake, so a large share of it reads as "
-           f"past target. That is the sample's spread, not an operational failure.")
+           f"past target. That is the sample's spread, not an operational failure. "
+           f"The complaints themselves are the **public CFPB corpus** — United States "
+           f"records standing in for this firm's book — so the products and the language "
+           f"are American. What is real here is how the system reads them; Phase 0 replaces "
+           f"the corpus with your own complaints.")
 
 view = queue_filters(df, extra_facets=[("product", "Product"),
                                        ("proposed_team", "Proposed team"),

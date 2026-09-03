@@ -17,8 +17,6 @@ st.caption("Ranked by how far a pattern departs from that account's own normal �
            "the amount. A large but ordinary payment on a wealthy account does not outrank "
            "a small impossible one on a modest account.")
 
-# An off switch is only real if the page honours it. Chleo can disable this from Overview
-# and it takes effect for everyone immediately, without a restart or a developer.
 items = Q.load_anomaly()
 if not items:
     st.warning("The queue has not been built yet. Run `python -m mvp.build_queues`.")
@@ -29,7 +27,10 @@ dated, as_at = Q.with_clock(items, "raised")
 df = pd.DataFrame([{**it, "status": Q.status_of(it["item_id"], it, latest)} for it in dated])
 st.caption(f"Batch as at **{as_at}**. Age is shown because a stale flag is a worse flag — "
            f"but no first-response target applies here: a fraud pattern is not on a "
-           f"complaints deadline.")
+           f"complaints deadline. **These transactions are synthetic**: the accounts, "
+           f"amounts, countries and channels are generated, not this firm's book. Read them "
+           f"as a fixture the detector is being shown, not as customer behaviour — what is "
+           f"real is how it ranks them. Phase 0 replaces the fixture with your own ledger.")
 
 view = queue_filters(df, extra_facets=[("rule", "Pattern"), ("country", "Country")],
                      date_col="raised")

@@ -27,8 +27,6 @@ from mvp.ui import conf_txt, ladder_html, model_ready, status_chip, current_oper
 
 st.title("Reporting assistance")
 
-# An off switch is only real if the page honours it. Chleo can disable this from Overview
-# and it takes effect for everyone immediately, without a restart or a developer.
 if "report" not in st.session_state:
     st.session_state.report = {"audience": None, "period": None, "sections": {}}
 store = st.session_state.report
