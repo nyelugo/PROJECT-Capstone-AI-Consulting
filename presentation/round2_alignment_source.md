@@ -284,6 +284,11 @@ within 36 months.
 
 The bespoke model needs about **3,800 complaints a year**.
 
+**€9,918 of €17,326 is cash — ombudsman fees and fraud losses, not saved time.**
+Displaced minutes are not counted as savings: three minutes on 2,426 complaints is 121
+hours a year, seven per cent of one person. The case rests on four avoided ombudsman
+referrals, which is what the shadow pilot measures.
+
 The client has about **2,426**.
 
 | Commercial structure | 36-month ROI |
