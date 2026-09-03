@@ -32,14 +32,15 @@ MVP = [
      "say": "The workflow classified one complaint at a time. This is a morning's work, "
             "already read."},
     {"do": ("point", "Tick one to read it"),
-     "say": "Sixty complaints, each one already proposed a team. Nobody typed them in — "
-            "they arrived in the case system and the queue picked them up."},
-    {"do": ("point", "Past the target"),
+     "say": "Every complaint in the batch, each one already proposed a team. Nobody typed "
+            "them in — they arrived in the case system and the queue picked them up."},
+    {"do": ("point", "Past target"),
      "say": "And this is what a regulated firm actually lives on. How old each complaint "
-            "is, and how long is left before the first-response target."},
+            "is, and where it stands against the first-response target."},
     {"do": ("point", "Target is 15 days"),
-     "say": "Forty-two of these are already past it. You can sort on that column, and "
-            "filter down to just the ones that need a person."},
+     "say": "A large share are already past it — the spread of a historical sample, not a "
+            "failing team, and the page says so. You can sort on that column, and filter "
+            "down to just the ones that need a person."},
     {"do": ("row", 0),
      "say": "Open one."},
     {"do": ("point", "Because the customer wrote"),
@@ -62,10 +63,10 @@ MVP = [
     {"do": ("nav", "Overview"),
      "say": "This is what the chief executive sees. What it proposed, what was held back "
             "and why."},
-    {"do": ("point", "Agreement rate"),
-     "say": "And how often her people actually agreed with it — the number that says "
-            "whether this is working. Same six checks behind all three capabilities. Only "
-            "the evidence changes."},
+    {"do": ("point", "Do your people agree with it"),
+     "say": "And whether her people actually agree with it — which it refuses to score "
+            "until enough decisions exist for a rate to mean anything. Same six checks "
+            "behind all three capabilities. Only the evidence changes."},
 ]
 
 # --------------------------------------------------------------------------------- POC
