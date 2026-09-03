@@ -201,15 +201,28 @@ It's the same trap as the sixty per cent, and I've bound the caveat to the figur
 code so it can't be lifted onto a slide on its own. Only a pilot on real traffic settles it.
 
 # Slide 15 — Backup: AI Act classification, step by step
-[If Legal wants the reasoning.]
+[If Legal wants the reasoning. The slide shows four steps; these are all seven.]
 
-Six steps. Step four is the one that matters: it's not an Annex Three use, because it never
-evaluates creditworthiness.
+Seven steps in the assessment. The slide shows the four that decide the outcome.
 
-Step five is the interesting one. If step four ever fails, anomaly flagging alone becomes
-high-risk — because it profiles, and the derogation can't save something that profiles.
-Triage and reporting stay outside. That asymmetry is exactly why anomaly flagging is built
-last and can be switched off without touching the other two.
+One: it is an AI system under Article 3(1) — inference from input to output.
+Two: not a prohibited practice under Article 5. One close call on anomaly flagging, and it
+is flagged for your counsel rather than waved through.
+Three: not a safety component of an Annex One product — nothing here goes into a regulated
+machine, so Article 6(1) does not apply.
+Four: not an Annex Three use case. This is the one that matters. Annex Three, point five(b)
+covers creditworthiness, and this system never evaluates it.
+Five: the Article 6(3) derogation is therefore not reached. Worth knowing why that matters —
+if step four ever failed, anomaly flagging alone would become high-risk, because it profiles,
+and the derogation cannot save something that profiles. Triage and reporting stay outside.
+That asymmetry is exactly why anomaly flagging is built last and can be switched off without
+touching the other two.
+Six: Article 50 transparency. No customer-facing surface, but generated drafts are marked
+anyway.
+Seven: the obligations that apply whatever the tier — Article 4 AI literacy applies today.
+
+[If pressed on the label:] What holds it out of the high-risk tier is not a claim, it is a
+design property: it proposes, a person decides. Remove that step and it is a new assessment.
 
 # Slide 16 — Backup: what actually leaves the building
 [If Data Protection presses.]
