@@ -8,10 +8,19 @@ python -m demo.generate_demo mvp          # the MVP demo — slide 9's backup
 python -m demo.generate_demo poc          # the POC demo — a required deliverable
 ```
 
-**The one human step.** The POC target is the gated cohort n8n instance, and signing in has
-to be done by a person: the assistant's sandbox SIGKILLs any headed browser it launches, so
-it cannot put a visible window on screen at all. Double-click **`demo/n8n_login.command`**,
-sign in, and it detects the session and closes itself. Everything after that is automated.
+**The one human step.** The POC target is the gated cohort n8n instance, so someone has to
+type a password. Double-click **`demo/n8n_login.command`**, sign in, and it detects the
+session and closes itself. Everything after that is automated.
+
+**If the login window never appears**, the headed Chromium is missing. Playwright installs a
+`chromium_headless_shell` separately from the full browser, so headless recording can work
+perfectly while every headed launch dies — and `playwright install chromium` is a no-op in
+that state, because the `INSTALLATION_COMPLETE` marker is present even when the `.app`
+bundle underneath is not. The fix:
+
+```bash
+python -m playwright install --force chromium
+```
 
 Output lands in `demo/recordings/`. Needs `ffmpeg`, `playwright`, and `OPENAI_API_KEY`.
 

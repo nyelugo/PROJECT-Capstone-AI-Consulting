@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Double-click this to sign the demo recorder in to n8n.
 #
-# It has to be run by you rather than by the assistant: the agent's sandbox kills any
-# headed browser it launches (SIGKILL on start), so it cannot put a visible window on your
-# screen. Everything else about the recording is automated — this is the one human step.
+# It has to be run by you rather than by the assistant for the ordinary reason: somebody has
+# to type a password, and that is not something to hand to an agent. Everything else about
+# the recording is automated — this is the one human step.
+#
+# If no window appears, the full headed Chromium is missing (Playwright ships the headless
+# shell separately). Fix with:  python -m playwright install --force chromium
 #
 # A window titled "Chrome for Testing" opens on the n8n workflow. Sign in. The script
 # detects the session itself and closes; you do not need to close anything.
