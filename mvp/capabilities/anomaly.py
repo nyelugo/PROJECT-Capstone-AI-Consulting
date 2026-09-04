@@ -192,7 +192,14 @@ def score() -> dict:
     }
 
 
-_NUM = re.compile(r"\d+(?:[.,]\d+)?")
+# An ordinal is not a claimed figure. "the 90th percentile" was being read as the number 90
+# and rejected as uncomputed, which stopped a correct section during a live run. The
+# quantifier is possessive so the engine cannot backtrack into the middle of "90th" and
+# match a bare 9; a multiplier like "10.8x" is still a figure and still checked.
+# The repeated group keeps a grouped decimal whole: "EUR 1,660.29" was being read as
+# 1660 AND 29, and the stray 29 matched nothing in the record, so a correctly grounded
+# note would have been rejected the first time one was written with a separator.
+_NUM = re.compile(r"\b\d++(?:[.,]\d++)*+(?!(?:st|nd|rd|th)\b)")
 
 
 def _numbers_in(text: str) -> list[float]:

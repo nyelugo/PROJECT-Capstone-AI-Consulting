@@ -158,9 +158,17 @@ if merged:
     _chart(base.mark_bar(size=20, color=ACCENT)
            + base.mark_text(align="left", dx=6, color=FAINT).encode(text="n:Q"),
            max(90, 34 * len(rs)))
+    # ERROR_MODEL_CALL is the one code here that is not a refusal — the provider was
+    # unreachable, so nothing was judged at all. It lands in this chart because the item is
+    # genuinely held, but reading an outage as caution would be the wrong lesson, so it is
+    # named separately whenever it is non-zero.
+    outage = tri["by_reason"].get("ERROR_MODEL_CALL", 0) + ano["by_reason"].get("ERROR_MODEL_CALL", 0)
     st.caption(f"**{sum(merged.values())} refusals, {len(merged)} distinct reasons.** Every one "
                "is a named check the item failed, not a shrug. The codes behind these labels "
-               "are in the decision log under *Technical details*.")
+               "are in the decision log under *Technical details*."
+               + (f" **{outage} of these is the provider being unreachable, not the system being "
+                  "cautious** — nothing was judged, so nothing was refused."
+                  if outage else ""))
 else:
     st.caption("Nothing has been held back in this batch.")
 
