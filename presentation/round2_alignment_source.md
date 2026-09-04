@@ -5,13 +5,20 @@ round: Capstone Round 2
 author: Ugo Ahukannah
 status: Follow-up alignment source
 main_slides: 11
-backup_slides: 7
+backup_slides: 4
 ---
 
 # Purpose of this source
 
-This is the canonical source for the follow-up alignment of `presentation.pptx`,
-`presentation.pdf`, and the embedded speaker notes after the active deck pass is complete.
+This is the drafting source for `presentation.pptx` — the argument and the on-slide copy,
+written before the deck was built.
+
+**Where this and the deck disagree, the deck wins.** It is the deliverable; this is the
+reasoning behind it. Section headings carry the deck slide they correspond to, and three
+sections are marked "Not in the current deck" — they were drafted and then cut, and are kept
+because the reasoning is still worth having. The notes that will actually be spoken live in
+the deck itself and are exported to `round2_speaker_notes.md`; do not treat this file as a
+third account of them.
 
 The communication job is:
 
@@ -220,7 +227,36 @@ the entire product.
 
 ---
 
-## Slide 5 — The POC proves the mechanism—not accuracy
+## Slide 5 — The system proposes. A person decides.
+
+**Takeaway:** Three jobs, three different ways a proposal is made, three different kinds of
+proof — then one person, for all of them.
+
+### On-slide copy
+
+The slide is a diagram, rendered from `assets/decision_spine_slide.html`. Its four columns:
+
+1. **The work** — each use case with what arrives and why it is hard today
+2. **What makes the proposal** — AI for triage; rules then AI for anomaly; computed then AI
+   for reporting. Two of the three proposals are not the AI's call
+3. **What it must prove** — the quoted sentence must be in the complaint word for word, every
+   number must match the transaction record, every figure must be on the computed sheet
+4. **Who decides** — a person, every time, with their decision recorded beside the proposal
+
+### Speaker notes
+
+Held in the deck itself; see `round2_speaker_notes.md`, slide 5.
+
+### Sources
+
+[Sources]
+- `mvp/spine.py`, the six stages and twelve reason codes
+- `mvp/capabilities/`, what each capability submits as evidence
+- `use_case_definition.md`, the three problems named in column one
+
+---
+
+## Slide 6 — The POC proves the mechanism—not accuracy
 
 **Narrative job:** Demonstrate the narrow proof and state its boundary immediately.
 
@@ -269,7 +305,7 @@ client performance. The client's own labelled cases must supply that evidence.
 
 ---
 
-## Slide 6 — The system works; the bespoke economics do not
+## Slide 7 — The system works; the bespoke economics do not
 
 **Narrative job:** Deliver the finding that changes the recommendation.
 
@@ -324,7 +360,7 @@ commercial structure that does not charge one firm for the entire build.
 
 ---
 
-## Slide 7 — Three risks decide whether a pilot is defensible
+## Slide 8 — Three risks decide whether a pilot is defensible
 
 **Narrative job:** Surface the risks that could reverse the recommendation.
 
@@ -365,7 +401,7 @@ fails. These risks are operational and measurable, and the client can stop at ea
 
 ---
 
-## Slide 8 — The current design is not high-risk; real-data use still has gates
+## Slide 9 — The current design is not high-risk; real-data use still has gates
 
 **Narrative job:** Give the honest legal and data-protection conclusion without reading the
 compliance pack.
@@ -416,7 +452,7 @@ are complete.
 
 ---
 
-## Slide 9 — The programme earns each next step
+## Slide 10 — The programme earns each next step
 
 **Narrative job:** Convert the risks and legal gates into a staged operating plan.
 
@@ -463,7 +499,7 @@ Eighteen thousand two hundred euros buys the evidence and the deployment decisio
 
 ---
 
-## Slide 10 — The MVP makes every proposal accountable
+## Slide 11 — The MVP makes every proposal accountable
 
 **Narrative job:** Show the operational product that grew from the POC.
 
@@ -505,7 +541,7 @@ the system proposed and what the responsible person did.
 
 ---
 
-## Slide 11 — Proceed to evidence—not deployment
+## Slide 12 — Proceed to evidence—not deployment
 
 **Narrative job:** Resolve the opening with one recommendation the client can accept or
 reject.
@@ -552,7 +588,7 @@ performance thresholds and the commercial structure makes the economics work.
 
 ---
 
-## Slide 12 — Backup
+## Not in the current deck — Backup
 
 **Narrative job:** Separate the presented story from evidence used only in questions.
 
@@ -610,7 +646,7 @@ reference set that can support one.
 
 ---
 
-## Slide 14 — Why 100% anomaly detection is not real-world performance
+## Not in the current deck — Why the synthetic anomaly result is not real-world performance
 
 **Takeaway:** Synthetic test success proves implementation consistency, not effectiveness on
 live fraud or transaction data.
@@ -618,6 +654,7 @@ live fraud or transaction data.
 ### On-slide copy
 
 - The detector's thresholds were used to plant the synthetic anomalies
+- Recall is no longer perfect either: threshold structuring misses one in twenty
 - The test therefore measures whether the implementation matches its own specification
 - It does not establish precision on real client traffic
 
@@ -625,8 +662,8 @@ live fraud or transaction data.
 
 ### Speaker notes
 
-The anomaly detector's perfect synthetic result should not be presented as real-world
-performance. The same thresholds used by the detector were used to plant the anomalies, so
+The anomaly detector's synthetic result — 97.9% precision, 98.9% recall since the fixture
+grew to two hundred accounts — should not be presented as real-world performance. The same thresholds used by the detector were used to plant the anomalies, so
 the test proves that the implementation agrees with its own specification. It does not prove
 precision on live client traffic. The operational measure belongs in the pilot: at least
 thirty per cent of raised candidates must be judged worth investigating by the client's
@@ -641,7 +678,7 @@ analysts.
 
 ---
 
-## Slide 15 — AI Act classification, step by step
+## Slide 14 — AI Act classification, step by step
 
 **Takeaway:** The classification follows the intended use and human boundary; UC-2 remains
 the open question.
@@ -673,7 +710,7 @@ UC-3 remain outside that tier. AI literacy applies regardless.
 
 ---
 
-## Slide 16 — What actually leaves the bank
+## Slide 15 — What actually leaves the bank
 
 **Takeaway:** Pseudonymisation removes the direct reference; it does not remove personal data
 from the narrative.
@@ -706,7 +743,7 @@ pseudonym alone is not an answer.
 
 ---
 
-## Slide 17 — What the pilot must prove
+## Slide 16 — What the pilot must prove
 
 **Takeaway:** Missing any of the first three gates stops deployment.
 
@@ -741,7 +778,7 @@ does not require discarding triage and reporting.
 
 ---
 
-## Slide 18 — Detection is deterministic; explanation is guarded
+## Not in the current deck — Detection is deterministic; explanation is guarded
 
 **Takeaway:** The language model explains an anomaly selected by arithmetic; it does not
 decide which transactions are unusual.

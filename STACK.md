@@ -90,8 +90,9 @@ both. Edit the workflow in the n8n UI and that link breaks — change the source
 **One source per number.** `dashboard/metrics.py` and `cost_estimation/cost_model.py` are
 the only places figures are computed. The documents and the deck read from them, so a
 number cannot say one thing on a slide and another in a file.
-`evidence_walkthrough.ipynb` re-derives all of it and reconciles against what the deck
-states — currently 0 mismatches.
+`evidence_walkthrough.ipynb` re-derives all of it and reconciles against what the **Round 1**
+deck states — 0 mismatches. Round 2's own figures are checked by
+`cost_estimation/check_roi_doc.py` and `research/check_user_stories.py`.
 
 **Telemetry cannot break the system.** Tracing is a leaf on a parallel branch with
 `onError: continueRegularOutput`. This was demonstrated by accident: while the LangSmith

@@ -154,9 +154,11 @@ To stop it: `pkill -f "streamlit run dashboard/app.py"`.
 
 ## Reproducing the numbers
 
-`evidence_walkthrough.ipynb` recomputes every figure quoted in the pitch from the
-committed evidence files and reconciles them against what the deck states. It makes **no
-API calls and needs no keys**, so it costs nothing to run.
+`evidence_walkthrough.ipynb` recomputes every figure quoted in the **Round 1** pitch from the
+committed evidence files and reconciles them against what that deck states — 0 mismatches when
+last run. It covers the corpus figures, which have not changed; it does **not** cover Round 2's
+ROI, which is checked instead by `cost_estimation/check_roi_doc.py`. It makes **no API calls
+and needs no keys**, so it costs nothing to run.
 
 ```bash
 conda activate bootcamp-env
@@ -193,7 +195,7 @@ classifier/         prompt, taxonomy, team map, decision codes, FINDINGS.md
 cost_estimation/    cost_model.py (all figures derived) + analysis + timeline + assumptions table
 feedback/           round1_decision.md — KEEP or CHANGE, completed after the presentation
 presentation/       round1_pitch.pptx + .pdf + speaker_notes.md
-evidence_walkthrough.ipynb   recomputes and reconciles every figure in the pitch
+evidence_walkthrough.ipynb   recomputes and reconciles every figure in the Round 1 pitch
 data_prep.py        curation, with both data-quality corrections
 fetch_data.sh       re-download the raw pull
 PLAN.md             locked decisions, rubric weights, open questions

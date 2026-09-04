@@ -129,6 +129,8 @@ My recommendation is to approve Phases 0 and 1, capped at €18,200. Before real
 
 These figures are diagnostic, not client performance. The 60.5 per cent is agreement with complainant-selected CFPB labels, not expert accuracy. The model agreed with itself on 88.0 per cent of repeated inputs, showing that the disagreement is systematic rather than random; it does not identify the cause. The anomaly detector reached 97.9 per cent precision on synthetic data designed around its thresholds, and 98.9 per cent recall — it now misses one pattern in twenty on threshold structuring, which appeared only once the fixture grew from forty accounts to two hundred. Phase 0 creates the client benchmark.
 
+[If someone opens FINDINGS.md and sees different numbers] These are the 2026-08-28 run, which is the baseline this whole deck was built on, and FINDINGS.md says so. Re-running the identical sample six days later, gpt-4o came back within a third of a point — so the sampling, prompt and scoring are all doing the same thing — but gpt-4o-mini moved from 56.8 to 61.6, twelve of two hundred and forty predictions flipping. Nothing in the repo changed; the alias almost certainly resolves to a newer snapshot. The conclusion gets stronger, not weaker: the premium I charged gpt-4o with earning does not reproduce. Both runs are committed with dated evidence files.
+
 [Sources]
 - `classifier/FINDINGS.md`
 - `classifier/eval_results_gpt-4o.json`
