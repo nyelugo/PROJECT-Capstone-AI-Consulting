@@ -43,7 +43,7 @@ you size the opportunity.
 [`mvp_demo.mp4`](demo/recordings/mvp_demo.mp4) (1:57, slide 9's backup). Re-recording after a
 UI change costs a command, not an afternoon.
 
-**Outstanding:** submitting the repo URL to Campus under `final-project`.
+**Submitted** to Campus under `final-project`. All seven Round 2 deliverables complete.
 
 **Where the MVP falls short:** [`research/user_stories.md`](research/user_stories.md) —
 32 user stories across the six people who would actually touch this, each checked
