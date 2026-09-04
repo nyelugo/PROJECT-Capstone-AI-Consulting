@@ -195,11 +195,16 @@ customer filing the complaint, from a dropdown, with no training.
 
 The fix isn't a cleverer model. It's better labels. That's exactly what Phase 0 buys.
 
-# Slide 14 — Backup: the anomaly detector's 100%
-[If someone quotes the 100% back at you approvingly.]
+# Slide 14 — Backup: the anomaly detector's precision
+[If someone quotes 97.9% back at you approvingly.]
 
 Don't let me get away with that number. I wrote the detector's thresholds and I wrote the
 generator that planted the anomalies. So it measures whether my code agrees with itself.
+
+Recall used to read 100%. It doesn't any more — at two hundred accounts instead of forty it
+finds 98.9%, because threshold structuring, the one pattern defined over a window rather than
+a single event, now misses one in twenty. That drop is worth more than the precision figure:
+it is the only thing here that behaved differently when the data got bigger.
 
 It's the same trap as the agreement figure, and I've bound the caveat to the figure in the
 code so it can't be lifted onto a slide on its own. Only a pilot on real traffic settles it.

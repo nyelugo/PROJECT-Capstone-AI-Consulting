@@ -36,7 +36,8 @@ st.caption(f"Batch as at **{as_at}**. Age is shown because a stale flag is a wor
            f"complaints deadline. **These transactions are synthetic**: the accounts, "
            f"amounts, countries and channels are generated, not this firm's book. Read them "
            f"as a fixture the detector is being shown, not as customer behaviour — what is "
-           f"real is how it ranks them. Phase 0 replaces the fixture with your own ledger.")
+           f"real is how it ranks them. Your own ledger replaces the fixture once the engagement "
+           f"provides a transaction extract — which is scoped work, not a switch to flip.")
 
 view = queue_filters(df, extra_facets=[("pattern", "Pattern"), ("country", "Country")],
                      date_col="raised")

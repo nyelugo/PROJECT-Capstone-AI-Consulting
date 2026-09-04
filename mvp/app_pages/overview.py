@@ -356,5 +356,6 @@ st.caption(
     "**Two honest limits.** Sign-in is a name typed into a box — it records who *said* they "
     "decided, not who did; real identity arrives with the case-system integration in Phase "
     "2. And this is demo data: triage and the reporting figures both run on the public "
-    "CFPB corpus, anomaly review on synthetic transactions. Phase 0 replaces them with "
-    "your own.")
+    "CFPB corpus, anomaly review on synthetic transactions. Phase 0 buys the complaint side "
+    "— data access and 300 expert-labelled complaints. The transaction extract behind anomaly "
+    "review is not in that scope.")

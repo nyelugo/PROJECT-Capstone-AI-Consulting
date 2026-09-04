@@ -34,13 +34,13 @@ you size the opportunity.
 | [`compliance/gdpr_documentation.md`](compliance/gdpr_documentation.md) | 10 | **Done** — data flow, Art. 30 register, DPIA, rights, transfers |
 | [`strategic_plan.md`](strategic_plan.md) | 10 | **Done** — POC → pilot → deployment, KPIs, GTM, commercialisation |
 | [`mvp/`](mvp/) + [`mvp_documentation.md`](mvp/mvp_documentation.md) | **15** | **Done** — three capabilities, one spine, 32 guard cases, verified end to end |
-| [`presentation.pdf`](presentation.pdf) | 10 | **Done** — 1 title + 10 slides + 7 backups, speaker notes on all 18, 24pt body minimum, ~10 min |
+| [`presentation.pdf`](presentation.pdf) | 10 | **Done** — 1 title + 11 slides + 4 backups, speaker notes on all 16, 24pt body minimum, ~10 min |
 
 \* shared weighting across use case definition and POC.
 
 **Both demo recordings are done** and generated from a script — see [`demo/`](demo/):
-[`poc_demo.mp4`](demo/recordings/poc_demo.mp4) (2:13, the deliverable) and
-[`mvp_demo.mp4`](demo/recordings/mvp_demo.mp4) (1:55, slide 9's backup). Re-recording after a
+[`poc_demo.mp4`](demo/recordings/poc_demo.mp4) (2:15, the deliverable) and
+[`mvp_demo.mp4`](demo/recordings/mvp_demo.mp4) (1:58, slide 9's backup). Re-recording after a
 UI change costs a command, not an afternoon.
 
 **Outstanding:** submitting the repo URL to Campus under `final-project`.
