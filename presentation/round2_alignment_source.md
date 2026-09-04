@@ -4,7 +4,7 @@ subtitle: What works, what does not yet pay, and how to decide with evidence
 round: Capstone Round 2
 author: Ugo Ahukannah
 status: Follow-up alignment source
-main_slides: 11
+main_slides: 10
 backup_slides: 4
 ---
 
@@ -40,7 +40,7 @@ The presentation is one connected decision story:
 ## Alignment rules
 
 - One argument per slide.
-- Main deck: one title slide plus ten content slides. Slides 12–18 are backup only.
+- Main deck: one title slide plus ten content slides. Slides 12–15 are backup only.
 - The Round 1 problem and initial test case are established context, not a new pitch.
 - The final recommendation is this project's consulting conclusion, not an Ironhack-mandated
   answer.
@@ -143,7 +143,7 @@ the client should proceed.
 
 ---
 
-## Slide 3 — Three jobs share one accountability problem
+## Not in the current deck — Three jobs share one accountability problem
 
 **Narrative job:** Show why the widened scope is coherent rather than three disconnected
 features.
@@ -184,7 +184,7 @@ common shape is what makes the widened scope manageable.
 
 ---
 
-## Slide 4 — One decision spine controls all three
+## Slide 3 — One decision spine controls all three
 
 **Narrative job:** Explain the solution at the level needed by the panel.
 
@@ -227,7 +227,7 @@ the entire product.
 
 ---
 
-## Slide 5 — The system proposes. A person decides.
+## Slide 4 — The system proposes. A person decides.
 
 **Takeaway:** Three jobs, three different ways a proposal is made, three different kinds of
 proof — then one person, for all of them.
@@ -245,7 +245,7 @@ The slide is a diagram, rendered from `assets/decision_spine_slide.html`. Its fo
 
 ### Speaker notes
 
-Held in the deck itself; see `round2_speaker_notes.md`, slide 5.
+Held in the deck itself; see `round2_speaker_notes.md`, slide 4.
 
 ### Sources
 
@@ -256,7 +256,7 @@ Held in the deck itself; see `round2_speaker_notes.md`, slide 5.
 
 ---
 
-## Slide 6 — The POC proves the mechanism—not accuracy
+## Slide 5 — The POC proves the mechanism—not accuracy
 
 **Narrative job:** Demonstrate the narrow proof and state its boundary immediately.
 
@@ -305,7 +305,7 @@ client performance. The client's own labelled cases must supply that evidence.
 
 ---
 
-## Slide 7 — The system works; the bespoke economics do not
+## Slide 6 — The system works; the bespoke economics do not
 
 **Narrative job:** Deliver the finding that changes the recommendation.
 
@@ -360,7 +360,7 @@ commercial structure that does not charge one firm for the entire build.
 
 ---
 
-## Slide 8 — Three risks decide whether a pilot is defensible
+## Slide 7 — Three risks decide whether a pilot is defensible
 
 **Narrative job:** Surface the risks that could reverse the recommendation.
 
@@ -401,7 +401,7 @@ fails. These risks are operational and measurable, and the client can stop at ea
 
 ---
 
-## Slide 9 — The current design is not high-risk; real-data use still has gates
+## Slide 8 — The current design is not high-risk; real-data use still has gates
 
 **Narrative job:** Give the honest legal and data-protection conclusion without reading the
 compliance pack.
@@ -452,7 +452,7 @@ are complete.
 
 ---
 
-## Slide 10 — The programme earns each next step
+## Slide 9 — The programme earns each next step
 
 **Narrative job:** Convert the risks and legal gates into a staged operating plan.
 
@@ -499,7 +499,7 @@ Eighteen thousand two hundred euros buys the evidence and the deployment decisio
 
 ---
 
-## Slide 11 — The MVP makes every proposal accountable
+## Slide 10 — The MVP makes every proposal accountable
 
 **Narrative job:** Show the operational product that grew from the POC.
 
@@ -541,7 +541,7 @@ the system proposed and what the responsible person did.
 
 ---
 
-## Slide 12 — Proceed to evidence—not deployment
+## Slide 11 — Proceed to evidence—not deployment
 
 **Narrative job:** Resolve the opening with one recommendation the client can accept or
 reject.
@@ -614,7 +614,7 @@ The remaining slides support questions and are not part of the main presentation
 
 ---
 
-## Slide 13 — Why 60.5% is not accuracy
+## Slide 12 — Why 60.5% is not accuracy
 
 **Takeaway:** Public, complainant-selected labels cannot establish expert-routing accuracy.
 
@@ -678,7 +678,7 @@ analysts.
 
 ---
 
-## Slide 14 — AI Act classification, step by step
+## Slide 13 — AI Act classification, step by step
 
 **Takeaway:** The classification follows the intended use and human boundary; UC-2 remains
 the open question.
@@ -710,7 +710,7 @@ UC-3 remain outside that tier. AI literacy applies regardless.
 
 ---
 
-## Slide 15 — What actually leaves the bank
+## Slide 14 — What actually leaves the bank
 
 **Takeaway:** Pseudonymisation removes the direct reference; it does not remove personal data
 from the narrative.
@@ -743,7 +743,7 @@ pseudonym alone is not an answer.
 
 ---
 
-## Slide 16 — What the pilot must prove
+## Slide 15 — What the pilot must prove
 
 **Takeaway:** Missing any of the first three gates stops deployment.
 

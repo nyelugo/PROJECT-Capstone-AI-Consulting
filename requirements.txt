@@ -5,6 +5,8 @@
 streamlit>=1.62.0
 pandas>=3.0.3
 plotly>=7.0.0
+# presentation/assets/roi_breakeven_chart.py
+matplotlib>=3.9
 openai>=2.45.0
 langsmith>=0.10.11
 python-dotenv>=1.2.2

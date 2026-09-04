@@ -34,7 +34,7 @@ you size the opportunity.
 | [`compliance/gdpr_documentation.md`](compliance/gdpr_documentation.md) | 10 | **Done** — data flow, Art. 30 register, DPIA, rights, transfers |
 | [`strategic_plan.md`](strategic_plan.md) | 10 | **Done** — POC → pilot → deployment, KPIs, GTM, commercialisation |
 | [`mvp/`](mvp/) + [`mvp_documentation.md`](mvp/mvp_documentation.md) | **15** | **Done** — three capabilities, one spine, 32 guard cases, verified end to end |
-| [`presentation.pdf`](presentation.pdf) | 10 | **Done** — 1 title + 11 slides + 4 backups, speaker notes on all 16, 24pt body minimum, ~10 min |
+| [`presentation.pdf`](presentation.pdf) | 10 | **Done** — 1 title + 10 slides + 4 backups, speaker notes on all 15, 24pt body minimum, ~10 min |
 
 \* shared weighting across use case definition and POC.
 

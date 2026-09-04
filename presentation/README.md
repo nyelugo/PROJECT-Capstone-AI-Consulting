@@ -25,12 +25,12 @@ Displayed number = slide index − 1. The cover carries none.
 
 `round2_speaker_notes.md` is produced from the deck's own notes; the regeneration snippet is
 at the foot of it. Do not hand-edit it — edit the notes in the `.pptx` and regenerate. It
-replaced a draft that had drifted to 18 sections against the deck's 16 and was referenced by
-nothing, which is how the wrong notes get read on the day.
+replaced a draft that had drifted out of step with the deck and was referenced by nothing,
+which is how the wrong notes get read on the day.
 
-## 4 · Slide 5 is an image, and its source is here
+## 4 · Two slides are generated images, and both sources are here
 
-"The system proposes. A person decides." is a PNG. Edit
+"The system proposes. A person decides." (slide 4) is a PNG. Edit
 [`assets/decision_spine_slide.html`](assets/decision_spine_slide.html) and run:
 
 ```bash
@@ -42,7 +42,18 @@ deck's content band — full width by 6.95in of the 7.5in page — so the footer
 line and page number sit beneath the image rather than being covered. Do not redraw the slide
 in PowerPoint; the source would then be a lie.
 
-The other two images already carry alt text. Keep it that way if you add one.
+The ROI slide's chart is generated too: `assets/roi_breakeven_chart.py` reads
+`cost_estimation/roi_model.json` and writes `assets/roi_breakeven.png`, deriving every point,
+so it cannot drift from the model. Re-run it after any model change and replace the picture
+on that slide.
+
+It draws in **Carlito**, the deck's own face, which ships with LibreOffice but is usually not
+registered with fontconfig — the script now loads the file directly from LibreOffice's bundle
+so it does not silently fall back to DejaVu and restyle the slide. The render is deterministic
+on one machine but not byte-identical across machines; the copy inside the `.pptx` is the
+authoritative one, and `assets/roi_breakeven.png` is gitignored because it is derived.
+
+The screenshots already carry alt text. Keep it that way if you add one.
 
 ## 5 · Every money figure is generated, and checked
 
@@ -63,12 +74,14 @@ against this client's 2,426.
 
 ## 6 · Slide budget
 
-pf-05 allows **10–12 slides excluding the title and backups**. The deck has 11 content slides
-(2–12) and 4 backups (13–16), so there is room for exactly one more before it breaches.
+pf-05 allows **10–12 slides excluding the title and backups**. The deck has 10 content slides
+(2–11) and 4 backups (12–15) — **exactly the lower bound**. One more cut breaches it; there is
+room for two more.
 
 All ten prescribed roles are present and in order: title, problem, solution, POC demo,
 business case, risk, compliance, deployment plan, MVP demo, conclusion — with the Round 1
-bridge on slide 2 and a second solution slide at 5.
+bridge on slide 2 and a second solution slide at 4. The standalone problem slide was cut, so
+slides 3 and 4 carry problem and solution together.
 
 ## After any change
 
