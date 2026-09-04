@@ -1,0 +1,252 @@
+<title>How Assist Decides</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+/* SOURCE for slide 5 of presentation.pptx — "The system proposes. A person decides."
+   The deck holds only a PNG of this; edit here and re-render, never redraw in PowerPoint.
+
+     python presentation/assets/render_slide.py
+
+   It renders at 1600x834 CSS (dpr 2 -> 3200x1668), which is the deck's content band: full
+   width by 6.95in of the 7.5in page, so the deck's own footer rule, footer line and page
+   number sit beneath it rather than being covered.
+
+   It commits to one light world on purpose — this is exported into a deck, and a deck page is
+   white wherever it is opened. Every colour is painted explicitly so it holds on a dark host
+   too. */
+:root{
+  --paper:#FFFFFF; --ink:#131E27; --ink-2:#4B5C69; --ink-3:#8496A3;
+  --rule:#D3DBE1; --band:#F1F4F6;
+  --go:#0E6E67; --go-soft:#E0EFED;
+  --rules:#5B4B8A; --rules-soft:#E8E4F2;
+  --stop:#A93B26; --stop-soft:#F7E6E1;
+}
+*{box-sizing:border-box}
+html,body{margin:0; background:var(--paper)}
+body{
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--ink); -webkit-font-smoothing:antialiased;
+  display:flex; justify-content:center; align-items:flex-start;
+}
+.fit{width:100%; max-width:1600px}
+.slide{
+  width:1600px; height:900px; transform-origin:top left;
+  background:var(--paper); padding:50px 60px 44px;
+  display:flex; flex-direction:column; gap:22px;
+}
+h1{
+  font-family:Archivo,sans-serif; font-size:50px; font-weight:700; letter-spacing:-.022em;
+  margin:0; line-height:1.06; text-wrap:balance;
+}
+/* ---------- column headers ---------- */
+.heads{
+  display:grid; grid-template-columns:.95fr 44px 1.08fr 44px 1.0fr 44px 1.02fr;
+  font-family:Archivo,sans-serif; font-size:12px; font-weight:700; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.heads span:nth-child(even){content:""}
+/* ---------- the flow ---------- */
+.steps{
+  display:grid; grid-template-columns:.95fr 44px 1.08fr 44px 1.0fr 44px 1.02fr;
+  align-items:stretch; flex:1 1 auto; min-height:0;
+}
+.arrow{display:flex; align-items:center; justify-content:center; color:var(--ink-3); font-size:28px; line-height:1}
+/* One arrow per row where three boxes feed three boxes, so a reader can follow a single use
+   case straight across. The last arrow stays single — that is where the three converge. */
+.arrow.triple{flex-direction:column; gap:10px; align-items:stretch}
+.arrow.triple span{flex:1 1 0; display:flex; align-items:center; justify-content:center}
+.stack{display:flex; flex-direction:column; gap:10px; min-height:0}
+.cell{
+  flex:1 1 0; border:2px solid var(--rule); border-radius:5px; padding:13px 16px;
+  display:flex; flex-direction:column; gap:4px; background:var(--paper); min-height:0;
+}
+.cell h2{font-family:Archivo,sans-serif; font-size:21px; font-weight:600; margin:0; letter-spacing:-.01em; line-height:1.1}
+.cell p{margin:0; font-size:15.5px; line-height:1.32; color:var(--ink-2)}
+/* the three sources */
+.src{border-left:6px solid var(--go)}
+.src dl{margin:0; display:grid; grid-template-columns:44px 1fr; gap:1px 8px; align-items:baseline}
+.src dt{
+  font-family:Archivo,sans-serif; font-size:10.5px; font-weight:700; letter-spacing:.13em;
+  color:var(--ink-3); text-transform:uppercase; padding-top:3px;
+}
+.src dd{margin:0; font-size:15.5px; line-height:1.32; color:var(--ink)}
+.src dd.why{color:var(--ink-2)}
+/* The tag names what does the CHOOSING. All three involve the AI; only triage lets it
+   choose. "AI" not "model" on purpose — to a CRO, "model" means something else entirely. */
+.tag{
+  align-self:flex-start; font-family:Archivo,sans-serif; font-size:10.5px; font-weight:700;
+  letter-spacing:.13em; text-transform:uppercase; padding:3px 8px; border-radius:3px;
+}
+.t-model{background:var(--go-soft); color:var(--go)}
+.t-rules{background:var(--rules-soft); color:var(--rules)}
+/* shared stages */
+.step{
+  border:2px solid var(--rule); border-radius:5px; padding:20px 20px 18px;
+  display:flex; flex-direction:column; gap:10px; background:var(--paper); min-height:0;
+}
+.step.checks{background:var(--band)}
+.step.person{border-color:var(--ink); border-width:3px}
+.step h2{font-family:Archivo,sans-serif; font-size:26px; font-weight:600; margin:0; line-height:1.1; letter-spacing:-.012em}
+.step p{margin:0; font-size:16px; color:var(--ink-2); line-height:1.34}
+/* Stage 3 splits per use case because what counts as PROOF differs, even though the checks
+   that demand it are identical. Same .stack shape as columns 1 and 2, so the three rows line
+   up across the page by construction rather than by tuning. */
+.cell.proof{
+  background:var(--band); border-left:6px solid var(--go);
+  justify-content:center;
+}
+.cell.proof p{font-size:17px; line-height:1.34; color:var(--ink)}
+.cell.proof b{font-weight:600}
+/* Accept and Send elsewhere are opposites — agreeing with the system and overriding it — so
+   they must not read as three identical choices. The colours match the ones the app itself
+   uses for agreed and overridden. */
+.step p.arrives{font-size:15.5px; line-height:1.32}
+.acts{display:flex; flex-direction:column; gap:8px}
+.act{
+  padding:9px 12px; border-radius:4px; display:flex; flex-direction:column; gap:1px;
+  border-left:5px solid currentColor;
+}
+.act b{font-family:Archivo,sans-serif; font-size:18px; font-weight:700; line-height:1.1}
+.act span{font-size:14.5px; opacity:.86; line-height:1.25}
+.act.agree{background:var(--go-soft); color:var(--go)}
+.act.over{background:var(--stop-soft); color:var(--stop)}
+.act.esc{background:var(--band); color:var(--ink-2)}
+.step p.rec{
+  margin-top:auto; padding-top:11px; border-top:2px solid var(--ink);
+  font-size:15px; line-height:1.3; color:var(--ink);
+}
+/* Spans all four stages. Context the diagram cannot carry — what the design buys you. The
+   deck already has a slide for what is not yet proven; repeating it here would be noise. */
+.foot{
+  border-top:2px solid var(--rule); padding-top:13px;
+  display:grid; grid-template-columns:1fr 1fr 1.15fr; gap:28px;
+}
+.foot div{display:flex; flex-direction:column; gap:1px; min-width:0}
+.foot b{
+  font-family:Archivo,sans-serif; font-size:14px; font-weight:700; color:var(--ink);
+  letter-spacing:-.004em;
+}
+.foot span{font-size:13.5px; line-height:1.32; color:var(--ink-3)}
+</style>
+
+<div class="fit"><div class="slide" id="slide">
+
+  <div>
+    <h1>The system proposes. A person decides.</h1>
+  </div>
+
+  <div class="heads">
+    <span>1 · The work</span><span></span>
+    <span>2 · What makes the proposal</span><span></span>
+    <span>3 · What it must prove</span><span></span>
+    <span>4 · Who decides</span>
+  </div>
+
+  <div class="steps">
+
+    <!-- 1 · the three sources -->
+    <div class="stack">
+      <div class="cell src">
+        <h2>Complaint triage</h2>
+        <dl>
+          <dt>What</dt><dd>Complaints, as they arrive.</dd>
+          <dt>Why</dt><dd class="why">64 overlapping categories; two handlers route the same one
+            differently — and the clock is 15 days.</dd>
+        </dl>
+      </div>
+      <div class="cell src">
+        <h2>Anomaly review</h2>
+        <dl>
+          <dt>What</dt><dd>Account transactions, in a batch.</dd>
+          <dt>Why</dt><dd class="why">Unusual patterns surface as complaints, not alerts. By then the money
+            has moved.</dd>
+        </dl>
+      </div>
+      <div class="cell src">
+        <h2>Reporting assistance</h2>
+        <dl>
+          <dt>What</dt><dd>The quarter's complaint figures.</dd>
+          <dt>Why</dt><dd class="why">Built by hand from spreadsheets, five days a quarter, and every figure
+            has to be right.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="arrow triple" aria-hidden="true"><span>→</span><span>→</span><span>→</span></div>
+
+    <!-- 2 · what proposes, per use case -->
+    <div class="stack">
+      <div class="cell">
+        <span class="tag t-model">AI</span>
+        <p>The AI reads the complaint and picks the team from a fixed list — and must quote the
+          customer's own sentence as its reason.</p>
+      </div>
+      <div class="cell">
+        <span class="tag t-rules">Rules, then AI</span>
+        <p>Rules pick the case out of the ledger. The AI never decides what is suspicious — it only
+          explains the case the rules raised.</p>
+      </div>
+      <div class="cell">
+        <span class="tag t-rules">Computed, then AI</span>
+        <p>The figures are calculated first. The AI only writes the narrative around numbers it did
+          not produce.</p>
+      </div>
+    </div>
+
+    <div class="arrow triple" aria-hidden="true"><span>→</span><span>→</span><span>→</span></div>
+
+    <!-- 3 · what each one must prove -->
+    <div class="stack">
+        <div class="cell proof">
+          <p>The sentence it quoted must appear in the complaint, <b>word for word</b>.</p>
+        </div>
+        <div class="cell proof">
+          <p>Every number in the note must <b>match the transaction record</b>.</p>
+        </div>
+        <div class="cell proof">
+          <p>Every figure must already be <b>on the computed sheet</b>.</p>
+        </div>
+    </div>
+
+    <div class="arrow" aria-hidden="true">→</div>
+
+    <!-- 4 · the human -->
+    <div class="step person">
+      <h2>A person. Every&nbsp;time.</h2>
+      <p class="arrives">It arrives either as a proposal with its evidence, or as a hold naming what
+        stopped it. Nothing arrives decided.</p>
+      <div class="acts">
+        <div class="act agree"><b>Accept</b><span>agrees with it</span></div>
+        <div class="act over"><b>Send elsewhere</b><span>overrides it</span></div>
+        <div class="act esc"><b>Escalate</b><span>wants another pair of eyes</span></div>
+      </div>
+      <p class="rec">Whichever they choose is written down beside what the system proposed.</p>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div><b>One system, not three</b><span>the same checks and the same record serve all three —
+      a fourth capability reuses them rather than starting again</span></div>
+    <div><b>Every step is kept</b><span>proposal, checks and human decision stored together — which
+      is what makes agreement and override rates measurable at all</span></div>
+    <div><b>Minutes, not days</b><span>500 complaints classified in about a minute, eight at a
+      time</span></div>
+  </div>
+
+</div></div>
+
+<script>
+// Scale the fixed 16:9 board to the width it is being viewed at, so the slide reads the same
+// in a side panel as it will on the deck.
+(function () {
+  var slide = document.getElementById('slide');
+  var fit = slide.parentElement;
+  function size() {
+    var s = Math.min(1, fit.clientWidth / 1600);
+    slide.style.transform = 'scale(' + s + ')';
+    fit.style.height = (900 * s) + 'px';
+  }
+  size();
+  window.addEventListener('resize', size);
+})();
+</script>

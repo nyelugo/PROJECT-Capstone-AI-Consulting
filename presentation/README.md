@@ -1,0 +1,87 @@
+# Working on the deck
+
+`presentation.pptx` is the deliverable; `presentation.pdf` is exported from it. Six things
+about this deck are not obvious and each one has already cost a mistake.
+
+## 1 · Edit in place, never regenerate
+
+The deck has been edited by more than one person. Rebuilding it from a script discards
+whatever the other author did. For a text change, rewrite the `.pptx` zip copying every part
+byte-for-byte and substituting only the slide XML you mean to touch, then diff the parts and
+confirm the blast radius before saving. `python-pptx` re-serialises the whole package (71
+parts moved when a slide was added), so where you have to use it, verify by **content** — a
+text diff of the exported PDF — rather than by counting changed parts.
+
+## 2 · Page numbers are literal text, not fields
+
+Every slide carries its number as a text run at 11.43in, 7.00in. There is no slide-number
+field. **Insert or remove a slide and every page number after it is silently wrong.**
+Renumber by position, not by shape name — one slide calls that shape `Text 6` where the rest
+call it `Text 4`, and a name-based loop skips it without complaining.
+
+Displayed number = slide index − 1. The cover carries none.
+
+## 3 · The speaker notes file is generated
+
+`round2_speaker_notes.md` is produced from the deck's own notes; the regeneration snippet is
+at the foot of it. Do not hand-edit it — edit the notes in the `.pptx` and regenerate. It
+replaced a draft that had drifted to 18 sections against the deck's 16 and was referenced by
+nothing, which is how the wrong notes get read on the day.
+
+## 4 · Slide 5 is an image, and its source is here
+
+"The system proposes. A person decides." is a PNG. Edit
+[`assets/decision_spine_slide.html`](assets/decision_spine_slide.html) and run:
+
+```bash
+python presentation/assets/render_slide.py
+```
+
+That re-renders it and swaps only `ppt/media/image1.png` into the deck. It renders to the
+deck's content band — full width by 6.95in of the 7.5in page — so the footer rule, footer
+line and page number sit beneath the image rather than being covered. Do not redraw the slide
+in PowerPoint; the source would then be a lie.
+
+The other two images already carry alt text. Keep it that way if you add one.
+
+## 5 · Every money figure is generated, and checked
+
+Nothing in the ROI story is typed by hand. `cost_estimation/roi_model.py` writes
+`roi_model.json`; `roi_risk_assessment.md` quotes it; and
+
+```bash
+python cost_estimation/check_roi_doc.py
+```
+
+fails if the document and the model disagree. **Run it after any change that touches a
+number.** The deck, the strategic plan and the README quote the same figures but are *not*
+covered by that checker — if a model figure moves, grep for the old value across `*.md` and
+the deck's slide text *and* its speaker notes.
+
+Current headline: −18.0% at 36 months, break-even month 46, 3,100 complaints a year needed
+against this client's 2,426.
+
+## 6 · Slide budget
+
+pf-05 allows **10–12 slides excluding the title and backups**. The deck has 11 content slides
+(2–12) and 4 backups (13–16), so there is room for exactly one more before it breaches.
+
+All ten prescribed roles are present and in order: title, problem, solution, POC demo,
+business case, risk, compliance, deployment plan, MVP demo, conclusion — with the Round 1
+bridge on slide 2 and a second solution slide at 5.
+
+## After any change
+
+```bash
+soffice --headless --convert-to pdf --outdir . presentation.pptx
+```
+
+Copy the PDF into place by **explicit name**. A glob once matched two files, the copy failed
+silently, and a stale PDF was committed alongside an updated deck.
+
+---
+
+The Round 1 files in this folder — `round1_pitch.pptx`, `speaker_notes.md`,
+`master_pitch.md`, `one_minute_pitch.md` — are a finished deliverable from a previous
+submission. They quote a different cost model and are correct for what they describe. Leave
+them alone.
