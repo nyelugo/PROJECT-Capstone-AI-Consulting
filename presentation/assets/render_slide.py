@@ -1,4 +1,4 @@
-"""Re-render slide 5 from its HTML source and put it back into the deck.
+"""Re-render slide 4 from its HTML source and put it back into the deck.
 
 The slide is a PNG inside presentation.pptx. Edit decision_spine_slide.html, run this, and
 the deck picks up the new image with nothing else touched — the package is rewritten part by
