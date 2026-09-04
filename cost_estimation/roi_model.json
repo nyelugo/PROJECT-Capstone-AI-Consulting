@@ -19,6 +19,8 @@
     "Human oversight (quarterly review of three capabilities)": 8400
   },
   "annual_running_cost_total_eur": 10201,
+  "annual_running_cost_after_handover_eur": 5197,
+  "oversight_handover_month": 12,
   "ai_share_of_running_cost_pct": 0.01,
   "upfront_fixed_fee": {
     "Phase 0 \u2014 Discovery and expert labelling": {
@@ -56,9 +58,9 @@
         "months": 36,
         "earning_months": 30,
         "total_benefit_eur": 18521,
-        "total_cost_eur": 62802,
-        "net_benefit_eur": -44280,
-        "roi_pct": -70.5
+        "total_cost_eur": 52795,
+        "net_benefit_eur": -34274,
+        "roi_pct": -64.9
       },
       "break_even_month": null
     },
@@ -76,42 +78,42 @@
         "months": 36,
         "earning_months": 30,
         "total_benefit_eur": 43315,
-        "total_cost_eur": 62802,
-        "net_benefit_eur": -19487,
-        "roi_pct": -31.0
+        "total_cost_eur": 52795,
+        "net_benefit_eur": -9480,
+        "roi_pct": -18.0
       },
-      "break_even_month": 69
+      "break_even_month": 46
     }
   },
   "sensitivity_36m_central_roi_pct": {
-    "base": -31.0,
-    "earlier_detection_rate_pct 15 -> 5": -49.3,
-    "report_time_reduction_pct 50 -> 20": -37.8,
-    "review_days_per_quarter 3 -> 6": -50.8,
-    "value_starts_month 7 -> 10": -37.9
+    "base": -18.0,
+    "earlier_detection_rate_pct 15 -> 5": -39.7,
+    "report_time_reduction_pct 50 -> 20": -26.0,
+    "review_days_per_quarter 3 -> 6": -36.3,
+    "value_starts_month 7 -> 10": -26.2
   },
   "break_even_volume": {
-    "complaints_per_year_for_36m_payback": 3800,
-    "retail_accounts_implied": 391591,
+    "complaints_per_year_for_36m_payback": 3100,
+    "retail_accounts_implied": 319456,
     "this_client_complaints_per_year": 2426,
     "note": "At this client's volume the bespoke build does not pay back inside 36 months. This is the volume at which it would."
   },
   "productised": {
     "clients_sharing_the_build": 5,
     "per_client_build_eur": 6440,
-    "total_cost_36m_eur": 37042,
+    "total_cost_36m_eur": 27035,
     "total_benefit_36m_eur": 43315,
-    "net_benefit_36m_eur": 6273,
-    "roi_36m_pct": 16.9,
+    "net_benefit_36m_eur": 16280,
+    "roi_36m_pct": 60.2,
     "note": "The build is bespoke today. Amortising it across five mid-size firms is what turns the same capability from a loss into a return for a client this size. It is a commercial decision, not a technical one."
   },
   "consultant_day_rate_eur": 700,
   "oversight_inhouse_day_eur": 283.05,
   "levers_36m_central_roi_pct": {
-    "as proposed \u2014 bespoke build, consultant-run oversight": -31.0,
-    "oversight moved in-house after handover": -9.4,
-    "build amortised across 5 clients": 16.9,
-    "both \u2014 productised build AND in-house oversight": 96.6
+    "as proposed \u2014 consultant runs year one, then in-house": -18.0,
+    "oversight absorbed into an existing remit after handover": -5.8,
+    "build amortised across 5 clients": 60.2,
+    "both \u2014 productised build AND absorbed oversight": 114.0
   },
   "assumptions": {
     "report_days_per_quarter_now": {

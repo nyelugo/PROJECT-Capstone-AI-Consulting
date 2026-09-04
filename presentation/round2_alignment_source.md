@@ -278,11 +278,11 @@ within 36 months.
 
 ### On-slide copy
 
-**−31.0%** 36-month ROI
+**−18.0%** 36-month ROI
 
-**Month 69** break-even
+**Month 46** break-even
 
-The bespoke model needs about **3,800 complaints a year**.
+The bespoke model needs about **3,100 complaints a year**.
 
 **€9,918 of €17,326 is cash — ombudsman fees and fraud losses, not saved time.**
 Displaced minutes are not counted as savings: three minutes on 2,426 complaints is 121
@@ -293,9 +293,9 @@ The client has about **2,426**.
 
 | Commercial structure | 36-month ROI |
 |---|---:|
-| Bespoke build; consultant oversight | −31.0% |
-| Productised across five firms | +16.9% |
-| Productised; oversight brought in-house | +96.6% |
+| Bespoke build; consultant runs year one, then in-house | −18.0% |
+| Productised across five firms | +60.2% |
+| Productised; oversight absorbed into an existing remit | +114.0% |
 
 **The technology is unchanged. Who pays for the build changes.**
 

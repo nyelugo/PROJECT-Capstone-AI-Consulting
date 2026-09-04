@@ -139,6 +139,23 @@ COST_RUN = {
     "Human oversight (quarterly review of three capabilities)": oversight,
 }
 cost_run_year = sum(COST_RUN.values())
+
+# strategic_plan.md: the consultant "runs the first year of oversight before handing it to a
+# named internal owner". Running cost is therefore NOT flat across the 36-month window — only
+# the first year carries the consultant day rate. Modelling it flat charged €700/day for three
+# years and contradicted the plan the same model is used to argue for.
+HANDOVER_MONTH = 12
+inhouse_day = DAY_HOURS * HOURLY                      # the firm's own loaded day cost
+oversight_inhouse = V["review_days_per_quarter"] * 4 * inhouse_day
+cost_run_after_handover = cost_run_year - oversight + oversight_inhouse
+
+
+def run_cost_over(months: float) -> float:
+    """Cumulative running cost across `months`, with oversight handed over at month 12."""
+    consultant = min(months, HANDOVER_MONTH)
+    internal = max(0.0, months - HANDOVER_MONTH)
+    return cost_run_year * consultant / 12 + cost_run_after_handover * internal / 12
+
 ai_share_pct = 100 * (api_triage + api_report + api_anomaly) / cost_run_year
 
 # --------------------------------------------------------------------------- upfront
@@ -167,7 +184,7 @@ def roi(months: int, annual_value: float) -> dict:
     """ROI = (Net Benefit / Total Cost) x 100, with benefits ramped from month 7."""
     earning = max(0, months - (V["value_starts_month"] - 1))
     benefit = annual_value * earning / 12
-    cost = upfront_full + cost_run_year * months / 12
+    cost = upfront_full + run_cost_over(months)
     net = benefit - cost
     return {"months": months, "earning_months": earning,
             "total_benefit_eur": round(benefit), "total_cost_eur": round(cost),
@@ -177,7 +194,7 @@ def roi(months: int, annual_value: float) -> dict:
 def break_even_month(annual_value: float) -> int | None:
     for m in range(1, 121):
         earning = max(0, m - (V["value_starts_month"] - 1))
-        if annual_value * earning / 12 >= upfront_full + cost_run_year * m / 12:
+        if annual_value * earning / 12 >= upfront_full + run_cost_over(m):
             return m
     return None
 
@@ -206,10 +223,14 @@ def _with(**over):
     av = (COMPLAINTS_YEAR * V["fraud_unauth_share_pct"] / 100
           * V["earlier_detection_rate_pct"] / 100) * (redress_eur + handling_eur)
     ov = V["review_days_per_quarter"] * 4 * DAY_RATE
+    ov_internal = V["review_days_per_quarter"] * 4 * inhouse_day
     val = triage_labour + rl + av + ombudsman_value
-    run = api_triage + api_report + api_anomaly + platform + ov
+    api = api_triage + api_report + api_anomaly + platform
+    # same handover the base case uses — a sensitivity row computed on a different basis from
+    # the row it is compared against is worse than no row at all
     earning = 36 - (V["value_starts_month"] - 1)
-    benefit, cost = val * earning / 12, upfront_full + run * 3
+    benefit = val * earning / 12
+    cost = upfront_full + (api + ov) + (api + ov_internal) * 2
     V = saved
     return round(100 * (benefit - cost) / cost, 1)
 
@@ -235,7 +256,7 @@ def _value_at_volume(complaints: int) -> float:
 def break_even_volume(months: int = 36) -> int | None:
     """Complaint volume at which the central case clears its costs within `months`."""
     earning = months - (V["value_starts_month"] - 1)
-    cost = upfront_full + cost_run_year * months / 12
+    cost = upfront_full + run_cost_over(months)
     for n in range(500, 200_001, 100):
         if _value_at_volume(n) * earning / 12 >= cost:
             return n
@@ -254,7 +275,7 @@ be_accounts = round(be_vol / complaints_per_account) if be_vol else None
 # Chleo's size ever sees a positive return.
 CLIENTS = 5
 per_client_build = upfront_full / CLIENTS
-prod_cost_36 = per_client_build + cost_run_year * 3
+prod_cost_36 = per_client_build + run_cost_over(36)
 prod_benefit_36 = value_central * (36 - (V["value_starts_month"] - 1)) / 12
 productised = {
     "clients_sharing_the_build": CLIENTS,
@@ -268,26 +289,28 @@ productised = {
              "It is a commercial decision, not a technical one."),
 }
 
-# The three levers, priced. Each is a decision someone can actually take.
-inhouse_day = DAY_HOURS * HOURLY                      # the firm's own loaded day cost
-oversight_inhouse = V["review_days_per_quarter"] * 4 * inhouse_day
-
-
-def _roi36(cost_upfront: float, cost_run: float) -> float:
+# The levers, priced. Each is a decision someone can actually take.
+def _roi36(cost_upfront: float, run36: float) -> float:
     benefit = value_central * (36 - (V["value_starts_month"] - 1)) / 12
-    cost = cost_upfront + cost_run * 3
+    cost = cost_upfront + run36
     return round(100 * (benefit - cost) / cost, 1)
 
 
+# oversight absorbed: the same 12 days done by someone already on the payroll. The model
+# declines to bank displaced handler time as a saving, so charging allocated internal time as
+# a cost is the same hour treated two ways — this lever prices the symmetric reading. Whether
+# a firm can absorb it is their staffing reality, which is why it is a lever and not the base.
+run36_absorbed = cost_run_year + (cost_run_year - oversight) * 2
+
 LEVERS = {
-    "as proposed — bespoke build, consultant-run oversight":
-        _roi36(upfront_full, cost_run_year),
-    "oversight moved in-house after handover":
-        _roi36(upfront_full, cost_run_year - oversight + oversight_inhouse),
+    "as proposed — consultant runs year one, then in-house":
+        _roi36(upfront_full, run_cost_over(36)),
+    "oversight absorbed into an existing remit after handover":
+        _roi36(upfront_full, run36_absorbed),
     "build amortised across 5 clients":
-        _roi36(per_client_build, cost_run_year),
-    "both — productised build AND in-house oversight":
-        _roi36(per_client_build, cost_run_year - oversight + oversight_inhouse),
+        _roi36(per_client_build, run_cost_over(36)),
+    "both — productised build AND absorbed oversight":
+        _roi36(per_client_build, run36_absorbed),
 }
 
 out = {
@@ -295,6 +318,8 @@ out = {
     "value_scenario": {k: s for k, (_, s) in VALUE.items()},
     "annual_running_cost_eur": {k: round(v, 2) for k, v in COST_RUN.items()},
     "annual_running_cost_total_eur": round(cost_run_year),
+    "annual_running_cost_after_handover_eur": round(cost_run_after_handover),
+    "oversight_handover_month": HANDOVER_MONTH,
     "ai_share_of_running_cost_pct": round(ai_share_pct, 2),
     "upfront_fixed_fee": {n: {"days": d, "fee_eur": c, "why": w} for n, d, c, w in phase_costs},
     "upfront_to_end_of_pilot_eur": upfront_to_pilot,

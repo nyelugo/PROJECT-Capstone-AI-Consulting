@@ -14,17 +14,22 @@ verifies that every figure printed in this document still matches the model.
 ## The headline, before the detail
 
 **On these assumptions, a bespoke build for a firm this size does not pay back within 36
-months.** The 36-month ROI is **−31.0%** and break-even falls in **month 69**.
+months.** The 36-month ROI is **−18.0%** and break-even falls in **month 46**.
 
-That is the honest answer, and it is not the end of the conversation. Three levers change
-it, each of them a decision someone can actually take:
+That figure already assumes the handover this plan proposes: the consultant runs the first
+year of oversight, and a named internal owner runs it after that. Charging the consultant day
+rate for all three years would read −31.0%, and would be modelling an engagement nobody is
+offering.
+
+That is the honest answer, and it is not the end of the conversation. Two further levers
+change it, each of them a decision someone can actually take:
 
 | 36-month ROI | Lever |
 |---:|---|
-| **−31.0%** | As proposed — bespoke build, consultant-run oversight |
-| **−9.4%** | Oversight moved in-house after handover |
-| **+16.9%** | Build amortised across five mid-size firms |
-| **+96.6%** | Both — productised build *and* in-house oversight |
+| **−18.0%** | As proposed — bespoke build, consultant runs year one then hands over |
+| **−5.8%** | Oversight absorbed into an existing compliance remit rather than added |
+| **+60.2%** | Build amortised across five mid-size firms |
+| **+114.0%** | Both — productised build *and* absorbed oversight |
 
 The recommendation follows from this table rather than from enthusiasm: **commit to the
 pilot, not to the deployment.** €18,200 buys a decision backed by the firm's own data. The
@@ -58,14 +63,21 @@ a new system.
 | Model calls — reporting | €0.00 |
 | Model calls — anomaly | €0.08 |
 | Platform (hosting, monitoring, logging) | €1,800 |
-| **Human oversight** (quarterly review of three capabilities) | **€8,400** |
-| **Total** | **€10,201** |
+| **Human oversight** (quarterly review of three capabilities) | **€8,400** in year one, **€3,397** after |
+| **Total** | **€10,201** year one, **€5,197** after |
 
 **The AI is 0.004% of the running cost.** Everything else is the platform it runs on and the
 person accountable for watching it. This is the number that most often surprises a board, and
 it should: cutting oversight is the only way to make this system cheap, and it is the wrong
-saving. The €8,400 assumes the consultant runs the quarterly review at €700/day. Moved
-in-house after handover it costs €283/day loaded — €3,397 — which is the second lever above.
+saving.
+
+What is *not* the wrong saving is who does it. The €8,400 is twelve days at the consultant's
+€700; the same twelve days cost €283/day loaded once a named internal owner has them — €3,397
+— and the plan hands them over at the end of year one. The ROI above already reflects that.
+Whether even the €3,397 is a real cost is a fair challenge: the system frees roughly 196
+hours a year of handler and drafting time against 90 hours of oversight, and this model
+declines to bank freed time as a saving. Treating both sides the same way is the second lever
+above.
 
 Round 1 assumed 2 review days per quarter for one capability; this assumes 3 for three. That
 increase is the honest running cost of the widened scope.
@@ -113,26 +125,27 @@ be wrong.
 | | Earning months | Total benefit | Total cost | Net benefit | **ROI** |
 |---|---:|---:|---:|---:|---:|
 | **Conservative, 12 months** | 6 | €3,704 | €42,401 | −€38,696 | **−91.3%** |
-| **Conservative, 36 months** | 30 | €18,521 | €62,802 | −€44,280 | **−70.5%** |
+| **Conservative, 36 months** | 30 | €18,521 | €52,795 | −€34,274 | **−64.9%** |
 | **Central, 12 months** | 6 | €8,663 | €42,401 | −€33,738 | **−79.6%** |
-| **Central, 36 months** | 30 | €43,315 | €62,802 | −€19,487 | **−31.0%** |
+| **Central, 36 months** | 30 | €43,315 | €52,795 | −€9,480 | **−18.0%** |
 
-Total cost = €32,200 upfront + running cost for the period.
+Total cost = €32,200 upfront + running cost for the period, with oversight at the
+consultant rate for year one and the internal rate thereafter.
 
 ## Break-even note
 
-**Break-even falls in month 69 on the central case, and never on the conservative case.**
+**Break-even falls in month 46 on the central case, and never on the conservative case.**
 
 Two readings of why, both useful:
 
-- **By volume.** The central case clears its costs inside 36 months at **3,800 complaints a
-  year** — roughly 391,591 retail accounts. This client has **2,426** complaints a year on
-  ~250,000 accounts. Chleo is about a third too small for a bespoke build to pay back, and
+- **By volume.** The central case clears its costs inside 36 months at **3,100 complaints a
+  year** — roughly 319,456 retail accounts. This client has **2,426** complaints a year on
+  ~250,000 accounts. Chleo is about a fifth too small for a bespoke build to pay back, and
   that is a fact about her size, not about the technology.
 - **By structure.** Amortised across five mid-size firms, the per-client build falls from
-  €32,200 to **€6,440** and the 36-month ROI turns **positive at +16.9%** — or **+96.6%**
-  with oversight in-house. The capability is identical in every case. What changes is who
-  pays for the build.
+  €32,200 to **€6,440** and the 36-month ROI turns **positive at +60.2%** — or **+114.0%**
+  if oversight is absorbed rather than added. The capability is identical in every case. What
+  changes is who pays for the build.
 
 This is the finding that shapes the go-to-market in
 [`strategic_plan.md`](strategic_plan.md): a bespoke AI build for a single mid-size firm is
@@ -172,15 +185,16 @@ repeated here.
 
 | 36-month ROI | Change |
 |---:|---|
-| −31.0% | Base case |
-| −37.8% | Reporting time saved 50% → 20% |
-| −37.9% | Value starts month 7 → month 10 (delivery slips) |
-| −49.3% | Earlier detection 15% → 5% |
-| **−50.8%** | **Oversight 3 → 6 days per quarter** |
+| −18.0% | Base case |
+| −26.0% | Reporting time saved 50% → 20% |
+| −26.2% | Value starts month 7 → month 10 (delivery slips) |
+| −36.3% | Oversight 3 → 6 days per quarter |
+| **−39.7%** | **Earlier detection 15% → 5%** |
 
-The two that dominate are `earlier_detection_rate_pct` and `review_days_per_quarter`. The
-first is a benefit nobody has measured; the second is a cost that grows if the system needs
-more watching than expected. **Both are measured by the pilot, and neither can be settled by
+The one that dominates is `earlier_detection_rate_pct` — a benefit nobody has measured, and
+the largest single line of value. `review_days_per_quarter` is second and matters less than
+it used to: once oversight is handed over at internal rates, doubling the days costs half of
+what doubling consultant days would have. **Both are measured by the pilot, and neither can be settled by
 argument** — which is the case for spending €18,200 before €32,200.
 
 ---

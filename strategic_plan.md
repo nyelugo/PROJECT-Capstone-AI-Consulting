@@ -9,13 +9,15 @@ Client: **Chleo**, mid-size EU retail bank
 ## The strategy in one paragraph
 
 The ROI analysis produced an uncomfortable number and it shapes everything below: **a
-bespoke build does not pay back for a firm Chleo's size** — −31.0% at 36 months, break-even
-in month 69. The capability is sound; the *commercial shape* is wrong. A firm needs about
-3,800 complaints a year for a one-off build to pay for itself and Chleo has 2,426. So the
+bespoke build does not pay back for a firm Chleo's size** — −18.0% at 36 months, break-even
+in month 46, and that already assumes oversight hands over to a named internal owner after
+year one. The capability is sound; the *commercial shape* is wrong. A firm needs about
+3,100 complaints a year for a one-off build to pay for itself and Chleo has 2,426. So the
 plan is not "build it and hope". It is: **spend €18,200 to reach a decision on the firm's
 own data, and structure everything after that so the build is not paid for once by one
-firm.** Productised across five mid-size firms the same capability returns +16.9% over 36
-months, and +96.6% with oversight brought in-house. That is the strategy — the phases below
+firm.** Productised across five mid-size firms the same capability returns +60.2% over 36
+months, and +114.0% if oversight is absorbed into an existing remit rather than added. That
+is the strategy — the phases below
 are how it gets tested before it gets funded.
 
 ## Phase plan
@@ -208,7 +210,7 @@ Ruled out, with reasons:
 
 | Model | Why not |
 |---|---|
-| **Bespoke build per client** | **The ROI analysis says no.** −31% over 36 months for a firm this size. It is what was pitched and the numbers refuse it |
+| **Bespoke build per client** | **The ROI analysis says no.** −18% over 36 months for a firm this size. It is what was pitched and the numbers refuse it |
 | **Multi-tenant SaaS** | Would require processing complaint narratives from many banks in one platform. The transfer and controller analysis becomes far harder, and it is the opposite of the trust position. Wrong product for this buyer |
 | **Open-source with paid support** | Gives away the only durable asset — the guard and reason-code design — for a support business at this scale |
 
@@ -218,8 +220,8 @@ The consultant implements, tunes the taxonomy to that firm, and runs the first y
 oversight before handing it to a named internal owner.
 
 **Why it works, in one line:** the build is paid for once and implemented many times — per
-client €6,440 rather than €32,200 — which turns a −31% return into +16.9%, and +96.6% once
-the client owns oversight. **The technology does not change at all. Only who pays for the
+client €6,440 rather than €32,200 — which turns a −18% return into +60.2%, and +114.0% if
+the oversight is absorbed into a role that already exists. **The technology does not change at all. Only who pays for the
 build.**
 
 ## Stakeholder communication plan

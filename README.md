@@ -53,10 +53,10 @@ hard, analyst-tunable thresholds, and authenticated identity, which is Phase 2.
 
 ### The two findings Round 2 turns on
 
-1. **A bespoke build does not pay back for a firm this size** — −31.0% at 36 months,
-   break-even month 69. It needs ~3,800 complaints a year; Chleo has 2,426. Productised
-   across five firms the same capability returns **+16.9%**, and **+96.6%** with oversight
-   in-house. The technology does not change — only who pays for the build.
+1. **A bespoke build does not pay back for a firm this size** — −18.0% at 36 months,
+   break-even month 46, with oversight handed to an internal owner after year one. It needs
+   ~3,100 complaints a year; Chleo has 2,426. Productised across five firms the same
+   capability returns **+60.2%**, and **+114.0%** if oversight is absorbed rather than added. The technology does not change — only who pays for the build.
 2. **Pseudonymisation here protects the reference, not the content.** The complaint narrative
    goes to the model provider in full and the quoted sentence is stored in monitoring. The
    transfer analysis, not the aliasing, is the load-bearing control.
