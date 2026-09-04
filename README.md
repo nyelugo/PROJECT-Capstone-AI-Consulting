@@ -40,7 +40,7 @@ you size the opportunity.
 
 **Both demo recordings are done** and generated from a script — see [`demo/`](demo/):
 [`poc_demo.mp4`](demo/recordings/poc_demo.mp4) (2:15, the deliverable) and
-[`mvp_demo.mp4`](demo/recordings/mvp_demo.mp4) (1:58, slide 9's backup). Re-recording after a
+[`mvp_demo.mp4`](demo/recordings/mvp_demo.mp4) (1:57, slide 9's backup). Re-recording after a
 UI change costs a command, not an afternoon.
 
 **Outstanding:** submitting the repo URL to Campus under `final-project`.
